@@ -1,3 +1,4 @@
 from .base import Base
+from .user import User, UserRole
 
-# We will import other models here later
+__all__ = ["Base", "User", "UserRole"]

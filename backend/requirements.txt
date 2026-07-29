@@ -1,6 +1,6 @@
 fastapi
 uvicorn[standard]
-pydantic
+pydantic[email]
 pydantic-settings
 python-dotenv
 sqlalchemy
@@ -8,5 +8,5 @@ alembic
 asyncpg
 psycopg2-binary
 redis
-pyjwt
-passlib[bcrypt]
+python-jose[cryptography]
+argon2-cffi

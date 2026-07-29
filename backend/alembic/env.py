@@ -22,7 +22,8 @@ import os
 # Add the backend directory to sys.path so we can import app modules
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from app.models.base import Base
+from app.models import Base  # noqa: F401 — imports User etc., registering tables
+from app.models import User  # noqa: F401
 from app.core.config import settings
 
 # add your model's MetaData object here
