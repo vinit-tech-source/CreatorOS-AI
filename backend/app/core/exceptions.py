@@ -62,3 +62,28 @@ class UsernameAlreadyExistsError(AppException):
 
     def __init__(self, message: str = "This username is already taken.") -> None:
         super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# Workspace Exceptions
+# ─────────────────────────────────────────────
+
+class WorkspaceNotFoundError(AppException):
+    """Raised when a requested workspace does not exist."""
+
+    def __init__(self, message: str = "Workspace not found.") -> None:
+        super().__init__(message)
+
+
+class SlugAlreadyExistsError(AppException):
+    """Raised when attempting to create a workspace with a slug that is already taken."""
+
+    def __init__(self, message: str = "A workspace with this slug already exists.") -> None:
+        super().__init__(message)
+
+
+class PermissionDeniedError(AppException):
+    """Raised when a user attempts an action they are not authorised to perform."""
+
+    def __init__(self, message: str = "You do not have permission to perform this action.") -> None:
+        super().__init__(message)
