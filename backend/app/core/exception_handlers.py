@@ -14,8 +14,11 @@ from app.core.exceptions import (
     InactiveUserError,
     InvalidCredentialsError,
     InvalidTokenError,
+    PermissionDeniedError,
+    SlugAlreadyExistsError,
     UserNotFoundError,
     UsernameAlreadyExistsError,
+    WorkspaceNotFoundError,
 )
 
 logger = logging.getLogger(__name__)
@@ -62,3 +65,21 @@ async def username_exists_handler(
     request: Request, exc: UsernameAlreadyExistsError
 ) -> JSONResponse:
     return _error_response(409, exc.message)
+
+
+async def workspace_not_found_handler(
+    request: Request, exc: WorkspaceNotFoundError
+) -> JSONResponse:
+    return _error_response(404, exc.message)
+
+
+async def slug_exists_handler(
+    request: Request, exc: SlugAlreadyExistsError
+) -> JSONResponse:
+    return _error_response(409, exc.message)
+
+
+async def permission_denied_handler(
+    request: Request, exc: PermissionDeniedError
+) -> JSONResponse:
+    return _error_response(403, exc.message)

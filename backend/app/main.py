@@ -9,21 +9,28 @@ from app.core.exception_handlers import (
     inactive_user_handler,
     invalid_credentials_handler,
     invalid_token_handler,
+    permission_denied_handler,
+    slug_exists_handler,
     user_not_found_handler,
     username_exists_handler,
+    workspace_not_found_handler,
 )
 from app.core.exceptions import (
     EmailAlreadyExistsError,
     InactiveUserError,
     InvalidCredentialsError,
     InvalidTokenError,
+    PermissionDeniedError,
+    SlugAlreadyExistsError,
     UserNotFoundError,
     UsernameAlreadyExistsError,
+    WorkspaceNotFoundError,
 )
 from app.core.logging import setup_logging
 from app.core.redis import redis_manager
 from app.api.health import router as health_router
 from app.api.auth import router as auth_router
+from app.api.workspace import router as workspace_router
 
 setup_logging()
 
@@ -77,6 +84,9 @@ app.add_exception_handler(InvalidTokenError, invalid_token_handler)
 app.add_exception_handler(UserNotFoundError, user_not_found_handler)
 app.add_exception_handler(EmailAlreadyExistsError, email_exists_handler)
 app.add_exception_handler(UsernameAlreadyExistsError, username_exists_handler)
+app.add_exception_handler(WorkspaceNotFoundError, workspace_not_found_handler)
+app.add_exception_handler(SlugAlreadyExistsError, slug_exists_handler)
+app.add_exception_handler(PermissionDeniedError, permission_denied_handler)
 
 # ─────────────────────────────────────────────
 # Routers
@@ -84,3 +94,4 @@ app.add_exception_handler(UsernameAlreadyExistsError, username_exists_handler)
 
 app.include_router(health_router, prefix=settings.API_V1_STR, tags=["System"])
 app.include_router(auth_router, prefix=settings.API_V1_STR)
+app.include_router(workspace_router, prefix=settings.API_V1_STR)

@@ -5,8 +5,8 @@ Reusable FastAPI dependency functions.
 
 Provides:
   - Database session injection
-  - UserRepository injection
-  - AuthService injection
+  - Repository injections (User, Workspace)
+  - Service injections (Auth, Workspace)
   - Bearer token extraction and validation (current user ID)
 """
 import uuid
@@ -19,7 +19,9 @@ from app.core.database import AsyncSessionLocal
 from app.core.exceptions import InvalidTokenError
 from app.core.security import decode_access_token
 from app.repositories.user_repository import UserRepository
+from app.repositories.workspace_repository import WorkspaceRepository
 from app.services.auth_service import AuthService
+from app.services.workspace_service import WorkspaceService
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +50,13 @@ async def get_user_repository(
     return UserRepository(db)
 
 
+async def get_workspace_repository(
+    db=Depends(get_db),
+) -> WorkspaceRepository:
+    """Construct a WorkspaceRepository bound to the current request's DB session."""
+    return WorkspaceRepository(db)
+
+
 # ─────────────────────────────────────────────
 # Service
 # ─────────────────────────────────────────────
@@ -57,6 +66,13 @@ async def get_auth_service(
 ) -> AuthService:
     """Construct an AuthService with the injected UserRepository."""
     return AuthService(repo)
+
+
+async def get_workspace_service(
+    repo: WorkspaceRepository = Depends(get_workspace_repository),
+) -> WorkspaceService:
+    """Construct a WorkspaceService with the injected WorkspaceRepository."""
+    return WorkspaceService(repo)
 
 
 # ─────────────────────────────────────────────
