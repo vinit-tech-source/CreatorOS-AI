@@ -44,7 +44,7 @@ class Workspace(Base):
 
     # Relationships
     owner: Mapped["User"] = relationship(  # noqa: F821
-        "User", foreign_keys=[owner_id], lazy="selectin"
+        "User", back_populates="workspaces", foreign_keys=[owner_id], lazy="selectin"
     )
 
     def __repr__(self) -> str:
