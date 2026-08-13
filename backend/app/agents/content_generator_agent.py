@@ -70,11 +70,11 @@ async def content_generator_agent(state: ContentWorkflowState) -> dict:
     prompt_text = generator_prompt_v1.build_user_prompt(
         user_request=user_request,
         platform=platform,
+        research_context=json.dumps(state.get("research", [])),
+        workspace_rag_context=json.dumps(state.get("rag_context", [])),
         strategy_context=json.dumps(strategy),
         trends_context=json.dumps(trends),
-        research_context=json.dumps(research),
         outline_context=json.dumps(outline),
-        workspace_context=json.dumps(state.get("workspace") or {}),
         brand_kit_context=json.dumps(state.get("brand_kit") or {})
     )
     

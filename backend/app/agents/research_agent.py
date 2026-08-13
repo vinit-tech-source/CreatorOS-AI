@@ -13,6 +13,7 @@ from app.services.ai_service import AIService
 from app.workflows.state import ContentWorkflowState
 from app.services.research_retrieval_service import ResearchRetrievalService
 from app.mcp.client.client import get_default_mcp_client
+from app.services.rag_context_service import RAGContextService
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +87,22 @@ async def research_agent(state: ContentWorkflowState) -> dict:
             raise
         raise MCPProviderError(f"Research retrieval failed: {str(e)}")
 
+    # 2. Workspace Knowledge (RAG Retrieval)
+    workspace_id = state.get("workspace", {}).get("id")
+    if workspace_id:
+        # Construct focused query from user request and strategy
+        content_goal = strategy.get("content_goal", "")
+        rag_query = f"{user_request} {content_goal}".strip()
+        
+        rag_service = RAGContextService()
+        workspace_context = await rag_service.retrieve_agent_context(
+            query=rag_query,
+            workspace_id=str(workspace_id),
+            top_k=5
+        )
+        state["rag_context"] = workspace_context
+        logger.info(f"RAG retrieval complete: {len(workspace_context)} workspace chunks found.")
+
     ai_service = await _get_service()
 
     # Build the prompt using the context from state
@@ -95,6 +112,7 @@ async def research_agent(state: ContentWorkflowState) -> dict:
         strategy_context=json.dumps(strategy),
         trends_context=json.dumps(trends),
         research_sources_context=json.dumps(state.get("research_sources") or []),
+        workspace_rag_context=json.dumps(state.get("rag_context") or []),
         workspace_context=json.dumps(state.get("workspace") or {}),
         brand_kit_context=json.dumps(state.get("brand_kit") or {})
     )
@@ -112,9 +130,13 @@ async def research_agent(state: ContentWorkflowState) -> dict:
         )
         
         # Return the dictionary portion to update state
-        # The LangGraph state defines 'research' as Annotated[List[Dict[str, Any]], operator.add]
-        # We append a single item to this list.
-        return {"research": [output.model_dump()]}
+        update_dict = {"research": [output.model_dump()]}
+        if state.get("rag_context") is not None:
+            update_dict["rag_context"] = state["rag_context"]
+        if state.get("research_sources") is not None:
+            update_dict["research_sources"] = state["research_sources"]
+            
+        return update_dict
 
     except (AIProviderError, AIValidationError) as e:
         logger.error(f"Research Agent failed due to AI error: {e}")

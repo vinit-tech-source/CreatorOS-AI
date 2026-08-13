@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     RAG_CHUNK_SIZE: int = 1000
     RAG_CHUNK_OVERLAP: int = 200
     RAG_MAX_CONTEXT_TOKENS: int = 4000
+    RAG_MIN_SCORE: float = 0.5
     REDDIT_CLIENT_ID: str = ""
     REDDIT_CLIENT_SECRET: str = ""
     

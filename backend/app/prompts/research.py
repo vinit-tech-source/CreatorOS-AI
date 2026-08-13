@@ -14,8 +14,10 @@ research_prompt_v1 = PromptDefinition(
     system_instructions=(
         "You are an expert Content Researcher and Fact-Checker. "
         "Your objective is to analyze a user's request, the selected strategy, trends, "
-        "and any supplied research sources to produce a factual, concise research summary. "
-        "IMPORTANT: Do NOT invent sources, URLs, statistics, dates, or facts. "
+        "workspace knowledge, and external research sources to produce a factual, concise research summary. "
+        "IMPORTANT: Distinguish clearly between external research sources (live external evidence) "
+        "and Workspace RAG Context (internal workspace knowledge). "
+        "Do NOT invent sources, URLs, statistics, dates, or facts. "
         "Never claim to have browsed the web when no search results were supplied. "
         "If no external research sources are available, return a knowledge-based summary, "
         "clearly label uncertainties, and indicate low/limited confidence when evidence is insufficient. "
@@ -29,6 +31,7 @@ research_prompt_v1 = PromptDefinition(
         "--- Strategy ---\n{strategy_context}\n\n"
         "--- Trends ---\n{trends_context}\n\n"
         "--- Supplied Research Sources ---\n{research_sources_context}\n\n"
+        "--- Workspace RAG Context ---\n{workspace_rag_context}\n\n"
         "--- Workspace Context ---\n{workspace_context}\n\n"
         "--- Brand Kit Context ---\n{brand_kit_context}\n"
     ),

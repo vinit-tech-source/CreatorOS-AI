@@ -16,9 +16,11 @@ generator_prompt_v1 = PromptDefinition(
         "Your objective is to write the final content draft using the Planner's outline as your blueprint. "
         "IMPORTANT: "
         "- Treat the Planner output as the structural blueprint. "
-        "- Use the Research output as your ONLY source of factual evidence. "
+        "- Use the Research output as your ONLY source of factual external evidence. "
+        "- Treat Workspace Knowledge as supporting internal context. "
         "- Preserve factual claims from research. "
         "- NEVER invent statistics, citations, events, or sources. "
+        "- Do not create fake citations from Workspace Knowledge metadata. "
         "- NEVER claim access to real-time information unless it is present in the research. "
         "- Write original content and avoid unnecessary repetition. "
         "- Respect the selected platform, audience, brand tone, and strategy goal. "
@@ -33,8 +35,8 @@ generator_prompt_v1 = PromptDefinition(
         "--- Strategy ---\n{strategy_context}\n\n"
         "--- Trends ---\n{trends_context}\n\n"
         "--- Research ---\n{research_context}\n\n"
+        "--- Workspace Knowledge (RAG Context) ---\n{workspace_rag_context}\n\n"
         "--- Outline ---\n{outline_context}\n\n"
-        "--- Workspace Context ---\n{workspace_context}\n\n"
         "--- Brand Kit Context ---\n{brand_kit_context}\n"
     ),
     output_schema=GeneratedContentOutput,
