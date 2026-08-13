@@ -25,13 +25,20 @@ class Settings(BaseSettings):
     MCP_LOG_TOOL_CALLS: bool = True
     
     # Provider Flags (Prepared for future MCP integration)
+    # Optional: Research Provider Flags (MCP)
     YOUTUBE_ENABLED: bool = False
     YOUTUBE_API_KEY: str = ""
     YOUTUBE_MAX_RESULTS: int = 10
     
     BLUESKY_ENABLED: bool = False
-    
     REDDIT_ENABLED: bool = False
+    
+    # RAG Settings
+    RAG_ENABLED: bool = True
+    RAG_TOP_K: int = 5
+    RAG_CHUNK_SIZE: int = 1000
+    RAG_CHUNK_OVERLAP: int = 200
+    RAG_MAX_CONTEXT_TOKENS: int = 4000
     REDDIT_CLIENT_ID: str = ""
     REDDIT_CLIENT_SECRET: str = ""
     
