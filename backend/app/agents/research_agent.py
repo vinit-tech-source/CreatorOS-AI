@@ -11,6 +11,8 @@ from app.core.exceptions import AIProviderError, AIValidationError
 from app.prompts.research import research_prompt_v1
 from app.services.ai_service import AIService
 from app.workflows.state import ContentWorkflowState
+from app.services.research_retrieval_service import ResearchRetrievalService
+from app.mcp.client.client import get_default_mcp_client
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +56,36 @@ async def research_agent(state: ContentWorkflowState) -> dict:
     if not trends:
         raise ValueError("Missing 'trends' in workflow state.")
         
+    # 1. MCP Research Retrieval
+    retrieval_service = ResearchRetrievalService(get_default_mcp_client())
+    
+    # We'll build a controlled query from the user request
+    # and select platforms from configuration (hardcoded to standard 3 for this foundation)
+    platforms_to_search = ["youtube", "bluesky", "reddit"]
+    
+    # Ensure research_sources is initialized in state
+    if state.get("research_sources") is None:
+        state["research_sources"] = []
+        
+    try:
+        sources, metadata = await retrieval_service.search_research_sources(
+            query=user_request,
+            platforms=platforms_to_search,
+            max_results=15
+        )
+        # Update state with the normalized research items
+        state["research_sources"].extend(sources)
+        logger.info(f"Research retrieval complete: {len(sources)} items returned. Metadata: {metadata}")
+    except Exception as e:
+        logger.error(f"Research retrieval failed entirely: {str(e)}")
+        # We record the error but don't fail the agent if we have enough context from Strategy/Trends
+        # Or we could raise depending on strictness. The prompt says "Raise a controlled research retrieval exception"
+        # "If all providers fail: Raise a controlled research retrieval exception."
+        from app.mcp.exceptions.exceptions import MCPProviderError
+        if isinstance(e, MCPProviderError):
+            raise
+        raise MCPProviderError(f"Research retrieval failed: {str(e)}")
+
     ai_service = await _get_service()
 
     # Build the prompt using the context from state

@@ -3,7 +3,7 @@ tests/test_research_agent.py
 
 Tests for the AI Research Agent.
 """
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 import uuid
 
 import pytest
@@ -23,6 +23,16 @@ def mock_ai_service():
     research_agent._ai_service_instance = service
     yield service
     research_agent._ai_service_instance = None
+
+
+@pytest.fixture(autouse=True)
+def mock_retrieval_service():
+    """Mock the ResearchRetrievalService to avoid real MCP tool calls during agent tests."""
+    with patch("app.agents.research_agent.ResearchRetrievalService") as mock:
+        mock_instance = mock.return_value
+        # By default, pretend it successfully fetched an empty list
+        mock_instance.search_research_sources = AsyncMock(return_value=([], {"status": "mocked"}))
+        yield mock_instance
 
 
 @pytest.fixture

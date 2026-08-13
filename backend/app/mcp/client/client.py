@@ -87,3 +87,17 @@ class MCPClient:
             if isinstance(e, (MCPToolPermissionError, MCPToolValidationError, MCPConnectionError)):
                 raise
             raise MCPToolExecutionError(f"Error calling tool {tool_name}: {str(e)}")
+
+
+def get_default_mcp_client() -> MCPClient:
+    """
+    Helper to instantiate a fully configured MCPClient with the Research Server.
+    """
+    from app.mcp.client.registry import MCPServerRegistry
+    from app.mcp.servers.research_server import ResearchServer
+    
+    registry = MCPServerRegistry()
+    registry.register_server(ResearchServer())
+    
+    from app.core.config import settings
+    return MCPClient(registry=registry, default_timeout=settings.MCP_DEFAULT_TIMEOUT)
