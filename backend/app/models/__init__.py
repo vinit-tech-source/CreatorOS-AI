@@ -5,6 +5,7 @@ from .brand_kit import BrandKit
 from .social_account import SocialAccount, SocialPlatform
 from .project import Project, ProjectStatus
 from .post import Post, ContentType, PostStatus
+from .media_asset import MediaAsset, MediaType
 
 __all__ = [
     "Base",
@@ -19,4 +20,6 @@ __all__ = [
     "Post",
     "ContentType",
     "PostStatus",
+    "MediaAsset",
+    "MediaType",
 ]

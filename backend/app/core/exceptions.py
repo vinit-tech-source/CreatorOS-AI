@@ -159,3 +159,14 @@ class InvalidStatusTransitionError(AppException):
 
     def __init__(self, message: str = "Invalid status transition.") -> None:
         super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# MediaAsset Exceptions
+# ─────────────────────────────────────────────
+
+class MediaAssetNotFoundError(AppException):
+    """Raised when a requested media asset does not exist."""
+
+    def __init__(self, message: str = "Media asset not found.") -> None:
+        super().__init__(message)

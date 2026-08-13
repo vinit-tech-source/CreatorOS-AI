@@ -30,12 +30,15 @@ from app.repositories.project_repository import ProjectRepository
 from app.repositories.project_repository_interface import AbstractProjectRepository
 from app.repositories.post_repository import PostRepository
 from app.repositories.post_repository_interface import AbstractPostRepository
+from app.repositories.media_asset_repository import MediaAssetRepository
+from app.repositories.media_asset_repository_interface import AbstractMediaAssetRepository
 from app.services.auth_service import AuthService
 from app.services.workspace_service import WorkspaceService
 from app.services.brand_kit_service import BrandKitService
 from app.services.social_account_service import SocialAccountService
 from app.services.project_service import ProjectService
 from app.services.post_service import PostService
+from app.services.media_asset_service import MediaAssetService
 
 logger = logging.getLogger(__name__)
 
@@ -155,6 +158,28 @@ async def get_post_service(
         post_repository=post_repo,
         project_repository=proj_repo,
         workspace_repository=ws_repo,
+    )
+
+
+async def get_media_asset_repository(
+    db=Depends(get_db),
+) -> AbstractMediaAssetRepository:
+    """Construct a MediaAssetRepository bound to the current DB session."""
+    return MediaAssetRepository(db)
+
+
+async def get_media_asset_service(
+    media_repo: AbstractMediaAssetRepository = Depends(get_media_asset_repository),
+    post_repo: AbstractPostRepository = Depends(get_post_repository),
+    proj_repo: AbstractProjectRepository = Depends(get_project_repository),
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+) -> MediaAssetService:
+    """Construct a MediaAssetService with injected repos."""
+    return MediaAssetService(
+        media_repo=media_repo,
+        post_repo=post_repo,
+        project_repo=proj_repo,
+        ws_repo=ws_repo,
     )
 
 

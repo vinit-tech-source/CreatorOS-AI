@@ -106,6 +106,9 @@ class Post(Base):
         foreign_keys=[project_id],
         lazy="selectin",
     )
+    media_assets: Mapped[list["MediaAsset"]] = relationship(  # noqa: F821
+        "MediaAsset", back_populates="post"
+    )
 
     def __repr__(self) -> str:
         return f"<Post id={self.id} project={self.project_id} platform={self.platform.value} status={self.status.value}>"

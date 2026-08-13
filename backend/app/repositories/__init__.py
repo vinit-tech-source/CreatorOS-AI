@@ -10,6 +10,8 @@ from .project_repository import ProjectRepository
 from .project_repository_interface import AbstractProjectRepository
 from .post_repository import PostRepository
 from .post_repository_interface import AbstractPostRepository
+from .media_asset_repository import MediaAssetRepository
+from .media_asset_repository_interface import AbstractMediaAssetRepository
 
 __all__ = [
     "UserRepository",
@@ -24,4 +26,6 @@ __all__ = [
     "AbstractProjectRepository",
     "PostRepository",
     "AbstractPostRepository",
+    "MediaAssetRepository",
+    "AbstractMediaAssetRepository",
 ]

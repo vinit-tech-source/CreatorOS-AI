@@ -55,6 +55,9 @@ class Workspace(Base):
     projects: Mapped[list["Project"]] = relationship(  # noqa: F821
         "Project", back_populates="workspace", cascade="all, delete-orphan"
     )
+    media_assets: Mapped[list["MediaAsset"]] = relationship(  # noqa: F821
+        "MediaAsset", back_populates="workspace", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<Workspace id={self.id} slug={self.slug} owner={self.owner_id}>"

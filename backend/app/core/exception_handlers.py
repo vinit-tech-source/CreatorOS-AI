@@ -17,6 +17,7 @@ from app.core.exceptions import (
     InvalidCredentialsError,
     InvalidStatusTransitionError,
     InvalidTokenError,
+    MediaAssetNotFoundError,
     PermissionDeniedError,
     PostNotFoundError,
     ProjectNotFoundError,
@@ -139,3 +140,9 @@ async def invalid_status_transition_handler(
     request: Request, exc: InvalidStatusTransitionError
 ) -> JSONResponse:
     return _error_response(400, exc.message)
+
+
+async def media_asset_not_found_handler(
+    request: Request, exc: MediaAssetNotFoundError
+) -> JSONResponse:
+    return _error_response(404, exc.message)

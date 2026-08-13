@@ -12,6 +12,7 @@ from app.core.exception_handlers import (
     invalid_credentials_handler,
     invalid_status_transition_handler,
     invalid_token_handler,
+    media_asset_not_found_handler,
     permission_denied_handler,
     post_not_found_handler,
     project_not_found_handler,
@@ -31,6 +32,7 @@ from app.core.exceptions import (
     InvalidCredentialsError,
     InvalidStatusTransitionError,
     InvalidTokenError,
+    MediaAssetNotFoundError,
     PermissionDeniedError,
     PostNotFoundError,
     ProjectNotFoundError,
@@ -51,6 +53,7 @@ from app.api.brand_kit import router as brand_kit_router
 from app.api.social_accounts import router as social_accounts_router
 from app.api.projects import router as projects_router
 from app.api.posts import router as posts_router
+from app.api.media import router as media_router
 
 setup_logging()
 
@@ -115,6 +118,7 @@ app.add_exception_handler(ProjectNotFoundError, project_not_found_handler)
 app.add_exception_handler(ProjectSlugAlreadyExistsError, project_slug_already_exists_handler)
 app.add_exception_handler(PostNotFoundError, post_not_found_handler)
 app.add_exception_handler(InvalidStatusTransitionError, invalid_status_transition_handler)
+app.add_exception_handler(MediaAssetNotFoundError, media_asset_not_found_handler)
 
 # ─────────────────────────────────────────────
 # Routers
@@ -127,3 +131,4 @@ app.include_router(brand_kit_router, prefix=settings.API_V1_STR)
 app.include_router(social_accounts_router, prefix=settings.API_V1_STR)
 app.include_router(projects_router, prefix=settings.API_V1_STR)
 app.include_router(posts_router, prefix=settings.API_V1_STR)
+app.include_router(media_router, prefix=settings.API_V1_STR)
