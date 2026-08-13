@@ -86,11 +86,12 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent
+    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent
     from app.schemas.ai.strategy import StrategyOutput
     from app.schemas.ai.trend import TrendOutput, TrendItem
     from app.schemas.ai.research import ResearchOutput, ResearchSource
     from app.schemas.ai.content_plan import ContentPlanOutput, ContentSection
+    from app.schemas.ai.generated_content import GeneratedContentOutput
 
     mock_strategy_service = AsyncMock()
     mock_strategy_service.generate_structured.return_value = StrategyOutput(
@@ -143,6 +144,20 @@ async def test_langgraph_workflow_execution(monkeypatch):
         constraints=[]
     )
     monkeypatch.setattr(content_planner_agent, "_ai_service_instance", mock_planner_service)
+    
+    mock_generator_service = AsyncMock()
+    mock_generator_service.generate_structured.return_value = GeneratedContentOutput(
+        title="Test Title",
+        content="Generated post content.",
+        content_type="Post",
+        platform="X",
+        language="En",
+        hashtags=["#Test"],
+        call_to_action=None,
+        character_count=0,
+        word_count=0
+    )
+    monkeypatch.setattr(content_generator_agent, "_ai_service_instance", mock_generator_service)
 
     graph = build_content_workflow()
     
@@ -177,5 +192,10 @@ async def test_langgraph_workflow_execution(monkeypatch):
     
     assert "outline" in final_state
     assert final_state["outline"]["title"] == "Test Title"
+    
+    assert "draft" in final_state
+    assert final_state["draft"]["content"] == "Generated post content."
+    assert final_state["draft"]["character_count"] == 23
+    assert final_state["draft"]["word_count"] == 3
     
     assert final_state["user_request"] == "Test"

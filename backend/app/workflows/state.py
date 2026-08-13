@@ -33,7 +33,7 @@ class ContentWorkflowState(TypedDict):
     
     # Drafting Phase
     outline: Optional[Dict[str, Any]]
-    draft: Optional[str]
+    draft: Optional[Dict[str, Any]]
     
     # Refinement Phase
     optimized_content: Optional[str]
