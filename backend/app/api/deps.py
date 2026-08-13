@@ -22,8 +22,11 @@ from app.repositories.user_repository import UserRepository
 from app.repositories.user_repository_interface import AbstractUserRepository
 from app.repositories.workspace_repository import WorkspaceRepository
 from app.repositories.workspace_repository_interface import AbstractWorkspaceRepository
+from app.repositories.brand_kit_repository import BrandKitRepository
+from app.repositories.brand_kit_repository_interface import AbstractBrandKitRepository
 from app.services.auth_service import AuthService
 from app.services.workspace_service import WorkspaceService
+from app.services.brand_kit_service import BrandKitService
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +78,21 @@ async def get_workspace_service(
 ) -> WorkspaceService:
     """Construct a WorkspaceService with the injected WorkspaceRepository."""
     return WorkspaceService(repo)
+
+
+async def get_brand_kit_repository(
+    db=Depends(get_db),
+) -> AbstractBrandKitRepository:
+    """Construct a BrandKitRepository bound to the current request's DB session."""
+    return BrandKitRepository(db)
+
+
+async def get_brand_kit_service(
+    bk_repo: AbstractBrandKitRepository = Depends(get_brand_kit_repository),
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+) -> BrandKitService:
+    """Construct a BrandKitService with injected BrandKit and Workspace repositories."""
+    return BrandKitService(brand_kit_repository=bk_repo, workspace_repository=ws_repo)
 
 
 # ─────────────────────────────────────────────

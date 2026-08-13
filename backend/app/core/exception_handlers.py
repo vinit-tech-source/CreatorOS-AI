@@ -10,6 +10,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 
 from app.core.exceptions import (
+    BrandKitAlreadyExistsError,
+    BrandKitNotFoundError,
     EmailAlreadyExistsError,
     InactiveUserError,
     InvalidCredentialsError,
@@ -83,3 +85,15 @@ async def permission_denied_handler(
     request: Request, exc: PermissionDeniedError
 ) -> JSONResponse:
     return _error_response(403, exc.message)
+
+
+async def brand_kit_not_found_handler(
+    request: Request, exc: BrandKitNotFoundError
+) -> JSONResponse:
+    return _error_response(404, exc.message)
+
+
+async def brand_kit_already_exists_handler(
+    request: Request, exc: BrandKitAlreadyExistsError
+) -> JSONResponse:
+    return _error_response(409, exc.message)

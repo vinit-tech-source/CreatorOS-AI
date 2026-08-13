@@ -87,3 +87,21 @@ class PermissionDeniedError(AppException):
 
     def __init__(self, message: str = "You do not have permission to perform this action.") -> None:
         super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# Brand Kit Exceptions
+# ─────────────────────────────────────────────
+
+class BrandKitNotFoundError(AppException):
+    """Raised when a requested Brand Kit does not exist."""
+
+    def __init__(self, message: str = "Brand Kit not found.") -> None:
+        super().__init__(message)
+
+
+class BrandKitAlreadyExistsError(AppException):
+    """Raised when attempting to create a Brand Kit for a workspace that already has one."""
+
+    def __init__(self, message: str = "A Brand Kit already exists for this workspace.") -> None:
+        super().__init__(message)

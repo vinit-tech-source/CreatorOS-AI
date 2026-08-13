@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.exception_handlers import (
+    brand_kit_already_exists_handler,
+    brand_kit_not_found_handler,
     email_exists_handler,
     inactive_user_handler,
     invalid_credentials_handler,
@@ -16,6 +18,8 @@ from app.core.exception_handlers import (
     workspace_not_found_handler,
 )
 from app.core.exceptions import (
+    BrandKitAlreadyExistsError,
+    BrandKitNotFoundError,
     EmailAlreadyExistsError,
     InactiveUserError,
     InvalidCredentialsError,
@@ -31,6 +35,7 @@ from app.core.redis import redis_manager
 from app.api.health import router as health_router
 from app.api.auth import router as auth_router
 from app.api.workspace import router as workspace_router
+from app.api.brand_kit import router as brand_kit_router
 
 setup_logging()
 
@@ -87,6 +92,8 @@ app.add_exception_handler(UsernameAlreadyExistsError, username_exists_handler)
 app.add_exception_handler(WorkspaceNotFoundError, workspace_not_found_handler)
 app.add_exception_handler(SlugAlreadyExistsError, slug_exists_handler)
 app.add_exception_handler(PermissionDeniedError, permission_denied_handler)
+app.add_exception_handler(BrandKitNotFoundError, brand_kit_not_found_handler)
+app.add_exception_handler(BrandKitAlreadyExistsError, brand_kit_already_exists_handler)
 
 # ─────────────────────────────────────────────
 # Routers
@@ -95,3 +102,4 @@ app.add_exception_handler(PermissionDeniedError, permission_denied_handler)
 app.include_router(health_router, prefix=settings.API_V1_STR, tags=["System"])
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(workspace_router, prefix=settings.API_V1_STR)
+app.include_router(brand_kit_router, prefix=settings.API_V1_STR)

@@ -46,6 +46,9 @@ class Workspace(Base):
     owner: Mapped["User"] = relationship(  # noqa: F821
         "User", back_populates="workspaces", foreign_keys=[owner_id], lazy="selectin"
     )
+    brand_kit: Mapped["BrandKit | None"] = relationship(  # noqa: F821
+        "BrandKit", back_populates="workspace", uselist=False, cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<Workspace id={self.id} slug={self.slug} owner={self.owner_id}>"
