@@ -24,6 +24,7 @@ class ContentWorkflowState(TypedDict):
     # Input
     user_request: str
     platform: str
+    research_sources: Optional[List[Dict[str, Any]]]
     
     # Research & Strategy Phase
     strategy: Optional[Dict[str, Any]]

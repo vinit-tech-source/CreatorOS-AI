@@ -86,9 +86,10 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent, trend_agent
+    from app.agents import strategy_agent, trend_agent, research_agent
     from app.schemas.ai.strategy import StrategyOutput
     from app.schemas.ai.trend import TrendOutput, TrendItem
+    from app.schemas.ai.research import ResearchOutput, ResearchSource
 
     mock_strategy_service = AsyncMock()
     mock_strategy_service.generate_structured.return_value = StrategyOutput(
@@ -112,6 +113,16 @@ async def test_langgraph_workflow_execution(monkeypatch):
         trend_summary="Summary"
     )
     monkeypatch.setattr(trend_agent, "_ai_service_instance", mock_trend_service)
+    
+    mock_research_service = AsyncMock()
+    mock_research_service.generate_structured.return_value = ResearchOutput(
+        summary="AI is growing.",
+        key_facts=["Fact 1"],
+        sources=[],
+        uncertainties=[],
+        research_confidence=0.9
+    )
+    monkeypatch.setattr(research_agent, "_ai_service_instance", mock_research_service)
 
     graph = build_content_workflow()
     
@@ -139,5 +150,9 @@ async def test_langgraph_workflow_execution(monkeypatch):
     assert "trends" in final_state
     assert len(final_state["trends"]) == 1
     assert final_state["trends"][0]["trend_summary"] == "Summary"
+    
+    assert "research" in final_state
+    assert len(final_state["research"]) == 1
+    assert final_state["research"][0]["summary"] == "AI is growing."
     
     assert final_state["user_request"] == "Test"
