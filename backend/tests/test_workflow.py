@@ -86,10 +86,11 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent, trend_agent, research_agent
+    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent
     from app.schemas.ai.strategy import StrategyOutput
     from app.schemas.ai.trend import TrendOutput, TrendItem
     from app.schemas.ai.research import ResearchOutput, ResearchSource
+    from app.schemas.ai.content_plan import ContentPlanOutput, ContentSection
 
     mock_strategy_service = AsyncMock()
     mock_strategy_service.generate_structured.return_value = StrategyOutput(
@@ -124,6 +125,25 @@ async def test_langgraph_workflow_execution(monkeypatch):
     )
     monkeypatch.setattr(research_agent, "_ai_service_instance", mock_research_service)
 
+    mock_planner_service = AsyncMock()
+    mock_planner_service.generate_structured.return_value = ContentPlanOutput(
+        title="Test Title",
+        content_goal="Educate",
+        hook="Hook",
+        sections=[
+            ContentSection(heading="A", objective="A", key_points=["A"], estimated_length=10),
+            ContentSection(heading="B", objective="B", key_points=["B"], estimated_length=10)
+        ],
+        key_message="Message",
+        call_to_action="CTA",
+        content_type="Thread",
+        tone="Tone",
+        platform="X",
+        language="En",
+        constraints=[]
+    )
+    monkeypatch.setattr(content_planner_agent, "_ai_service_instance", mock_planner_service)
+
     graph = build_content_workflow()
     
     workspace = Workspace()
@@ -154,5 +174,8 @@ async def test_langgraph_workflow_execution(monkeypatch):
     assert "research" in final_state
     assert len(final_state["research"]) == 1
     assert final_state["research"][0]["summary"] == "AI is growing."
+    
+    assert "outline" in final_state
+    assert final_state["outline"]["title"] == "Test Title"
     
     assert final_state["user_request"] == "Test"

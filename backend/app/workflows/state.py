@@ -32,7 +32,7 @@ class ContentWorkflowState(TypedDict):
     research: Annotated[List[Dict[str, Any]], operator.add]
     
     # Drafting Phase
-    outline: Optional[str]
+    outline: Optional[Dict[str, Any]]
     draft: Optional[str]
     
     # Refinement Phase
