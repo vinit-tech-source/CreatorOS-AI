@@ -86,7 +86,7 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent, brand_voice_agent, fact_checker_agent
+    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent, brand_voice_agent, fact_checker_agent, seo_agent
     from app.schemas.ai.strategy import StrategyOutput
     from app.schemas.ai.trend import TrendOutput, TrendItem
     from app.schemas.ai.research import ResearchOutput, ResearchSource
@@ -94,6 +94,7 @@ async def test_langgraph_workflow_execution(monkeypatch):
     from app.schemas.ai.generated_content import GeneratedContentOutput
     from app.schemas.ai.brand_voice import BrandVoiceOutput, BrandVoiceIssue, IssueSeverity
     from app.schemas.ai.fact_check import FactCheckOutput, OverallStatus
+    from app.schemas.ai.seo import SEOOutput
 
     mock_strategy_service = AsyncMock()
     mock_strategy_service.generate_structured.return_value = StrategyOutput(
@@ -181,6 +182,17 @@ async def test_langgraph_workflow_execution(monkeypatch):
         recommendations=[]
     )
     monkeypatch.setattr(fact_checker_agent, "_ai_service_instance", mock_fact_checker_service)
+    
+    mock_seo_service = AsyncMock()
+    mock_seo_service.generate_structured.return_value = SEOOutput(
+        optimized_content="Fully optimized post content.",
+        seo_score=0.95,
+        primary_keywords=["AI"],
+        secondary_keywords=[],
+        recommendations=[],
+        changes=[]
+    )
+    monkeypatch.setattr(seo_agent, "_ai_service_instance", mock_seo_service)
 
     graph = build_content_workflow()
     
@@ -231,12 +243,15 @@ async def test_langgraph_workflow_execution(monkeypatch):
     assert final_state["draft"]["word_count"] == 3
     
     assert "optimized_content" in final_state
-    assert final_state["optimized_content"] == "Optimized post content."
+    assert final_state["optimized_content"] == "Fully optimized post content."
     assert "brand_voice" in final_state
     assert final_state["brand_voice"]["brand_score"] == 0.9
     
     assert "fact_check" in final_state
     assert final_state["fact_check"]["overall_status"] == "PASSED"
     assert final_state["fact_check"]["confidence"] == 0.9
+    
+    assert "seo" in final_state
+    assert final_state["seo"]["seo_score"] == 0.95
     
     assert final_state["user_request"] == "Test"
