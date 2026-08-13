@@ -14,9 +14,10 @@ from app.agents.content_generator_agent import content_generator_agent
 from app.agents.brand_voice_agent import brand_voice_agent
 from app.agents.fact_checker_agent import fact_checker_agent
 from app.agents.seo_agent import seo_agent
+from app.agents.hashtag_agent import hashtag_agent
 from app.schemas.ai.fact_check import OverallStatus
 
-def route_after_fact_check(state: ContentWorkflowState) -> str:
+def route_after_seo(state: ContentWorkflowState) -> str:
     """Determine the next node based on the Fact Checker's overall status."""
     fact_check = state.get("fact_check")
     if not fact_check:
@@ -24,7 +25,7 @@ def route_after_fact_check(state: ContentWorkflowState) -> str:
         
     status = fact_check.get("overall_status")
     if status == OverallStatus.PASSED.value:
-        return END
+        return "hashtag_agent"
     elif status == OverallStatus.NEEDS_REVIEW.value:
         return END
     elif status == OverallStatus.FAILED.value:
@@ -47,6 +48,7 @@ def build_content_workflow() -> StateGraph:
     workflow.add_node("brand_voice_agent", brand_voice_agent)
     workflow.add_node("fact_checker_agent", fact_checker_agent)
     workflow.add_node("seo_agent", seo_agent)
+    workflow.add_node("hashtag_agent", hashtag_agent)
     
     workflow.add_edge(START, "strategy_agent")
     workflow.add_edge("strategy_agent", "trend_agent")
@@ -59,8 +61,9 @@ def build_content_workflow() -> StateGraph:
     
     workflow.add_conditional_edges(
         "seo_agent",
-        route_after_fact_check
+        route_after_seo
     )
+    workflow.add_edge("hashtag_agent", END)
     
     return workflow.compile()
 
