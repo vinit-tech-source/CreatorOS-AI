@@ -41,7 +41,7 @@ class ContentWorkflowState(TypedDict):
     fact_check: Optional[Dict[str, Any]]
     seo: Optional[Dict[str, Any]]
     hashtags: Annotated[List[str], operator.add]
-    image_prompt: Optional[str]
+    image_prompt: Optional[Dict[str, Any]]
     
     # Execution Phase
     schedule: Optional[Dict[str, Any]]

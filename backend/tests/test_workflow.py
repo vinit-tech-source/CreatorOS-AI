@@ -86,7 +86,7 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent, brand_voice_agent, fact_checker_agent, seo_agent, hashtag_agent
+    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent, brand_voice_agent, fact_checker_agent, seo_agent, hashtag_agent, image_prompt_agent
     from app.schemas.ai.strategy import StrategyOutput
     from app.schemas.ai.trend import TrendOutput, TrendItem
     from app.schemas.ai.research import ResearchOutput, ResearchSource
@@ -96,6 +96,7 @@ async def test_langgraph_workflow_execution(monkeypatch):
     from app.schemas.ai.fact_check import FactCheckOutput, OverallStatus
     from app.schemas.ai.seo import SEOOutput
     from app.schemas.ai.hashtag import HashtagOutput, HashtagItem
+    from app.schemas.ai.image_prompt import ImagePromptOutput
 
     mock_strategy_service = AsyncMock()
     mock_strategy_service.generate_structured.return_value = StrategyOutput(
@@ -203,6 +204,21 @@ async def test_langgraph_workflow_execution(monkeypatch):
         recommendations=[]
     )
     monkeypatch.setattr(hashtag_agent, "_ai_service_instance", mock_hashtag_service)
+    
+    mock_image_prompt_service = AsyncMock()
+    mock_image_prompt_service.generate_structured.return_value = ImagePromptOutput(
+        prompt="A nice image.",
+        negative_prompt="",
+        visual_style="Art",
+        composition="Center",
+        aspect_ratio="16:9",
+        lighting="Bright",
+        color_palette="Blue",
+        subject="Sky",
+        platform="X",
+        accessibility_description="A sky"
+    )
+    monkeypatch.setattr(image_prompt_agent, "_ai_service_instance", mock_image_prompt_service)
 
     graph = build_content_workflow()
     
@@ -267,5 +283,8 @@ async def test_langgraph_workflow_execution(monkeypatch):
     assert "hashtags" in final_state
     assert len(final_state["hashtags"]) == 1
     assert "#Test" in final_state["hashtags"][0]["primary_hashtags"]
+    
+    assert "image_prompt" in final_state
+    assert final_state["image_prompt"]["prompt"] == "A nice image."
     
     assert final_state["user_request"] == "Test"

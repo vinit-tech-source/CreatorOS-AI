@@ -15,6 +15,7 @@ from app.agents.brand_voice_agent import brand_voice_agent
 from app.agents.fact_checker_agent import fact_checker_agent
 from app.agents.seo_agent import seo_agent
 from app.agents.hashtag_agent import hashtag_agent
+from app.agents.image_prompt_agent import image_prompt_agent
 from app.schemas.ai.fact_check import OverallStatus
 
 def route_after_seo(state: ContentWorkflowState) -> str:
@@ -49,6 +50,7 @@ def build_content_workflow() -> StateGraph:
     workflow.add_node("fact_checker_agent", fact_checker_agent)
     workflow.add_node("seo_agent", seo_agent)
     workflow.add_node("hashtag_agent", hashtag_agent)
+    workflow.add_node("image_prompt_agent", image_prompt_agent)
     
     workflow.add_edge(START, "strategy_agent")
     workflow.add_edge("strategy_agent", "trend_agent")
@@ -63,7 +65,8 @@ def build_content_workflow() -> StateGraph:
         "seo_agent",
         route_after_seo
     )
-    workflow.add_edge("hashtag_agent", END)
+    workflow.add_edge("hashtag_agent", "image_prompt_agent")
+    workflow.add_edge("image_prompt_agent", END)
     
     return workflow.compile()
 
