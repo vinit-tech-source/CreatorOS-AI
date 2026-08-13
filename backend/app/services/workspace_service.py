@@ -5,7 +5,7 @@ Workspace business logic for CreatorOS AI.
 
 Responsibilities:
   - Create workspace (with slug uniqueness validation)
-  - Retrieve a single workspace
+  - Retrieve a single workspace (owner-only)
   - List workspaces owned by a user
   - Update workspace (owner-only)
   - Delete workspace (owner-only)
@@ -14,6 +14,12 @@ Does NOT handle:
   - FastAPI request/response
   - Database session management (injected via repository)
   - Brand Kit or social media integrations
+
+Authorization:
+  - Every operation that reads or mutates a specific workspace validates
+    that the requesting user is the workspace owner before proceeding.
+  - For read operations, non-existence and non-ownership both surface as
+    WorkspaceNotFoundError to avoid revealing whether a workspace exists.
 """
 import uuid
 import logging
@@ -23,7 +29,7 @@ from app.core.exceptions import (
     SlugAlreadyExistsError,
     WorkspaceNotFoundError,
 )
-from app.repositories.workspace_repository import WorkspaceRepository
+from app.repositories.workspace_repository_interface import AbstractWorkspaceRepository
 from app.schemas.workspace import WorkspaceCreate, WorkspaceResponse, WorkspaceUpdate
 
 logger = logging.getLogger(__name__)
@@ -37,7 +43,7 @@ class WorkspaceService:
     Raises application-level exceptions; the API layer maps these to HTTP responses.
     """
 
-    def __init__(self, workspace_repository: WorkspaceRepository) -> None:
+    def __init__(self, workspace_repository: AbstractWorkspaceRepository) -> None:
         self._repo = workspace_repository
 
     # ─────────────────────────────────────────────
@@ -81,22 +87,41 @@ class WorkspaceService:
     # Read (single)
     # ─────────────────────────────────────────────
 
-    async def get_workspace(self, workspace_id: uuid.UUID) -> WorkspaceResponse:
+    async def get_workspace(
+        self,
+        workspace_id: uuid.UUID,
+        requesting_user_id: uuid.UUID,
+    ) -> WorkspaceResponse:
         """
         Retrieve a workspace by its UUID.
 
+        Only the workspace owner is allowed to read the workspace.
+        Non-existence and non-ownership both raise WorkspaceNotFoundError
+        to avoid revealing whether a workspace with this ID exists.
+
         Args:
-            workspace_id: UUID of the workspace to retrieve.
+            workspace_id:       UUID of the workspace to retrieve.
+            requesting_user_id: UUID of the authenticated user making the request.
 
         Returns:
             WorkspaceResponse for the workspace.
 
         Raises:
-            WorkspaceNotFoundError: If no workspace exists with the given ID.
+            WorkspaceNotFoundError: If no workspace exists with the given ID, or if
+                                    the workspace is not owned by the requesting user.
         """
         workspace = await self._repo.get_by_id(workspace_id)
         if workspace is None:
             raise WorkspaceNotFoundError()
+
+        if workspace.owner_id != requesting_user_id:
+            logger.warning(
+                f"Unauthorized read attempt: user={requesting_user_id} tried to access "
+                f"workspace={workspace_id} owned by {workspace.owner_id}"
+            )
+            # Return 404 (not 403) to avoid confirming the workspace exists
+            raise WorkspaceNotFoundError()
+
         return WorkspaceResponse.model_validate(workspace)
 
     # ─────────────────────────────────────────────

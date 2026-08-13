@@ -61,8 +61,14 @@ class WorkspaceRepository(AbstractWorkspaceRepository):
         return list(result.scalars().all())
 
     async def update(self, workspace: Workspace, data: WorkspaceUpdate) -> Workspace:
-        """Apply partial updates from WorkspaceUpdate schema to an existing Workspace."""
-        update_data = data.model_dump(exclude_none=True)
+        """Apply partial updates from WorkspaceUpdate schema to an existing Workspace.
+
+        Uses exclude_unset=True so that:
+          - Omitted fields are left unchanged.
+          - Explicitly provided null values (e.g. {"logo_url": null}) correctly
+            clear nullable fields on the model.
+        """
+        update_data = data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(workspace, field, value)
         self.session.add(workspace)

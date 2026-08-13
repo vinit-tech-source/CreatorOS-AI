@@ -19,7 +19,9 @@ from app.core.database import AsyncSessionLocal
 from app.core.exceptions import InvalidTokenError
 from app.core.security import decode_access_token
 from app.repositories.user_repository import UserRepository
+from app.repositories.user_repository_interface import AbstractUserRepository
 from app.repositories.workspace_repository import WorkspaceRepository
+from app.repositories.workspace_repository_interface import AbstractWorkspaceRepository
 from app.services.auth_service import AuthService
 from app.services.workspace_service import WorkspaceService
 
@@ -52,7 +54,7 @@ async def get_user_repository(
 
 async def get_workspace_repository(
     db=Depends(get_db),
-) -> WorkspaceRepository:
+) -> AbstractWorkspaceRepository:
     """Construct a WorkspaceRepository bound to the current request's DB session."""
     return WorkspaceRepository(db)
 

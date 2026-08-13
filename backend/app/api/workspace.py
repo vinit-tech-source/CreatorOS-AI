@@ -78,7 +78,10 @@ async def get_workspace(
     user_id: uuid.UUID = Depends(get_current_user_id),
     workspace_service: WorkspaceService = Depends(get_workspace_service),
 ) -> ApiResponse[WorkspaceResponse]:
-    workspace = await workspace_service.get_workspace(workspace_id)
+    workspace = await workspace_service.get_workspace(
+        workspace_id=workspace_id,
+        requesting_user_id=user_id,
+    )
     return ApiResponse.ok(data=workspace)
 
 

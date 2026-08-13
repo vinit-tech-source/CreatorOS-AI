@@ -42,7 +42,12 @@ class WorkspaceCreate(BaseModel):
 
 
 class WorkspaceUpdate(BaseModel):
-    """Schema for updating an existing workspace. All fields are optional."""
+    """Schema for updating an existing workspace. All fields are optional.
+
+    Note: `slug` is intentionally excluded. Slugs are immutable after creation
+    to prevent breaking existing URLs and external integrations that reference
+    the workspace by slug.
+    """
     name: Optional[str] = Field(
         None, 
         min_length=1, 
