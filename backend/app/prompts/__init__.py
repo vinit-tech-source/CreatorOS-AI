@@ -8,6 +8,7 @@ from .strategy import strategy_prompt_v1
 from .research import research_prompt_v1
 from .planner import planner_prompt_v1
 from .generator import generator_prompt_v1
+from .trend import trend_prompt_v1
 
 __all__ = [
     "PromptDefinition",
@@ -15,4 +16,5 @@ __all__ = [
     "research_prompt_v1",
     "planner_prompt_v1",
     "generator_prompt_v1",
+    "trend_prompt_v1",
 ]

@@ -86,11 +86,12 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent
+    from app.agents import strategy_agent, trend_agent
     from app.schemas.ai.strategy import StrategyOutput
+    from app.schemas.ai.trend import TrendOutput, TrendItem
 
-    mock_service = AsyncMock()
-    mock_service.generate_structured.return_value = StrategyOutput(
+    mock_strategy_service = AsyncMock()
+    mock_strategy_service.generate_structured.return_value = StrategyOutput(
         content_goal="Educate",
         target_audience="Developers",
         platform_strategy="Threads",
@@ -100,7 +101,17 @@ async def test_langgraph_workflow_execution(monkeypatch):
         call_to_action="Read more",
         constraints=[]
     )
-    monkeypatch.setattr(strategy_agent, "_ai_service_instance", mock_service)
+    monkeypatch.setattr(strategy_agent, "_ai_service_instance", mock_strategy_service)
+
+    mock_trend_service = AsyncMock()
+    mock_trend_service.generate_structured.return_value = TrendOutput(
+        trends=[
+            TrendItem(topic="AI", relevance_score=0.9, platform_relevance=0.9, reason="Trending")
+        ],
+        recommended_hashtags=["#AI"],
+        trend_summary="Summary"
+    )
+    monkeypatch.setattr(trend_agent, "_ai_service_instance", mock_trend_service)
 
     graph = build_content_workflow()
     
@@ -124,4 +135,9 @@ async def test_langgraph_workflow_execution(monkeypatch):
     
     assert "strategy" in final_state
     assert final_state["strategy"]["content_goal"] == "Educate"
+    
+    assert "trends" in final_state
+    assert len(final_state["trends"]) == 1
+    assert final_state["trends"][0]["trend_summary"] == "Summary"
+    
     assert final_state["user_request"] == "Test"
