@@ -10,8 +10,10 @@ from app.core.exception_handlers import (
     email_exists_handler,
     inactive_user_handler,
     invalid_credentials_handler,
+    invalid_status_transition_handler,
     invalid_token_handler,
     permission_denied_handler,
+    post_not_found_handler,
     project_not_found_handler,
     project_slug_already_exists_handler,
     slug_exists_handler,
@@ -27,8 +29,10 @@ from app.core.exceptions import (
     EmailAlreadyExistsError,
     InactiveUserError,
     InvalidCredentialsError,
+    InvalidStatusTransitionError,
     InvalidTokenError,
     PermissionDeniedError,
+    PostNotFoundError,
     ProjectNotFoundError,
     ProjectSlugAlreadyExistsError,
     SlugAlreadyExistsError,
@@ -46,6 +50,7 @@ from app.api.workspace import router as workspace_router
 from app.api.brand_kit import router as brand_kit_router
 from app.api.social_accounts import router as social_accounts_router
 from app.api.projects import router as projects_router
+from app.api.posts import router as posts_router
 
 setup_logging()
 
@@ -108,6 +113,8 @@ app.add_exception_handler(SocialAccountNotFoundError, social_account_not_found_h
 app.add_exception_handler(SocialAccountAlreadyExistsError, social_account_already_exists_handler)
 app.add_exception_handler(ProjectNotFoundError, project_not_found_handler)
 app.add_exception_handler(ProjectSlugAlreadyExistsError, project_slug_already_exists_handler)
+app.add_exception_handler(PostNotFoundError, post_not_found_handler)
+app.add_exception_handler(InvalidStatusTransitionError, invalid_status_transition_handler)
 
 # ─────────────────────────────────────────────
 # Routers
@@ -119,3 +126,4 @@ app.include_router(workspace_router, prefix=settings.API_V1_STR)
 app.include_router(brand_kit_router, prefix=settings.API_V1_STR)
 app.include_router(social_accounts_router, prefix=settings.API_V1_STR)
 app.include_router(projects_router, prefix=settings.API_V1_STR)
+app.include_router(posts_router, prefix=settings.API_V1_STR)

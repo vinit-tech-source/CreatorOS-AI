@@ -141,3 +141,21 @@ class ProjectSlugAlreadyExistsError(AppException):
 
     def __init__(self, message: str = "A project with this slug already exists in this workspace.") -> None:
         super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# Post Exceptions
+# ─────────────────────────────────────────────
+
+class PostNotFoundError(AppException):
+    """Raised when a requested post does not exist."""
+
+    def __init__(self, message: str = "Post not found.") -> None:
+        super().__init__(message)
+
+
+class InvalidStatusTransitionError(AppException):
+    """Raised when attempting an invalid status transition."""
+
+    def __init__(self, message: str = "Invalid status transition.") -> None:
+        super().__init__(message)

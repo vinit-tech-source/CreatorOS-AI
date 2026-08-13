@@ -94,6 +94,9 @@ class Project(Base):
         foreign_keys=[workspace_id],
         lazy="selectin",
     )
+    posts: Mapped[list["Post"]] = relationship(  # noqa: F821
+        "Post", back_populates="project", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<Project id={self.id} slug={self.slug} workspace={self.workspace_id}>"

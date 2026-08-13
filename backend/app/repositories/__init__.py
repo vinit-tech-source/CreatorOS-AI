@@ -8,6 +8,8 @@ from .social_account_repository import SocialAccountRepository
 from .social_account_repository_interface import AbstractSocialAccountRepository
 from .project_repository import ProjectRepository
 from .project_repository_interface import AbstractProjectRepository
+from .post_repository import PostRepository
+from .post_repository_interface import AbstractPostRepository
 
 __all__ = [
     "UserRepository",
@@ -20,4 +22,6 @@ __all__ = [
     "AbstractSocialAccountRepository",
     "ProjectRepository",
     "AbstractProjectRepository",
+    "PostRepository",
+    "AbstractPostRepository",
 ]

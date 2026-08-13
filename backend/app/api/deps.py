@@ -28,11 +28,14 @@ from app.repositories.social_account_repository import SocialAccountRepository
 from app.repositories.social_account_repository_interface import AbstractSocialAccountRepository
 from app.repositories.project_repository import ProjectRepository
 from app.repositories.project_repository_interface import AbstractProjectRepository
+from app.repositories.post_repository import PostRepository
+from app.repositories.post_repository_interface import AbstractPostRepository
 from app.services.auth_service import AuthService
 from app.services.workspace_service import WorkspaceService
 from app.services.brand_kit_service import BrandKitService
 from app.services.social_account_service import SocialAccountService
 from app.services.project_service import ProjectService
+from app.services.post_service import PostService
 
 logger = logging.getLogger(__name__)
 
@@ -132,6 +135,26 @@ async def get_project_service(
     """Construct a ProjectService with injected repos."""
     return ProjectService(
         project_repository=proj_repo, workspace_repository=ws_repo
+    )
+
+
+async def get_post_repository(
+    db=Depends(get_db),
+) -> AbstractPostRepository:
+    """Construct a PostRepository bound to the current DB session."""
+    return PostRepository(db)
+
+
+async def get_post_service(
+    post_repo: AbstractPostRepository = Depends(get_post_repository),
+    proj_repo: AbstractProjectRepository = Depends(get_project_repository),
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+) -> PostService:
+    """Construct a PostService with injected repos."""
+    return PostService(
+        post_repository=post_repo,
+        project_repository=proj_repo,
+        workspace_repository=ws_repo,
     )
 
 

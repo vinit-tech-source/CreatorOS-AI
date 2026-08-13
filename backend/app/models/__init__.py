@@ -4,6 +4,7 @@ from .workspace import Workspace
 from .brand_kit import BrandKit
 from .social_account import SocialAccount, SocialPlatform
 from .project import Project, ProjectStatus
+from .post import Post, ContentType, PostStatus
 
 __all__ = [
     "Base",
@@ -15,4 +16,7 @@ __all__ = [
     "SocialPlatform",
     "Project",
     "ProjectStatus",
+    "Post",
+    "ContentType",
+    "PostStatus",
 ]

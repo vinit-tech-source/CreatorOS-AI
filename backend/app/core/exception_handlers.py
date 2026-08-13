@@ -15,8 +15,10 @@ from app.core.exceptions import (
     EmailAlreadyExistsError,
     InactiveUserError,
     InvalidCredentialsError,
+    InvalidStatusTransitionError,
     InvalidTokenError,
     PermissionDeniedError,
+    PostNotFoundError,
     ProjectNotFoundError,
     ProjectSlugAlreadyExistsError,
     SlugAlreadyExistsError,
@@ -125,3 +127,15 @@ async def project_slug_already_exists_handler(
     request: Request, exc: ProjectSlugAlreadyExistsError
 ) -> JSONResponse:
     return _error_response(409, exc.message)
+
+
+async def post_not_found_handler(
+    request: Request, exc: PostNotFoundError
+) -> JSONResponse:
+    return _error_response(404, exc.message)
+
+
+async def invalid_status_transition_handler(
+    request: Request, exc: InvalidStatusTransitionError
+) -> JSONResponse:
+    return _error_response(400, exc.message)
