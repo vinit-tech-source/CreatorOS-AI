@@ -86,12 +86,13 @@ def test_langgraph_workflow_compiles():
 async def test_langgraph_workflow_execution(monkeypatch):
     """Test that the strategy node executes and modifies state."""
     from unittest.mock import AsyncMock
-    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent
+    from app.agents import strategy_agent, trend_agent, research_agent, content_planner_agent, content_generator_agent, brand_voice_agent
     from app.schemas.ai.strategy import StrategyOutput
     from app.schemas.ai.trend import TrendOutput, TrendItem
     from app.schemas.ai.research import ResearchOutput, ResearchSource
     from app.schemas.ai.content_plan import ContentPlanOutput, ContentSection
     from app.schemas.ai.generated_content import GeneratedContentOutput
+    from app.schemas.ai.brand_voice import BrandVoiceOutput, BrandVoiceIssue, IssueSeverity
 
     mock_strategy_service = AsyncMock()
     mock_strategy_service.generate_structured.return_value = StrategyOutput(
@@ -159,6 +160,16 @@ async def test_langgraph_workflow_execution(monkeypatch):
     )
     monkeypatch.setattr(content_generator_agent, "_ai_service_instance", mock_generator_service)
 
+    mock_brand_voice_service = AsyncMock()
+    mock_brand_voice_service.generate_structured.return_value = BrandVoiceOutput(
+        compliant=False,
+        brand_score=0.9,
+        revised_content="Optimized post content.",
+        issues=[],
+        changes=["Optimized it."]
+    )
+    monkeypatch.setattr(brand_voice_agent, "_ai_service_instance", mock_brand_voice_service)
+
     graph = build_content_workflow()
     
     workspace = Workspace()
@@ -169,10 +180,19 @@ async def test_langgraph_workflow_execution(monkeypatch):
     project.id = uuid.uuid4()
     project.name = "P"
     
+    from app.models.brand_kit import BrandKit
+    brand_kit = BrandKit()
+    brand_kit.id = uuid.uuid4()
+    brand_kit.brand_name = "Acme Corp"
+    brand_kit.default_tone = "Professional"
+    brand_kit.target_audience = "B2B"
+    brand_kit.brand_values = ["Integrity"]
+    brand_kit.preferred_language = "English"
+
     initial_state = ContextService.assemble_initial_state(
         workspace=workspace,
         project=project,
-        brand_kit=None,
+        brand_kit=brand_kit,
         user_request="Test",
         platform="X"
     )
@@ -197,5 +217,10 @@ async def test_langgraph_workflow_execution(monkeypatch):
     assert final_state["draft"]["content"] == "Generated post content."
     assert final_state["draft"]["character_count"] == 23
     assert final_state["draft"]["word_count"] == 3
+    
+    assert "optimized_content" in final_state
+    assert final_state["optimized_content"] == "Optimized post content."
+    assert "brand_voice" in final_state
+    assert final_state["brand_voice"]["brand_score"] == 0.9
     
     assert final_state["user_request"] == "Test"

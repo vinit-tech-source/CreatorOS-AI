@@ -37,6 +37,7 @@ class ContentWorkflowState(TypedDict):
     
     # Refinement Phase
     optimized_content: Optional[str]
+    brand_voice: Optional[Dict[str, Any]]
     fact_check: Optional[Dict[str, Any]]
     hashtags: Annotated[List[str], operator.add]
     image_prompt: Optional[str]
