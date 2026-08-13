@@ -10,3 +10,6 @@ psycopg2-binary
 redis
 python-jose[cryptography]
 argon2-cffi
+google-genai
+langgraph
+langchain-core

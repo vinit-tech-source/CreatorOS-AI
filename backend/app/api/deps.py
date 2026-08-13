@@ -42,6 +42,9 @@ from app.services.media_asset_service import MediaAssetService
 from app.integrations.ai.base import AbstractAIProvider
 from app.integrations.ai.gemini_client import GeminiClient
 from app.services.ai_service import AIService
+from app.services.context_service import ContextService
+from app.workflows.content_workflow import content_graph
+from langgraph.graph.state import CompiledStateGraph
 
 logger = logging.getLogger(__name__)
 
@@ -196,6 +199,16 @@ async def get_ai_service(
 ) -> AIService:
     """Construct an AIService with injected provider."""
     return AIService(provider=provider)
+
+
+async def get_context_service() -> ContextService:
+    """Construct the ContextService."""
+    return ContextService()
+
+
+async def get_content_workflow() -> CompiledStateGraph:
+    """Provide the compiled LangGraph workflow."""
+    return content_graph
 
 
 # ─────────────────────────────────────────────
