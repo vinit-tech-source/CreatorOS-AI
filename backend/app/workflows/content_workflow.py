@@ -6,15 +6,7 @@ LangGraph workflow definition for CreatorOS AI content generation.
 from langgraph.graph import StateGraph, START, END
 
 from app.workflows.state import ContentWorkflowState
-
-
-def placeholder_node(state: ContentWorkflowState) -> dict:
-    """
-    A minimal placeholder node to verify the graph state.
-    """
-    # Append a metadata marker to indicate processing
-    current_metadata = state.get("metadata", {})
-    return {"metadata": {**current_metadata, "processed_by": "placeholder_node"}}
+from app.agents.strategy_agent import strategy_agent
 
 
 def build_content_workflow() -> StateGraph:
@@ -23,10 +15,10 @@ def build_content_workflow() -> StateGraph:
     """
     workflow = StateGraph(ContentWorkflowState)
     
-    workflow.add_node("placeholder", placeholder_node)
+    workflow.add_node("strategy_agent", strategy_agent)
     
-    workflow.add_edge(START, "placeholder")
-    workflow.add_edge("placeholder", END)
+    workflow.add_edge(START, "strategy_agent")
+    workflow.add_edge("strategy_agent", END)
     
     return workflow.compile()
 

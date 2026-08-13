@@ -83,8 +83,25 @@ def test_langgraph_workflow_compiles():
 
 
 @pytest.mark.asyncio
-async def test_langgraph_workflow_execution():
-    """Test that the placeholder node executes and modifies state."""
+async def test_langgraph_workflow_execution(monkeypatch):
+    """Test that the strategy node executes and modifies state."""
+    from unittest.mock import AsyncMock
+    from app.agents import strategy_agent
+    from app.schemas.ai.strategy import StrategyOutput
+
+    mock_service = AsyncMock()
+    mock_service.generate_structured.return_value = StrategyOutput(
+        content_goal="Educate",
+        target_audience="Developers",
+        platform_strategy="Threads",
+        content_type="Thread",
+        tone="Educational",
+        language="English",
+        call_to_action="Read more",
+        constraints=[]
+    )
+    monkeypatch.setattr(strategy_agent, "_ai_service_instance", mock_service)
+
     graph = build_content_workflow()
     
     workspace = Workspace()
@@ -105,5 +122,6 @@ async def test_langgraph_workflow_execution():
     
     final_state = await graph.ainvoke(initial_state)
     
-    assert final_state["metadata"]["processed_by"] == "placeholder_node"
+    assert "strategy" in final_state
+    assert final_state["strategy"]["content_goal"] == "Educate"
     assert final_state["user_request"] == "Test"
