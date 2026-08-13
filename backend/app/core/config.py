@@ -26,8 +26,15 @@ class Settings(BaseSettings):
     
     # Provider Flags (Prepared for future MCP integration)
     YOUTUBE_ENABLED: bool = False
+    YOUTUBE_API_KEY: str = ""
+    YOUTUBE_MAX_RESULTS: int = 10
+    
     BLUESKY_ENABLED: bool = False
+    
     REDDIT_ENABLED: bool = False
+    REDDIT_CLIENT_ID: str = ""
+    REDDIT_CLIENT_SECRET: str = ""
+    
     GOOGLE_TRENDS_ENABLED: bool = False
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
