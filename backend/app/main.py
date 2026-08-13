@@ -12,7 +12,11 @@ from app.core.exception_handlers import (
     invalid_credentials_handler,
     invalid_token_handler,
     permission_denied_handler,
+    project_not_found_handler,
+    project_slug_already_exists_handler,
     slug_exists_handler,
+    social_account_already_exists_handler,
+    social_account_not_found_handler,
     user_not_found_handler,
     username_exists_handler,
     workspace_not_found_handler,
@@ -25,7 +29,11 @@ from app.core.exceptions import (
     InvalidCredentialsError,
     InvalidTokenError,
     PermissionDeniedError,
+    ProjectNotFoundError,
+    ProjectSlugAlreadyExistsError,
     SlugAlreadyExistsError,
+    SocialAccountAlreadyExistsError,
+    SocialAccountNotFoundError,
     UserNotFoundError,
     UsernameAlreadyExistsError,
     WorkspaceNotFoundError,
@@ -36,6 +44,8 @@ from app.api.health import router as health_router
 from app.api.auth import router as auth_router
 from app.api.workspace import router as workspace_router
 from app.api.brand_kit import router as brand_kit_router
+from app.api.social_accounts import router as social_accounts_router
+from app.api.projects import router as projects_router
 
 setup_logging()
 
@@ -94,6 +104,10 @@ app.add_exception_handler(SlugAlreadyExistsError, slug_exists_handler)
 app.add_exception_handler(PermissionDeniedError, permission_denied_handler)
 app.add_exception_handler(BrandKitNotFoundError, brand_kit_not_found_handler)
 app.add_exception_handler(BrandKitAlreadyExistsError, brand_kit_already_exists_handler)
+app.add_exception_handler(SocialAccountNotFoundError, social_account_not_found_handler)
+app.add_exception_handler(SocialAccountAlreadyExistsError, social_account_already_exists_handler)
+app.add_exception_handler(ProjectNotFoundError, project_not_found_handler)
+app.add_exception_handler(ProjectSlugAlreadyExistsError, project_slug_already_exists_handler)
 
 # ─────────────────────────────────────────────
 # Routers
@@ -103,3 +117,5 @@ app.include_router(health_router, prefix=settings.API_V1_STR, tags=["System"])
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(workspace_router, prefix=settings.API_V1_STR)
 app.include_router(brand_kit_router, prefix=settings.API_V1_STR)
+app.include_router(social_accounts_router, prefix=settings.API_V1_STR)
+app.include_router(projects_router, prefix=settings.API_V1_STR)

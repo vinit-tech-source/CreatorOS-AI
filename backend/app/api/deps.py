@@ -24,9 +24,15 @@ from app.repositories.workspace_repository import WorkspaceRepository
 from app.repositories.workspace_repository_interface import AbstractWorkspaceRepository
 from app.repositories.brand_kit_repository import BrandKitRepository
 from app.repositories.brand_kit_repository_interface import AbstractBrandKitRepository
+from app.repositories.social_account_repository import SocialAccountRepository
+from app.repositories.social_account_repository_interface import AbstractSocialAccountRepository
+from app.repositories.project_repository import ProjectRepository
+from app.repositories.project_repository_interface import AbstractProjectRepository
 from app.services.auth_service import AuthService
 from app.services.workspace_service import WorkspaceService
 from app.services.brand_kit_service import BrandKitService
+from app.services.social_account_service import SocialAccountService
+from app.services.project_service import ProjectService
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +99,40 @@ async def get_brand_kit_service(
 ) -> BrandKitService:
     """Construct a BrandKitService with injected BrandKit and Workspace repositories."""
     return BrandKitService(brand_kit_repository=bk_repo, workspace_repository=ws_repo)
+
+
+async def get_social_account_repository(
+    db=Depends(get_db),
+) -> AbstractSocialAccountRepository:
+    """Construct a SocialAccountRepository bound to the current DB session."""
+    return SocialAccountRepository(db)
+
+
+async def get_social_account_service(
+    sa_repo: AbstractSocialAccountRepository = Depends(get_social_account_repository),
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+) -> SocialAccountService:
+    """Construct a SocialAccountService with injected repos."""
+    return SocialAccountService(
+        social_account_repository=sa_repo, workspace_repository=ws_repo
+    )
+
+
+async def get_project_repository(
+    db=Depends(get_db),
+) -> AbstractProjectRepository:
+    """Construct a ProjectRepository bound to the current DB session."""
+    return ProjectRepository(db)
+
+
+async def get_project_service(
+    proj_repo: AbstractProjectRepository = Depends(get_project_repository),
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+) -> ProjectService:
+    """Construct a ProjectService with injected repos."""
+    return ProjectService(
+        project_repository=proj_repo, workspace_repository=ws_repo
+    )
 
 
 # ─────────────────────────────────────────────

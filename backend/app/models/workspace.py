@@ -49,6 +49,12 @@ class Workspace(Base):
     brand_kit: Mapped["BrandKit | None"] = relationship(  # noqa: F821
         "BrandKit", back_populates="workspace", uselist=False, cascade="all, delete-orphan"
     )
+    social_accounts: Mapped[list["SocialAccount"]] = relationship(  # noqa: F821
+        "SocialAccount", back_populates="workspace", cascade="all, delete-orphan"
+    )
+    projects: Mapped[list["Project"]] = relationship(  # noqa: F821
+        "Project", back_populates="workspace", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<Workspace id={self.id} slug={self.slug} owner={self.owner_id}>"

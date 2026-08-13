@@ -17,7 +17,11 @@ from app.core.exceptions import (
     InvalidCredentialsError,
     InvalidTokenError,
     PermissionDeniedError,
+    ProjectNotFoundError,
+    ProjectSlugAlreadyExistsError,
     SlugAlreadyExistsError,
+    SocialAccountAlreadyExistsError,
+    SocialAccountNotFoundError,
     UserNotFoundError,
     UsernameAlreadyExistsError,
     WorkspaceNotFoundError,
@@ -95,5 +99,29 @@ async def brand_kit_not_found_handler(
 
 async def brand_kit_already_exists_handler(
     request: Request, exc: BrandKitAlreadyExistsError
+) -> JSONResponse:
+    return _error_response(409, exc.message)
+
+
+async def social_account_not_found_handler(
+    request: Request, exc: SocialAccountNotFoundError
+) -> JSONResponse:
+    return _error_response(404, exc.message)
+
+
+async def social_account_already_exists_handler(
+    request: Request, exc: SocialAccountAlreadyExistsError
+) -> JSONResponse:
+    return _error_response(409, exc.message)
+
+
+async def project_not_found_handler(
+    request: Request, exc: ProjectNotFoundError
+) -> JSONResponse:
+    return _error_response(404, exc.message)
+
+
+async def project_slug_already_exists_handler(
+    request: Request, exc: ProjectSlugAlreadyExistsError
 ) -> JSONResponse:
     return _error_response(409, exc.message)

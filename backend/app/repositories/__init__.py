@@ -4,6 +4,10 @@ from .workspace_repository import WorkspaceRepository
 from .workspace_repository_interface import AbstractWorkspaceRepository
 from .brand_kit_repository import BrandKitRepository
 from .brand_kit_repository_interface import AbstractBrandKitRepository
+from .social_account_repository import SocialAccountRepository
+from .social_account_repository_interface import AbstractSocialAccountRepository
+from .project_repository import ProjectRepository
+from .project_repository_interface import AbstractProjectRepository
 
 __all__ = [
     "UserRepository",
@@ -12,4 +16,8 @@ __all__ = [
     "AbstractWorkspaceRepository",
     "BrandKitRepository",
     "AbstractBrandKitRepository",
+    "SocialAccountRepository",
+    "AbstractSocialAccountRepository",
+    "ProjectRepository",
+    "AbstractProjectRepository",
 ]

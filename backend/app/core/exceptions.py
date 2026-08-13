@@ -105,3 +105,39 @@ class BrandKitAlreadyExistsError(AppException):
 
     def __init__(self, message: str = "A Brand Kit already exists for this workspace.") -> None:
         super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# Social Account Exceptions
+# ─────────────────────────────────────────────
+
+class SocialAccountNotFoundError(AppException):
+    """Raised when a requested social account does not exist."""
+
+    def __init__(self, message: str = "Social account not found.") -> None:
+        super().__init__(message)
+
+
+class SocialAccountAlreadyExistsError(AppException):
+    """Raised when a social account with the same platform and platform_user_id already exists for the workspace."""
+
+    def __init__(self, message: str = "A social account with this platform user ID already exists for this workspace.") -> None:
+        super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# Project Exceptions
+# ─────────────────────────────────────────────
+
+class ProjectNotFoundError(AppException):
+    """Raised when a requested project does not exist."""
+
+    def __init__(self, message: str = "Project not found.") -> None:
+        super().__init__(message)
+
+
+class ProjectSlugAlreadyExistsError(AppException):
+    """Raised when attempting to create a project with a slug that is already taken in the workspace."""
+
+    def __init__(self, message: str = "A project with this slug already exists in this workspace.") -> None:
+        super().__init__(message)
