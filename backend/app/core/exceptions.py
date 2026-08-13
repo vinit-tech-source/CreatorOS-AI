@@ -170,3 +170,21 @@ class MediaAssetNotFoundError(AppException):
 
     def __init__(self, message: str = "Media asset not found.") -> None:
         super().__init__(message)
+
+
+# ─────────────────────────────────────────────
+# AI Exceptions
+# ─────────────────────────────────────────────
+
+class AIProviderError(AppException):
+    """Raised when the AI provider API returns an error or times out."""
+
+    def __init__(self, message: str = "AI provider encountered an error.") -> None:
+        super().__init__(message)
+
+
+class AIValidationError(AppException):
+    """Raised when the AI response fails structured validation."""
+
+    def __init__(self, message: str = "AI response failed validation.") -> None:
+        super().__init__(message)

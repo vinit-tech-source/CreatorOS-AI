@@ -39,6 +39,9 @@ from app.services.social_account_service import SocialAccountService
 from app.services.project_service import ProjectService
 from app.services.post_service import PostService
 from app.services.media_asset_service import MediaAssetService
+from app.integrations.ai.base import AbstractAIProvider
+from app.integrations.ai.gemini_client import GeminiClient
+from app.services.ai_service import AIService
 
 logger = logging.getLogger(__name__)
 
@@ -181,6 +184,18 @@ async def get_media_asset_service(
         project_repo=proj_repo,
         ws_repo=ws_repo,
     )
+
+
+async def get_ai_provider() -> AbstractAIProvider:
+    """Construct the configured AI provider."""
+    return GeminiClient()
+
+
+async def get_ai_service(
+    provider: AbstractAIProvider = Depends(get_ai_provider),
+) -> AIService:
+    """Construct an AIService with injected provider."""
+    return AIService(provider=provider)
 
 
 # ─────────────────────────────────────────────

@@ -19,9 +19,15 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
-    # Application-level encryption key for OAuth tokens
-    # Generate with: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    # Encryption
     ENCRYPTION_KEY: str = ""
+
+    # AI Configuration
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_TIMEOUT: int = 60
+    GEMINI_MAX_OUTPUT_TOKENS: int = 8192
+    GEMINI_TEMPERATURE: float = 0.7
 
     model_config = ConfigDict(env_file=".env", env_file_encoding="utf-8")
 

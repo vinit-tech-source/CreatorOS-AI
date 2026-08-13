@@ -28,6 +28,8 @@ from app.core.exceptions import (
     UserNotFoundError,
     UsernameAlreadyExistsError,
     WorkspaceNotFoundError,
+    AIProviderError,
+    AIValidationError,
 )
 
 logger = logging.getLogger(__name__)
@@ -146,3 +148,15 @@ async def media_asset_not_found_handler(
     request: Request, exc: MediaAssetNotFoundError
 ) -> JSONResponse:
     return _error_response(404, exc.message)
+
+
+async def ai_provider_error_handler(
+    request: Request, exc: AIProviderError
+) -> JSONResponse:
+    return _error_response(502, exc.message)
+
+
+async def ai_validation_error_handler(
+    request: Request, exc: AIValidationError
+) -> JSONResponse:
+    return _error_response(500, exc.message)
