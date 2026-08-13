@@ -13,10 +13,22 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = ""
 
-    # JWT
-    SECRET_KEY: str = ""
+    # Security config
+    SECRET_KEY: str = "changeme_in_production"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
+    
+    # MCP Configuration
+    MCP_ENABLED: bool = True
+    MCP_DEFAULT_TIMEOUT: int = 30
+    MCP_MAX_TOOL_CALLS: int = 5
+    MCP_LOG_TOOL_CALLS: bool = True
+    
+    # Provider Flags (Prepared for future MCP integration)
+    YOUTUBE_ENABLED: bool = False
+    BLUESKY_ENABLED: bool = False
+    REDDIT_ENABLED: bool = False
+    GOOGLE_TRENDS_ENABLED: bool = False
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
     # Encryption
