@@ -23,7 +23,11 @@ export function Sidebar({ className }: SidebarProps) {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Projects', path: '/projects', icon: FolderKanban },
     { name: 'Posts', path: '/projects', icon: PenTool },
-    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+    {
+      name: 'Analytics',
+      path: activeWorkspace ? `/workspaces/${activeWorkspace.id}/analytics` : '/analytics',
+      icon: BarChart3
+    },
     { name: 'Brand Kit', path: '/brand-kit', icon: Palette },
     {
       name: 'Social Accounts',

@@ -10,6 +10,7 @@ import { Projects } from '../pages/projects/Projects';
 import { PostList } from '../pages/posts/PostList';
 import { PostDetails } from '../pages/posts/PostDetails';
 import { Analytics } from '../pages/analytics/Analytics';
+import { PostAnalytics } from '../pages/analytics/PostAnalytics';
 import { SocialAccounts } from '../pages/settings/SocialAccounts';
 import { Settings } from '../pages/settings/Settings';
 import { ContentCreation } from '../pages/content-creation/ContentCreation';
@@ -28,7 +29,12 @@ export function AppRoutes() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/workspaces/:workspaceId/projects/:projectId/posts" element={<PostList />} />
         <Route path="/workspaces/:workspaceId/projects/:projectId/posts/:postId" element={<PostDetails />} />
+        
+        {/* Analytics Routes */}
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/workspaces/:workspaceId/analytics" element={<Analytics />} />
+        <Route path="/workspaces/:workspaceId/projects/:projectId/posts/:postId/analytics" element={<PostAnalytics />} />
+
         {/* Workspace-scoped social accounts route (preferred) */}
         <Route path="/workspaces/:workspaceId/social-accounts" element={<SocialAccounts />} />
         {/* Global social accounts route — falls back to activeWorkspace */}

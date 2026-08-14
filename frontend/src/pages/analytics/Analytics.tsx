@@ -1,101 +1,414 @@
-import { useState, useEffect } from 'react';
+/**
+ * Analytics.tsx
+ *
+ * Workspace Analytics Dashboard for CreatorOS AI.
+ *
+ * Provides:
+ * - KPI Summary cards
+ * - Performance trends (Line chart)
+ * - Post performance table with UI-level sorting and filtering
+ */
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import {
+  BarChart3,
+  RefreshCw,
+  Eye,
+  Heart,
+  MessageSquare,
+  Share2,
+  TrendingUp,
+  AlertCircle,
+  FileText,
+  Filter,
+  ArrowUp,
+  ArrowDown
+} from 'lucide-react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
+
 import { PageHeader } from '../../components/layout/PageHeader';
-import { Card, CardContent, CardHeader } from '../../components/ui/Card';
-import { BarChart3, TrendingUp, Users, Heart, MessageCircle } from 'lucide-react';
-import { AnalyticsSummary } from '../../types';
+import { Card, CardContent } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { useAnalyticsStore } from '../../stores/analyticsStore';
+import { useWorkspaceStore } from '../../stores/workspaceStore';
+import styles from './Analytics.module.css';
+
+type SortField = 'created_at' | 'engagement_rate' | 'likes' | 'comments' | 'shares' | 'views';
+type SortOrder = 'asc' | 'desc';
+
+function formatNumber(num: number | null | undefined): string {
+  if (num === null || num === undefined) return 'N/A';
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+  return num.toString();
+}
+
+function formatPercent(num: number | null | undefined): string {
+  if (num === null || num === undefined) return 'N/A';
+  return (num * 100).toFixed(1) + '%';
+}
+
+function formatDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  } catch {
+    return 'Unknown';
+  }
+}
 
 export function Analytics() {
-  const [summary, _setSummary] = useState<AnalyticsSummary | null>(null);
-  const [_isLoading, setIsLoading] = useState(true);
+  const { workspaceId: routeWorkspaceId } = useParams<{ workspaceId: string }>();
+  const { activeWorkspace } = useWorkspaceStore();
+  const workspaceId = routeWorkspaceId || activeWorkspace?.id || null;
+
+  const {
+    workspaceSummary,
+    workspacePostsAnalytics,
+    isLoading,
+    error,
+    fetchWorkspaceAnalytics,
+    clearAnalytics
+  } = useAnalyticsStore();
+
+  const [platformFilter, setPlatformFilter] = useState<string>('all');
+  const [sortField, setSortField] = useState<SortField>('created_at');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+
+  const loadAnalytics = useCallback(() => {
+    if (workspaceId) {
+      fetchWorkspaceAnalytics(workspaceId);
+    }
+  }, [workspaceId, fetchWorkspaceAnalytics]);
 
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        // Need a workspace ID in a real app, assuming one is provided by state/URL
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch analytics', error);
-        setIsLoading(false);
-      }
+    loadAnalytics();
+    return () => {
+      clearAnalytics();
     };
+  }, [loadAnalytics, clearAnalytics]);
 
-    fetchAnalytics();
-  }, []);
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('desc'); // Default to descending when changing fields
+    }
+  };
+
+  const filteredAndSortedPosts = useMemo(() => {
+    let result = [...workspacePostsAnalytics];
+
+    // Filter
+    if (platformFilter !== 'all') {
+      result = result.filter(p => p.platform.toLowerCase() === platformFilter.toLowerCase());
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      let valA: any = a[sortField];
+      let valB: any = b[sortField];
+
+      // Handle nulls safely (treat nulls as lowest value)
+      if (valA === null || valA === undefined) valA = -1;
+      if (valB === null || valB === undefined) valB = -1;
+
+      if (sortField === 'created_at') {
+        valA = new Date(a.created_at).getTime();
+        valB = new Date(b.created_at).getTime();
+      }
+
+      if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
+      if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return result;
+  }, [workspacePostsAnalytics, platformFilter, sortField, sortOrder]);
+
+  const chartData = useMemo(() => {
+    // Group by date, calculating average engagement rate
+    const dateMap = new Map<string, { date: string, totalEngagement: number, count: number }>();
+
+    filteredAndSortedPosts.forEach(post => {
+      if (post.engagement_rate === null || post.engagement_rate === undefined) return;
+      
+      const dateStr = formatDate(post.created_at);
+      const existing = dateMap.get(dateStr) || { date: dateStr, totalEngagement: 0, count: 0 };
+      
+      existing.totalEngagement += post.engagement_rate;
+      existing.count += 1;
+      dateMap.set(dateStr, existing);
+    });
+
+    return Array.from(dateMap.values())
+      .map(item => ({
+        date: item.date,
+        engagement: Number(((item.totalEngagement / item.count) * 100).toFixed(2))
+      }))
+      .reverse(); // Time series should usually read left-to-right (oldest to newest)
+  }, [filteredAndSortedPosts]);
+
+  const noWorkspace = !workspaceId;
 
   return (
-    <div className="flex-col gap-6">
-      <PageHeader 
-        title="Analytics" 
-        subtitle="Measure the performance of your social media content"
+    <div className={styles.page}>
+      <PageHeader
+        title="Workspace Analytics"
+        subtitle="Track your overall performance and engagement metrics across platforms."
+        action={
+          !noWorkspace && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={loadAnalytics}
+              disabled={isLoading}
+              isLoading={isLoading}
+              id="refresh-analytics-btn"
+            >
+              <RefreshCw size={16} aria-hidden />
+              Refresh
+            </Button>
+          )
+        }
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      {noWorkspace && (
         <Card glass>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }}>
-                <TrendingUp size={24} />
-              </div>
-              <div>
-                <span className="text-sm text-secondary font-medium block">Total Impressions</span>
-                <span className="text-2xl font-bold text-primary-text block">{summary?.total_impressions || 0}</span>
-              </div>
+          <CardContent>
+            <div className={styles.emptyState}>
+              <AlertCircle size={40} className={styles.emptyIcon} aria-hidden />
+              <p style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)' }}>No workspace selected</p>
+              <p>Select a workspace from the sidebar to view its analytics.</p>
             </div>
           </CardContent>
         </Card>
+      )}
 
+      {!noWorkspace && error && !isLoading && (
         <Card glass>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-                <Heart size={24} />
-              </div>
-              <div>
-                <span className="text-sm text-secondary font-medium block">Total Likes</span>
-                <span className="text-2xl font-bold text-primary-text block">{summary?.total_likes || 0}</span>
-              </div>
+          <CardContent>
+            <div className={styles.errorState} role="alert">
+              <AlertCircle size={40} aria-hidden />
+              <p style={{ fontSize: '1rem', fontWeight: 600 }}>Unable to load analytics</p>
+              <p style={{ fontSize: '0.875rem' }}>{error}</p>
+              <Button variant="outline" size="sm" onClick={loadAnalytics}>
+                Retry
+              </Button>
             </div>
           </CardContent>
         </Card>
+      )}
 
-        <Card glass>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-                <MessageCircle size={24} />
-              </div>
-              <div>
-                <span className="text-sm text-secondary font-medium block">Total Comments</span>
-                <span className="text-2xl font-bold text-primary-text block">{summary?.total_comments || 0}</span>
-              </div>
+      {/* ── KPI Summary ── */}
+      {!noWorkspace && !error && (
+        <div className={styles.kpiGrid} role="region" aria-label="KPI Summary">
+          <div className={styles.kpiCard}>
+            <div className={styles.kpiHeader}>
+              <Eye size={16} /> Total Views
             </div>
-          </CardContent>
-        </Card>
-
-        <Card glass>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(14, 165, 233, 0.1)', color: '#0ea5e9' }}>
-                <Users size={24} />
-              </div>
-              <div>
-                <span className="text-sm text-secondary font-medium block">Avg. Engagement Rate</span>
-                <span className="text-2xl font-bold text-primary-text block">{summary?.average_engagement_rate ? `${summary.average_engagement_rate.toFixed(2)}%` : '0%'}</span>
-              </div>
+            <div className={styles.kpiValue}>
+              {isLoading ? <div className={styles.skeletonLine} style={{ width: '60%', height: '32px' }} /> : formatNumber(workspaceSummary?.total_views)}
             </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="min-h-[300px]">
-        <CardHeader title="Performance Over Time" />
-        <CardContent>
-          <div className="flex flex-col items-center justify-center h-48 text-secondary">
-            <BarChart3 size={48} className="opacity-20 mb-4" />
-            <p>Not enough data to generate charts yet.</p>
           </div>
-        </CardContent>
-      </Card>
+          <div className={styles.kpiCard}>
+            <div className={styles.kpiHeader}>
+              <Heart size={16} /> Total Likes
+            </div>
+            <div className={styles.kpiValue}>
+              {isLoading ? <div className={styles.skeletonLine} style={{ width: '60%', height: '32px' }} /> : formatNumber(workspaceSummary?.total_likes)}
+            </div>
+          </div>
+          <div className={styles.kpiCard}>
+            <div className={styles.kpiHeader}>
+              <MessageSquare size={16} /> Comments
+            </div>
+            <div className={styles.kpiValue}>
+              {isLoading ? <div className={styles.skeletonLine} style={{ width: '60%', height: '32px' }} /> : formatNumber(workspaceSummary?.total_comments)}
+            </div>
+          </div>
+          <div className={styles.kpiCard}>
+            <div className={styles.kpiHeader}>
+              <Share2 size={16} /> Shares
+            </div>
+            <div className={styles.kpiValue}>
+              {isLoading ? <div className={styles.skeletonLine} style={{ width: '60%', height: '32px' }} /> : formatNumber(workspaceSummary?.total_shares)}
+            </div>
+          </div>
+          <div className={styles.kpiCard}>
+            <div className={styles.kpiHeader}>
+              <TrendingUp size={16} /> Avg Engagement
+            </div>
+            <div className={styles.kpiValue}>
+              {isLoading ? <div className={styles.skeletonLine} style={{ width: '60%', height: '32px' }} /> : formatPercent(workspaceSummary?.average_engagement_rate)}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Performance Trends Chart ── */}
+      {!noWorkspace && !error && (
+        <Card glass className={styles.chartCard}>
+          <div className={styles.chartHeader}>
+            <h2 className={styles.chartTitle}>Engagement Trends</h2>
+          </div>
+          
+          {isLoading ? (
+            <div className={styles.chartContainer} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+               <div className={styles.skeletonLine} style={{ height: '100%' }} />
+            </div>
+          ) : chartData.length > 1 ? (
+            <div className={styles.chartContainer}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="date" stroke="rgba(255,255,255,0.5)" fontSize={12} tickMargin={10} />
+                  <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} tickFormatter={(val) => `${val}%`} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--bg-surface-solid)', borderColor: 'var(--border-color)', borderRadius: 8 }}
+                    itemStyle={{ color: 'var(--color-primary)' }}
+                    formatter={(value: any) => [`${value}%`, 'Engagement']}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="engagement" 
+                    stroke="var(--color-primary)" 
+                    strokeWidth={3}
+                    dot={{ fill: 'var(--color-primary)', strokeWidth: 2 }}
+                    activeDot={{ r: 6, fill: '#fff', stroke: 'var(--color-primary)' }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className={styles.chartContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+               <p style={{ color: 'var(--text-muted)' }}>Not enough data to display trends.</p>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* ── Post Performance Table ── */}
+      {!noWorkspace && !error && (
+        <Card glass>
+          <CardContent>
+            <div className={styles.tableControls}>
+              <h2 className={styles.chartTitle}>Post Performance</h2>
+              <div className={styles.filters}>
+                <Filter size={16} color="var(--text-secondary)" />
+                <select 
+                  className={styles.filterSelect}
+                  value={platformFilter}
+                  onChange={(e) => setPlatformFilter(e.target.value)}
+                  aria-label="Filter by platform"
+                  disabled={isLoading}
+                >
+                  <option value="all">All Platforms</option>
+                  <option value="bluesky">Bluesky</option>
+                  <option value="x">X (Twitter)</option>
+                  <option value="linkedin">LinkedIn</option>
+                </select>
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className={styles.tableContainer}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Post</th><th>Platform</th><th>Date</th><th>Views</th><th>Likes</th><th>Comments</th><th>Shares</th><th>Engagement</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <tr key={i}>
+                        <td colSpan={8}><div className={styles.skeletonLine} /></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : filteredAndSortedPosts.length === 0 ? (
+              <div className={styles.emptyState}>
+                <FileText size={48} className={styles.emptyIcon} aria-hidden />
+                <p style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 0 }}>No posts found</p>
+                <p>Publish a post to start collecting performance data.</p>
+              </div>
+            ) : (
+              <div className={styles.tableContainer}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th onClick={() => handleSort('created_at')}>
+                        Published Date
+                        {sortField === 'created_at' && (sortOrder === 'asc' ? <ArrowUp size={12} className={`${styles.sortIcon} ${styles.active}`} /> : <ArrowDown size={12} className={`${styles.sortIcon} ${styles.active}`} />)}
+                      </th>
+                      <th>Platform</th>
+                      <th className={styles.metricCell} onClick={() => handleSort('views')}>
+                        Views
+                        {sortField === 'views' && (sortOrder === 'asc' ? <ArrowUp size={12} className={`${styles.sortIcon} ${styles.active}`} /> : <ArrowDown size={12} className={`${styles.sortIcon} ${styles.active}`} />)}
+                      </th>
+                      <th className={styles.metricCell} onClick={() => handleSort('likes')}>
+                        Likes
+                        {sortField === 'likes' && (sortOrder === 'asc' ? <ArrowUp size={12} className={`${styles.sortIcon} ${styles.active}`} /> : <ArrowDown size={12} className={`${styles.sortIcon} ${styles.active}`} />)}
+                      </th>
+                      <th className={styles.metricCell} onClick={() => handleSort('comments')}>
+                        Comments
+                        {sortField === 'comments' && (sortOrder === 'asc' ? <ArrowUp size={12} className={`${styles.sortIcon} ${styles.active}`} /> : <ArrowDown size={12} className={`${styles.sortIcon} ${styles.active}`} />)}
+                      </th>
+                      <th className={styles.metricCell} onClick={() => handleSort('shares')}>
+                        Shares
+                        {sortField === 'shares' && (sortOrder === 'asc' ? <ArrowUp size={12} className={`${styles.sortIcon} ${styles.active}`} /> : <ArrowDown size={12} className={`${styles.sortIcon} ${styles.active}`} />)}
+                      </th>
+                      <th className={styles.metricCell} onClick={() => handleSort('engagement_rate')}>
+                        Engagement
+                        {sortField === 'engagement_rate' && (sortOrder === 'asc' ? <ArrowUp size={12} className={`${styles.sortIcon} ${styles.active}`} /> : <ArrowDown size={12} className={`${styles.sortIcon} ${styles.active}`} />)}
+                      </th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAndSortedPosts.map((post) => (
+                      <tr key={post.id}>
+                        <td>{formatDate(post.created_at)}</td>
+                        <td>
+                          <Badge variant="secondary">{post.platform}</Badge>
+                        </td>
+                        <td className={styles.metricCell}>{formatNumber(post.views)}</td>
+                        <td className={styles.metricCell}>{formatNumber(post.likes)}</td>
+                        <td className={styles.metricCell}>{formatNumber(post.comments)}</td>
+                        <td className={styles.metricCell}>{formatNumber(post.shares)}</td>
+                        <td className={styles.metricCell}>{formatPercent(post.engagement_rate)}</td>
+                        <td>
+                          <Link 
+                            to={`/workspaces/${workspaceId}/projects/${post.workspace_id}/posts/${post.post_id}/analytics`}
+                            style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--color-primary)', fontSize: '0.75rem', fontWeight: 500 }}
+                          >
+                            Details <BarChart3 size={12} />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

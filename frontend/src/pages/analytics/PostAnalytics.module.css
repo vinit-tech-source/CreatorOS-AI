@@ -1,0 +1,123 @@
+/* PostAnalytics.module.css */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-4);
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-5);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  gap: var(--spacing-2);
+}
+
+.kpiHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kpiValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.chartCard {
+  padding: var(--spacing-6);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+}
+
+.chartTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.chartContainer {
+  height: 300px;
+  width: 100%;
+  margin-top: var(--spacing-4);
+}
+
+.skeletonLine {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--radius-md);
+  height: 16px;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-12);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  gap: var(--spacing-4);
+}
+
+.metaList {
+  display: flex;
+  gap: var(--spacing-4);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-top: var(--spacing-2);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.externalLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
+}
+
+.externalLink:hover {
+  text-decoration: underline;
+}

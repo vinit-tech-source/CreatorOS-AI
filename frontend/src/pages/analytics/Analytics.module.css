@@ -1,0 +1,217 @@
+/* Analytics.module.css */
+
+/* ── Page Layout ──────────────────────────────────────────────── */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+/* ── Summary Grid ─────────────────────────────────────────────── */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-5);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  gap: var(--spacing-2);
+}
+
+.kpiHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kpiValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+/* ── Charts ───────────────────────────────────────────────────── */
+.chartContainer {
+  height: 300px;
+  width: 100%;
+  margin-top: var(--spacing-4);
+}
+
+.chartCard {
+  padding: var(--spacing-6);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+}
+
+.chartTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── Post Analytics Table ─────────────────────────────────────── */
+.tableControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+.filters {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+}
+
+.filterSelect {
+  background: var(--bg-surface-solid);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.filterSelect:focus {
+  border-color: var(--color-primary);
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  padding: var(--spacing-3) var(--spacing-4);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.table th:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.table td {
+  padding: var(--spacing-4);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.postTitle {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.metricCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th.metricCell {
+  text-align: right;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-12);
+  color: var(--text-secondary);
+  text-align: center;
+  gap: var(--spacing-4);
+}
+
+.emptyIcon {
+  opacity: 0.3;
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-12);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  gap: var(--spacing-4);
+}
+
+.skeletonLine {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--radius-md);
+  height: 16px;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.sortIcon {
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: middle;
+  opacity: 0.5;
+}
+
+.sortIcon.active {
+  opacity: 1;
+  color: var(--color-primary);
+}
