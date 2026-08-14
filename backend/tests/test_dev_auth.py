@@ -67,6 +67,7 @@ def test_dev_bypass_allowed_in_development():
 def test_dev_bypass_disabled_by_default():
     """DEV_AUTH_BYPASS must default to False."""
     s = Settings(
+        _env_file=None,
         DATABASE_URL="postgresql+asyncpg://x:x@localhost/x",
         REDIS_URL="redis://localhost:6379/0",
         SECRET_KEY="test-secret-key-for-testing-only",
@@ -79,6 +80,7 @@ def test_dev_bypass_disabled_by_default():
 def test_environment_defaults_to_development():
     """ENVIRONMENT must default to 'development'."""
     s = Settings(
+        _env_file=None,
         DATABASE_URL="postgresql+asyncpg://x:x@localhost/x",
         REDIS_URL="redis://localhost:6379/0",
         SECRET_KEY="test-secret-key-for-testing-only",

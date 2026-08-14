@@ -5,12 +5,13 @@ import { Button } from '../../../components/ui/Button';
 import { ContentRequest } from '../../../services/api/contentGenerationService';
 
 interface CreationFormProps {
+  workspaceId: string;
   projectId: string;
   onSubmit: (request: ContentRequest) => void;
   isLoading: boolean;
 }
 
-export function CreationForm({ projectId, onSubmit, isLoading }: CreationFormProps) {
+export function CreationForm({ workspaceId, projectId, onSubmit, isLoading }: CreationFormProps) {
   const [platform, setPlatform] = useState('X');
   const [contentType, setContentType] = useState('Standard Post');
   const [userRequest, setUserRequest] = useState('');
@@ -22,6 +23,7 @@ export function CreationForm({ projectId, onSubmit, isLoading }: CreationFormPro
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
+      workspaceId,
       projectId,
       platform,
       contentType,

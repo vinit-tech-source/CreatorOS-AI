@@ -232,7 +232,7 @@ async def test_successful_publish_marks_scheduling_completed(mock_session, test_
         
         mock_social_repo_inst = AsyncMock()
         mock_account = MagicMock(id=uuid.uuid4(), platform=test_post.platform, is_active=True)
-        mock_social_repo_inst.list_by_workspace.return_value = [mock_account]
+        mock_social_repo_inst.get_by_workspace_id.return_value = [mock_account]
         MockSocialRepo.return_value = mock_social_repo_inst
         
         mock_tool_inst = AsyncMock()
@@ -281,7 +281,7 @@ async def test_transient_failure_retries(mock_session, test_post):
         
         mock_social_repo_inst = AsyncMock()
         mock_account = MagicMock(id=uuid.uuid4(), platform=test_post.platform, is_active=True)
-        mock_social_repo_inst.list_by_workspace.return_value = [mock_account]
+        mock_social_repo_inst.get_by_workspace_id.return_value = [mock_account]
         MockSocialRepo.return_value = mock_social_repo_inst
         
         mock_tool_inst = AsyncMock()
@@ -321,7 +321,7 @@ async def test_permanent_failure_no_retry(mock_session, test_post):
         
         mock_social_repo_inst = AsyncMock()
         mock_account = MagicMock(id=uuid.uuid4(), platform=test_post.platform, is_active=True)
-        mock_social_repo_inst.list_by_workspace.return_value = [mock_account]
+        mock_social_repo_inst.get_by_workspace_id.return_value = [mock_account]
         MockSocialRepo.return_value = mock_social_repo_inst
         
         mock_tool_inst = AsyncMock()
@@ -361,7 +361,7 @@ async def test_unapproved_post_blocked_at_execution(mock_session, test_post):
         
         mock_social_repo_inst = AsyncMock()
         mock_account = MagicMock(id=uuid.uuid4(), platform=test_post.platform, is_active=True)
-        mock_social_repo_inst.list_by_workspace.return_value = [mock_account]
+        mock_social_repo_inst.get_by_workspace_id.return_value = [mock_account]
         MockSocialRepo.return_value = mock_social_repo_inst
         
         await process_due_posts()

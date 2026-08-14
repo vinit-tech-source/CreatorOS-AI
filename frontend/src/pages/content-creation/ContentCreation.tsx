@@ -116,6 +116,7 @@ export function ContentCreation() {
 
       {stage === 'FORM' && (
         <CreationForm 
+          workspaceId={workspaceId}
           projectId={projectId} 
           onSubmit={handleGenerate} 
           isLoading={false} 

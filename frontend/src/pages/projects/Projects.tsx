@@ -8,28 +8,50 @@ import { Plus, FolderKanban, PenTool } from 'lucide-react';
 import { Project } from '../../types';
 import { Link } from 'react-router-dom';
 import { useWorkspaceStore } from '../../stores/workspaceStore';
+import { projectService } from '../../services/api/projectService';
+import { CreateProjectModal } from './components/CreateProjectModal';
 
 export function Projects() {
   const { activeWorkspace } = useWorkspaceStore();
-  const [projects, _setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const fetchProjects = async () => {
+    if (!activeWorkspace) {
+      setIsLoading(false);
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      const data = await projectService.getProjects(activeWorkspace.id);
+      setProjects(data);
+    } catch (error) {
+      console.error('Failed to fetch projects', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // In a real app, workspaceId would come from a global selector or URL
-    const fetchProjects = async () => {
-      try {
-        // We'll pass a dummy workspace ID or fetch the first one if we need to.
-        // For now, we assume the backend has an endpoint to get projects across all workspaces 
-        // or we use a hardcoded one for the shell.
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch projects', error);
-        setIsLoading(false);
-      }
-    };
-
     fetchProjects();
-  }, []);
+  }, [activeWorkspace]);
+
+  const handleCreateProject = async (data: { name: string; description: string }) => {
+    if (!activeWorkspace) return;
+    
+    await projectService.createProject(activeWorkspace.id, data);
+    await fetchProjects(); // Refresh the list
+  };
+
+  if (!activeWorkspace) {
+    return (
+      <div className="flex justify-center p-8 text-secondary">
+        Please select a workspace to view projects.
+      </div>
+    );
+  }
 
   return (
     <div className="flex-col gap-6">
@@ -37,7 +59,7 @@ export function Projects() {
         title="Projects" 
         subtitle="Organize your content into campaigns and themes"
         action={
-          <Button>
+          <Button onClick={() => setIsModalOpen(true)}>
             <Plus size={16} /> New Project
           </Button>
         }
@@ -51,7 +73,9 @@ export function Projects() {
             <div className="flex flex-col items-center justify-center p-12 text-secondary">
               <FolderKanban size={48} className="opacity-20 mb-4" />
               <p>No projects found in this workspace.</p>
-              <Button variant="outline" className="mt-4">Create your first project</Button>
+              <Button variant="outline" className="mt-4" onClick={() => setIsModalOpen(true)}>
+                Create your first project
+              </Button>
             </div>
           ) : (
             <Table>
@@ -75,7 +99,7 @@ export function Projects() {
                     <TableCell>{new Date(project.created_at).toLocaleDateString()}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Link to={`/workspaces/${activeWorkspace?.id}/projects/${project.id}/create`}>
+                        <Link to={`/workspaces/${activeWorkspace.id}/projects/${project.id}/create`}>
                           <Button variant="outline" size="sm">
                             <PenTool size={14} className="mr-1" /> Create Post
                           </Button>
@@ -90,6 +114,12 @@ export function Projects() {
           )}
         </CardContent>
       </Card>
+      
+      <CreateProjectModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateProject}
+      />
     </div>
   );
 }

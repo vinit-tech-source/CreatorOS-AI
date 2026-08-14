@@ -193,7 +193,8 @@ async def test_invalid_provider_response(mock_get, adapter):
 @pytest.mark.asyncio
 @patch("app.mcp.tools.social.get_recent_posts.AsyncSessionLocal")
 @patch("app.mcp.adapters.bluesky_social_adapter.BlueskySocialAdapter.get_recent_posts")
-async def test_tool_invocation_through_bluesky_adapter(mock_adapter_method, mock_session):
+@patch("app.mcp.tools.social.get_recent_posts.get_social_adapter")
+async def test_tool_invocation_through_bluesky_adapter(mock_get_adapter, mock_adapter_method, mock_session):
     # Setup mock DB session and repo
     mock_db = AsyncMock()
     mock_session.return_value.__aenter__.return_value = mock_db
@@ -226,6 +227,10 @@ async def test_tool_invocation_through_bluesky_adapter(mock_adapter_method, mock
                 url="https://bsky.app/test"
             )
         ]
+        
+        # Make get_social_adapter return an instance of BlueskySocialAdapter so our mock is hit
+        from app.mcp.adapters.bluesky_social_adapter import BlueskySocialAdapter
+        mock_get_adapter.return_value = BlueskySocialAdapter(access_token_encrypted=mock_account.access_token_encrypted, platform_user_id=mock_account.platform_user_id)
         
         tool = GetRecentPostsTool()
         result = await tool.execute({

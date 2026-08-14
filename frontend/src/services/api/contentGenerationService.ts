@@ -1,4 +1,5 @@
 export interface ContentRequest {
+  workspaceId: string;
   projectId: string;
   platform: string;
   contentType: string;
@@ -49,55 +50,26 @@ export interface GenerationResult {
   };
 }
 
+import { apiClient } from './client';
+
 export const contentGenerationService = {
-  // Mock endpoint simulating the LangGraph async workflow
   generateContent: async (request: ContentRequest): Promise<GenerationResult> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          title: `Exciting Update for ${request.platform}`,
-          content: `Here is the AI-generated draft based on your request: "${request.userRequest}". It is optimized for ${request.platform} and aligned with your brand voice.\n\nEnjoy engaging your audience!`,
-          platform: request.platform,
-          contentType: request.contentType,
-          hashtags: [
-            { tag: 'CreatorOS', isNiche: false, relevanceScore: 95 },
-            { tag: 'AIContent', isNiche: false, relevanceScore: 90 },
-            { tag: 'SocialMediaStrategy', isNiche: true, relevanceScore: 85 }
-          ],
-          cta: 'Sign up today to transform your workflow!',
-          imagePrompt: {
-            visualStyle: 'Photorealistic',
-            composition: 'Wide shot, subject in center',
-            aspectRatio: '16:9',
-            lighting: 'Cinematic lighting, golden hour',
-            colorPalette: 'Warm tones, vibrant contrasts',
-            altText: 'A professional workspace glowing with warm sunset light.',
-            prompt: 'A sleek, modern desk setup with a glowing monitor displaying abstract AI nodes. Cinematic lighting, photorealistic, 8k resolution.'
-          },
-          brandVoice: {
-            score: 92,
-            isCompliant: true,
-            issues: [],
-            changesMade: [
-              'Adjusted tone to be more professional and encouraging.',
-              'Replaced generic greetings with brand-specific terminology.'
-            ]
-          },
-          factCheck: {
-            status: 'PASSED',
-            issues: []
-          },
-          seo: {
-            score: 88,
-            primaryKeywords: ['AI content generation', 'social media strategy'],
-            secondaryKeywords: ['CreatorOS', 'automation', 'productivity'],
-            recommendations: [
-              'Consider adding a keyword to the first sentence.',
-              'The content length is optimal for the platform.'
-            ]
-          }
-        });
-      }, 5000); // 5 seconds delay to simulate generation
-    });
+    // Map camelCase to snake_case if necessary for backend mapping, 
+    // although our Pydantic schema expects snake_case, the Axios client or schema 
+    // needs to send the right structure.
+    const payload = {
+      workspace_id: request.workspaceId,
+      project_id: request.projectId,
+      platform: request.platform,
+      content_type: request.contentType,
+      user_request: request.userRequest,
+      target_audience: request.targetAudience,
+      tone: request.tone,
+      language: request.language,
+      additional_instructions: request.additionalInstructions
+    };
+    
+    const response = await apiClient.post('/content/generate', payload);
+    return response.data.data;
   }
 };

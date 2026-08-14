@@ -128,9 +128,9 @@ class PublishPostTool(AbstractMCPTool):
                 raise MCPProviderError(f"Post {post_id} not found")
                 
             # Verify workspace ownership via project (simplification, assume post belongs to project in workspace)
-            # Verify Post is APPROVED
-            if post.status != PostStatus.APPROVED:
-                raise MCPProviderError(f"Post {post_id} is not APPROVED. Current status: {post.status.value}")
+            # Verify Post is APPROVED or SCHEDULED
+            if post.status not in (PostStatus.APPROVED, PostStatus.SCHEDULED):
+                raise MCPProviderError(f"Post {post_id} is not APPROVED or SCHEDULED. Current status: {post.status.value}")
                 
             content = post.content
             media_urls = [] # In a real app, map post.media_assets to URLs

@@ -236,6 +236,21 @@ async def get_analytics_service(
 ) -> AnalyticsService:
     return AnalyticsService(session=db, mcp_client=mcp_client)
 
+from app.services.content_generation_service import ContentGenerationService
+
+async def get_content_generation_service(
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+    proj_repo: AbstractProjectRepository = Depends(get_project_repository),
+    bk_repo: AbstractBrandKitRepository = Depends(get_brand_kit_repository),
+    workflow: CompiledStateGraph = Depends(get_content_workflow),
+) -> ContentGenerationService:
+    return ContentGenerationService(
+        workspace_repo=ws_repo,
+        project_repo=proj_repo,
+        brand_kit_repo=bk_repo,
+        workflow=workflow,
+    )
+
 
 # ─────────────────────────────────────────────
 # Current User

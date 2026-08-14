@@ -30,8 +30,13 @@ apiClient.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config;
 
+    // Skip retry for auth endpoints — they legitimately return 401 on bad
+    // credentials; retrying with a refresh token would be wrong and leaks
+    // "No refresh token" into the login form's error state.
+    const isAuthEndpoint = originalRequest?.url?.includes('/auth/');
+
     // If error is 401 and we haven't already retried
-    if (error.response?.status === 401 && originalRequest && !(originalRequest as any)._retry) {
+    if (error.response?.status === 401 && originalRequest && !(originalRequest as any)._retry && !isAuthEndpoint) {
       (originalRequest as any)._retry = true;
 
       // ── Dev bypass: re-fetch the dev token instead of a normal refresh ──

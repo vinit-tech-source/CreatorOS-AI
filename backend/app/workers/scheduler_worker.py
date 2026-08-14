@@ -62,7 +62,7 @@ async def process_due_posts():
             
             # The prompt says: "Verify social account is active". We can query it here.
             social_repo = SocialAccountRepository(session)
-            accounts = await social_repo.list_by_workspace(workspace_id)
+            accounts = await social_repo.get_by_workspace_id(workspace_id)
             
             target_account = None
             for acc in accounts:

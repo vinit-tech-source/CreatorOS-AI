@@ -1,0 +1,21 @@
+=== Navigating ===
+[CONSOLE] DEBUG [vite] connecting...
+[CONSOLE] DEBUG [vite] connected.
+[CONSOLE] INFO %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold
+[CONSOLE] WARN [DEV AUTH BYPASS] Fetching development token from backend...
+This bypass is for local development only and will NOT work in production builds.
+[API RES] 200 http://localhost:8000/api/v1/auth/dev-token
+[API RES] 200 http://localhost:8000/api/v1/auth/dev-token
+[CONSOLE] WARN [DEV AUTH BYPASS] ✓ Authenticated as dev@localhost (id=00000000-0000-0000-0000-000000000001)
+Token stored in authStore and localStorage.
+[API RES] 200 http://localhost:8000/api/v1/workspaces
+[API RES] 200 http://localhost:8000/api/v1/workspaces
+[API RES] 200 http://localhost:8000/api/v1/workspaces
+[API RES] 200 http://localhost:8000/api/v1/workspaces
+URL: http://localhost:5173/dashboard
+=== Navigating to Projects ===
+Checking for 'New Project' button...
+Clicking into a project...
+URL in project: http://localhost:5173/dashboard
+Clicking Create Post...
+[ERROR] Could not find button, a with text "Create Post"

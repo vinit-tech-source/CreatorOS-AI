@@ -57,8 +57,10 @@ export function Sidebar({ className }: SidebarProps) {
           }}
           disabled={workspaces.length === 0}
         >
-          {workspaces.length === 0 ? (
+          {useWorkspaceStore(state => state.isLoading) ? (
             <option value="">Loading...</option>
+          ) : workspaces.length === 0 ? (
+            <option value="">No workspaces found</option>
           ) : (
             workspaces.map(ws => (
               <option key={ws.id} value={ws.id}>{ws.name}</option>

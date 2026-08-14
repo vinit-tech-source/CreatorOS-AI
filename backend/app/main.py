@@ -55,6 +55,7 @@ from app.api.projects import router as projects_router
 from app.api.posts import router as posts_router
 from app.api.media import router as media_router
 from app.api.ai import router as ai_router
+from app.api.content import router as content_router
 from app.api.endpoints.oauth import router as oauth_router
 
 setup_logging()
@@ -150,6 +151,7 @@ app.include_router(projects_router, prefix=settings.API_V1_STR)
 app.include_router(posts_router, prefix=settings.API_V1_STR)
 app.include_router(media_router, prefix=settings.API_V1_STR)
 app.include_router(ai_router, prefix=settings.API_V1_STR)
+app.include_router(content_router, prefix=settings.API_V1_STR)
 app.include_router(oauth_router, prefix=settings.API_V1_STR)
 
 # ── Development auth bypass (conditional) ─────────────────────────────────
