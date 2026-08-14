@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 import httpx
 
 from app.mcp.adapters.social_base import SocialAdapter
-from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics
+from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics, SocialPublishResult
 from app.mcp.exceptions.exceptions import MCPProviderError, MCPAuthenticationError
 from app.core.encryption import decrypt_secret
 
@@ -158,3 +158,66 @@ class BlueskySocialAdapter(SocialAdapter):
             ))
             
         return posts
+
+    async def publish_post(self, content: str, idempotency_key: str, media: List[str] = None) -> SocialPublishResult:
+        """Publish a post to the Bluesky account."""
+        if not content or not content.strip():
+            raise MCPProviderError("Content cannot be empty.")
+            
+        url = f"{self.base_url}/xrpc/com.atproto.repo.createRecord"
+        
+        # We need the user's DID to publish
+        # It's usually in platform_user_id (which is DID)
+        # But if it's a handle, we'd need to resolve it. Assuming platform_user_id is the DID here.
+        did = self._platform_user_id
+        
+        now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+        
+        record = {
+            "$type": "app.bsky.feed.post",
+            "text": content,
+            "createdAt": now
+        }
+        
+        # Bluesky doesn't use idempotency keys natively in createRecord, but we use it for DB logging.
+        # We just make the request.
+        
+        data = {
+            "repo": did,
+            "collection": "app.bsky.feed.post",
+            "record": record
+        }
+        
+        token = self._get_access_token()
+        headers = {"Authorization": f"Bearer {token}"}
+        
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(url, json=data, headers=headers)
+                
+                if response.status_code in (401, 403):
+                    raise MCPAuthenticationError("Bluesky credentials expired or unauthorized.")
+                
+                if response.status_code == 429:
+                    raise MCPProviderError("Bluesky API rate limit exceeded.")
+                    
+                if response.status_code != 200:
+                    logger.error(f"Bluesky publish error: {response.text}")
+                    raise MCPProviderError("Bluesky API returned an error.")
+                    
+                resp_json = response.json()
+                
+                uri = resp_json.get("uri", "")
+                post_id = uri.split("/")[-1] if uri else ""
+                
+                return SocialPublishResult(
+                    platform="BLUESKY",
+                    external_post_id=uri,
+                    published_at=datetime.now(timezone.utc),
+                    post_url=f"https://bsky.app/profile/{did}/post/{post_id}" if did and post_id else None,
+                    status="SUCCESS"
+                )
+                
+            except httpx.RequestError as e:
+                logger.error(f"Bluesky HTTP error: {e}")
+                raise MCPProviderError("Bluesky API is unavailable or timed out.")

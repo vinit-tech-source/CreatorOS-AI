@@ -60,19 +60,23 @@ def mock_repo():
 
 
 @pytest.mark.asyncio
-async def test_social_server_registers_read_only_tools(social_mcp_client):
-    """1. Social server registers read-only tools."""
+async def test_social_server_registers_tools(social_mcp_client):
+    """1. Social server registers tools."""
     tools = social_mcp_client.list_tools()
     tool_names = [t.name for t in tools]
     
     assert "get_account_info" in tool_names
     assert "get_profile_metrics" in tool_names
     assert "get_recent_posts" in tool_names
+    assert "publish_post" in tool_names
     
-    # 13. social:publish is not required or exposed yet
     for tool in tools:
-        assert MCPPermission.SOCIAL_READ in tool.required_permissions
-        assert MCPPermission.SOCIAL_PUBLISH not in tool.required_permissions
+        if tool.name == "publish_post":
+            assert MCPPermission.SOCIAL_PUBLISH in tool.required_permissions
+            assert MCPPermission.SOCIAL_READ not in tool.required_permissions
+        else:
+            assert MCPPermission.SOCIAL_READ in tool.required_permissions
+            assert MCPPermission.SOCIAL_PUBLISH not in tool.required_permissions
 
 
 @pytest.mark.asyncio

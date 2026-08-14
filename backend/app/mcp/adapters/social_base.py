@@ -6,7 +6,7 @@ Abstract base class for social media provider adapters.
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics
+from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics, SocialPublishResult
 
 
 class SocialAdapter(ABC):
@@ -28,4 +28,9 @@ class SocialAdapter(ABC):
     @abstractmethod
     async def get_recent_posts(self, platform_user_id: str, limit: int = 10) -> List[SocialPostData]:
         """Fetch recent posts from the account."""
+        pass
+
+    @abstractmethod
+    async def publish_post(self, content: str, idempotency_key: str, media: List[str] = None) -> SocialPublishResult:
+        """Publish a post to the account."""
         pass

@@ -6,6 +6,7 @@ from .social_account import SocialAccount, SocialPlatform
 from .project import Project, ProjectStatus
 from .post import Post, ContentType, PostStatus
 from .media_asset import MediaAsset, MediaType
+from .publishing_log import PublishingLog, PublishStatus
 
 __all__ = [
     "Base",
@@ -22,4 +23,6 @@ __all__ = [
     "PostStatus",
     "MediaAsset",
     "MediaType",
+    "PublishingLog",
+    "PublishStatus",
 ]

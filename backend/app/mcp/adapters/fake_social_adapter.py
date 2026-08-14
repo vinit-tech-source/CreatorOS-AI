@@ -7,7 +7,7 @@ from typing import List
 from datetime import datetime
 
 from app.mcp.adapters.social_base import SocialAdapter
-from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics
+from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics, SocialPublishResult
 from app.mcp.exceptions.exceptions import MCPProviderError
 
 
@@ -67,3 +67,15 @@ class FakeSocialAdapter(SocialAdapter):
                 )
             )
         return posts
+
+    async def publish_post(self, content: str, idempotency_key: str, media: List[str] = None) -> SocialPublishResult:
+        if "error" in content:
+            raise MCPProviderError("Simulated provider error on publish")
+            
+        return SocialPublishResult(
+            platform=self.platform,
+            external_post_id=f"fake_post_{idempotency_key}",
+            published_at=datetime.utcnow(),
+            post_url=f"https://{self.platform.lower()}.com/posts/fake_{idempotency_key}",
+            status="SUCCESS"
+        )

@@ -38,3 +38,12 @@ class SocialMetrics(BaseModel):
     comments: Optional[int] = Field(default=None)
     shares: Optional[int] = Field(default=None)
     collected_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SocialPublishResult(BaseModel):
+    """Normalized data representing the result of publishing a post."""
+    platform: str = Field(..., description="e.g., 'X', 'LINKEDIN', 'BLUESKY'")
+    external_post_id: Optional[str] = Field(None, description="Platform-specific post ID if successful")
+    published_at: Optional[datetime] = Field(None, description="When the post was published")
+    post_url: Optional[str] = Field(None, description="URL to the specific post")
+    status: str = Field(..., description="PublishStatus as a string, e.g., 'SUCCESS', 'FAILED'")
+    error_message: Optional[str] = Field(None, description="Error message if failed")
