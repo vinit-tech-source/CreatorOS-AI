@@ -19,6 +19,12 @@ class AbstractPostRepository(ABC):
 
     @abstractmethod
     async def list_by_project(self, project_id: uuid.UUID) -> list[Post]:
+        """Return all Posts for a specific project."""
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_due_posts(self, limit: int = 10) -> list[Post]:
+        """Return due posts for publishing."""
         raise NotImplementedError
 
     @abstractmethod

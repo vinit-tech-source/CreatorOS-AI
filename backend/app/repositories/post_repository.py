@@ -58,6 +58,22 @@ class PostRepository(AbstractPostRepository):
         )
         return list(result.scalars().all())
 
+    async def get_due_posts(self, limit: int = 10) -> list[Post]:
+        """Return posts that are scheduled, approved, and past their scheduled time."""
+        from datetime import datetime, timezone
+        from app.models.post import PostStatus, SchedulingStatus
+        
+        now_utc = datetime.now(timezone.utc)
+        result = await self.session.execute(
+            select(Post)
+            .where(Post.status == PostStatus.SCHEDULED)
+            .where(Post.scheduling_status == SchedulingStatus.SCHEDULED)
+            .where(Post.scheduled_at <= now_utc)
+            .order_by(Post.scheduled_at.asc())
+            .limit(limit)
+        )
+        return list(result.scalars().all())
+
     async def update(self, post: Post, data: PostUpdate) -> Post:
         """Apply partial updates from PostUpdate schema.
 

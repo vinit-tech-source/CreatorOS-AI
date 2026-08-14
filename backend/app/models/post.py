@@ -44,6 +44,15 @@ class PostStatus(str, enum.Enum):
     ARCHIVED = "ARCHIVED"
 
 
+class SchedulingStatus(str, enum.Enum):
+    NOT_SCHEDULED = "NOT_SCHEDULED"
+    SCHEDULED = "SCHEDULED"
+    PROCESSING = "PROCESSING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
 class Post(Base):
     """
     A Content Post belonging to a Project.
@@ -82,13 +91,19 @@ class Post(Base):
         index=True,
     )
 
-    scheduled_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True, index=True
-    )
-    published_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    # Publishing tracking
+    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     external_post_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    
+    # Scheduling fields
+    timezone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    scheduling_status: Mapped[SchedulingStatus] = mapped_column(
+        SAEnum(SchedulingStatus, name="schedulingstatus", create_type=True), nullable=False, default=SchedulingStatus.NOT_SCHEDULED
+    )
+    scheduled_attempts: Mapped[int] = mapped_column(nullable=False, default=0)
+    last_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    failure_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()

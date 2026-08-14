@@ -7,15 +7,17 @@ import uuid
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.deps import get_current_user_id, get_post_service
+from app.api.deps import get_current_user_id, get_post_service, get_scheduler_service
 from app.schemas.response import ApiResponse
 from app.schemas.post import (
     PostCreate,
     PostResponse,
     PostUpdate,
     PostReject,
+    PostSchedule,
 )
 from app.services.post_service import PostService
+from app.services.scheduler_service import SchedulerService
 
 router = APIRouter(
     prefix="/projects/{project_id}/posts",
@@ -57,6 +59,25 @@ async def list_posts(
     service: PostService = Depends(get_post_service),
 ) -> ApiResponse[list[PostResponse]]:
     posts = await service.list_posts(
+        project_id=project_id,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=posts)
+
+
+@router.get(
+    "/scheduled",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[list[PostResponse]],
+    summary="List Scheduled Posts",
+    description="List all scheduled posts in the project.",
+)
+async def list_scheduled_posts(
+    project_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: SchedulerService = Depends(get_scheduler_service),
+) -> ApiResponse[list[PostResponse]]:
+    posts = await service.list_scheduled_posts(
         project_id=project_id,
         requesting_user_id=user_id,
     )
@@ -210,3 +231,70 @@ async def reject_post(
         requesting_user_id=user_id,
     )
     return ApiResponse.ok(data=post, message="Post rejected.")
+
+
+@router.post(
+    "/{post_id}/schedule",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[PostResponse],
+    summary="Schedule Post",
+    description="Schedules an APPROVED post for publication.",
+)
+async def schedule_post(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    data: PostSchedule,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: SchedulerService = Depends(get_scheduler_service),
+) -> ApiResponse[PostResponse]:
+    post = await service.schedule_post(
+        project_id=project_id,
+        post_id=post_id,
+        schedule_data=data,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=post, message="Post scheduled.")
+
+
+@router.patch(
+    "/{post_id}/schedule",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[PostResponse],
+    summary="Reschedule Post",
+    description="Reschedules a previously scheduled post.",
+)
+async def reschedule_post(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    data: PostSchedule,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: SchedulerService = Depends(get_scheduler_service),
+) -> ApiResponse[PostResponse]:
+    post = await service.reschedule_post(
+        project_id=project_id,
+        post_id=post_id,
+        schedule_data=data,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=post, message="Post rescheduled.")
+
+
+@router.delete(
+    "/{post_id}/schedule",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[PostResponse],
+    summary="Cancel Schedule",
+    description="Cancels a scheduled post.",
+)
+async def cancel_schedule(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: SchedulerService = Depends(get_scheduler_service),
+) -> ApiResponse[PostResponse]:
+    post = await service.cancel_schedule(
+        project_id=project_id,
+        post_id=post_id,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=post, message="Schedule cancelled.")

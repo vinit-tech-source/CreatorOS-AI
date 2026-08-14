@@ -53,6 +53,18 @@ class PostUpdate(BaseModel):
     approved_by: Optional[uuid.UUID] = Field(None)
     approved_at: Optional[datetime] = Field(None)
     rejection_reason: Optional[str] = Field(None)
+    
+    # Scheduling fields
+    timezone: Optional[str] = Field(None)
+    scheduling_status: Optional[str] = Field(None)
+    scheduled_attempts: Optional[int] = Field(None)
+    last_attempt_at: Optional[datetime] = Field(None)
+    failure_reason: Optional[str] = Field(None)
+
+class PostSchedule(BaseModel):
+    """Schema for scheduling a post."""
+    scheduled_at: datetime = Field(..., description="The future datetime in UTC when the post should be published.")
+    timezone: str = Field(..., description="The user's timezone, e.g., 'America/New_York'.")
 
 class PostReject(BaseModel):
     """Schema for rejecting a post."""
@@ -86,3 +98,10 @@ class PostResponse(BaseModel):
     approved_by: Optional[uuid.UUID] = None
     approved_at: Optional[datetime] = None
     rejection_reason: Optional[str] = None
+    
+    # Scheduling fields
+    timezone: Optional[str] = None
+    scheduling_status: Optional[str] = None
+    scheduled_attempts: Optional[int] = 0
+    last_attempt_at: Optional[datetime] = None
+    failure_reason: Optional[str] = None

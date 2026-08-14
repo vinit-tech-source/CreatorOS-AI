@@ -39,6 +39,7 @@ from app.services.social_account_service import SocialAccountService
 from app.services.project_service import ProjectService
 from app.services.post_service import PostService
 from app.services.media_asset_service import MediaAssetService
+from app.services.scheduler_service import SchedulerService
 from app.integrations.ai.base import AbstractAIProvider
 from app.integrations.ai.gemini_client import GeminiClient
 from app.services.ai_service import AIService
@@ -166,6 +167,18 @@ async def get_post_service(
         workspace_repository=ws_repo,
     )
 
+
+async def get_scheduler_service(
+    post_repo: AbstractPostRepository = Depends(get_post_repository),
+    proj_repo: AbstractProjectRepository = Depends(get_project_repository),
+    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
+) -> SchedulerService:
+    """Construct a SchedulerService with injected repos."""
+    return SchedulerService(
+        post_repo=post_repo,
+        project_repo=proj_repo,
+        workspace_repo=ws_repo,
+    )
 
 async def get_media_asset_repository(
     db=Depends(get_db),

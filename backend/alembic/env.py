@@ -31,7 +31,7 @@ from app.core.config import settings
 target_metadata = Base.metadata
 
 # Override the sqlalchemy.url in alembic.ini with the one from our config
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
