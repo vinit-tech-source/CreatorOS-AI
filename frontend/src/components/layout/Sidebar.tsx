@@ -18,7 +18,7 @@ interface SidebarProps {
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'Projects', path: '/projects', icon: FolderKanban },
-  { name: 'Posts', path: '/posts', icon: PenTool },
+  { name: 'Posts', path: '/projects', icon: PenTool },
   { name: 'Analytics', path: '/analytics', icon: BarChart3 },
   { name: 'Brand Kit', path: '/brand-kit', icon: Palette },
   { name: 'Social Accounts', path: '/social-accounts', icon: Share2 },

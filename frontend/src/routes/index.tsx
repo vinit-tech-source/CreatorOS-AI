@@ -7,7 +7,8 @@ import { Register } from '../pages/auth/Register';
 import { Dashboard } from '../pages/dashboard/Dashboard';
 import { Workspaces } from '../pages/workspaces/Workspaces';
 import { Projects } from '../pages/projects/Projects';
-import { Posts } from '../pages/posts/Posts';
+import { PostList } from '../pages/posts/PostList';
+import { PostDetails } from '../pages/posts/PostDetails';
 import { Analytics } from '../pages/analytics/Analytics';
 import { SocialAccounts } from '../pages/settings/SocialAccounts';
 import { Settings } from '../pages/settings/Settings';
@@ -25,7 +26,8 @@ export function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/workspaces" element={<Workspaces />} />
         <Route path="/projects" element={<Projects />} />
-        <Route path="/posts" element={<Posts />} />
+        <Route path="/workspaces/:workspaceId/projects/:projectId/posts" element={<PostList />} />
+        <Route path="/workspaces/:workspaceId/projects/:projectId/posts/:postId" element={<PostDetails />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/social-accounts" element={<SocialAccounts />} />
         <Route path="/settings" element={<Settings />} />
