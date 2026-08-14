@@ -46,3 +46,9 @@ class MCPProviderError(AppException):
     """Raised when an underlying MCP provider (e.g., YouTube, Reddit) returns an error."""
     def __init__(self, message: str = "MCP provider returned an error"):
         super().__init__(message)
+
+
+class MCPAuthenticationError(MCPProviderError):
+    """Raised when an underlying MCP provider returns an authentication or authorization error."""
+    def __init__(self, message: str = "MCP provider authentication failed"):
+        super().__init__(message)

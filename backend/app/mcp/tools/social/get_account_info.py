@@ -11,7 +11,7 @@ from app.mcp.schemas.tool import ToolDefinition
 from app.mcp.schemas.result import ToolResult, ToolResultMetadata
 from app.mcp.tools.base import AbstractMCPTool
 from app.mcp.adapters.social_base import SocialAdapter
-from app.mcp.adapters.fake_social_adapter import FakeSocialAdapter
+from app.mcp.adapters.factory import get_social_adapter
 from app.mcp.permissions.permissions import MCPPermission
 from app.mcp.exceptions.exceptions import MCPToolValidationError, MCPProviderError
 
@@ -79,7 +79,7 @@ class GetAccountInfoTool(AbstractMCPTool):
             platform_user_id = account.platform_user_id
             
         # Select adapter
-        adapter = self.adapter or FakeSocialAdapter(platform=platform)
+        adapter = self.adapter or get_social_adapter(account)
         
         try:
             account_info = await adapter.get_account_info(platform_user_id=platform_user_id)
