@@ -1,0 +1,30 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-base);
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-surface-solid);
+  display: flex;
+  flex-direction: column;
+}
+
+.mainWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Important for preventing flex children from overflowing */
+}
+
+.mainContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-6);
+  background-color: transparent;
+}
