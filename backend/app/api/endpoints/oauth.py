@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, Query, status
 from app.api.deps import get_current_user_id, get_social_account_service
 from app.services.social_account_service import SocialAccountService
 from app.services.oauth.oauth_service import OAuthService
+from app.integrations.oauth.bluesky_provider import BlueskyOAuthProvider
 from app.schemas.oauth import OAuthAuthorization
 
 router = APIRouter(prefix="/oauth", tags=["oauth"])
@@ -19,8 +20,14 @@ async def get_oauth_service(
 ) -> OAuthService:
     """Dependency injection for OAuthService."""
     # In a real app, providers would be configured and registered here or at app startup.
-    # For MVP foundation, we just instantiate the service.
-    return OAuthService(social_account_service=sa_service)
+    service = OAuthService(social_account_service=sa_service)
+    
+    # Register providers
+    from app.core.config import settings
+    if settings.BLUESKY_ENABLED:
+        service.register_provider(BlueskyOAuthProvider())
+        
+    return service
 
 
 @router.get(

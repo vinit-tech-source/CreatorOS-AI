@@ -34,6 +34,7 @@ class SocialPlatform(str, enum.Enum):
     INSTAGRAM = "INSTAGRAM"
     FACEBOOK = "FACEBOOK"
     THREADS = "THREADS"
+    BLUESKY = "BLUESKY"
 
 
 class SocialAccount(Base):

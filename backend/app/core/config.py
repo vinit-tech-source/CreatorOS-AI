@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     YOUTUBE_MAX_RESULTS: int = 10
     
     BLUESKY_ENABLED: bool = False
+    BLUESKY_CLIENT_ID: str = ""
+    BLUESKY_CLIENT_SECRET: str = ""
+    BLUESKY_REDIRECT_URI: str = ""
+    
     REDDIT_ENABLED: bool = False
     
     # RAG Settings
