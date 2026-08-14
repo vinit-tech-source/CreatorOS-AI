@@ -91,13 +91,15 @@ class MCPClient:
 
 def get_default_mcp_client() -> MCPClient:
     """
-    Helper to instantiate a fully configured MCPClient with the Research Server.
+    Helper to instantiate a fully configured MCPClient with the Research Server and Social Server.
     """
     from app.mcp.client.registry import MCPServerRegistry
     from app.mcp.servers.research_server import ResearchServer
+    from app.mcp.servers.social_server import SocialServer
     
     registry = MCPServerRegistry()
     registry.register_server(ResearchServer())
+    registry.register_server(SocialServer())
     
     from app.core.config import settings
     return MCPClient(registry=registry, default_timeout=settings.MCP_DEFAULT_TIMEOUT)
