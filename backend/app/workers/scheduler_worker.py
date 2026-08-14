@@ -117,17 +117,42 @@ async def process_due_posts():
                 await service.mark_failed(post.id, reason=str(e), retry=True)
 
 
+shutdown_event = asyncio.Event()
+
+def handle_shutdown(sig, frame):
+    logger.info(f"Received signal {sig}. Shutting down gracefully...")
+    shutdown_event.set()
+
 async def worker_loop(interval_seconds: int = 10):
     """Main loop for the scheduler worker."""
     logger.info("Scheduler worker started.")
-    while True:
+    
+    import signal
+    try:
+        loop = asyncio.get_running_loop()
+        # In Docker, the main process gets SIGTERM. We might also get SIGINT.
+        # Note: signal.signal is safer for cross-platform, but asyncio handles it better.
+        # But we must register signal handlers via asyncio if supported.
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, lambda s=sig: shutdown_event.set())
+    except NotImplementedError:
+        # Windows doesn't support add_signal_handler fully, fallback to signal module
+        signal.signal(signal.SIGINT, handle_shutdown)
+        signal.signal(signal.SIGTERM, handle_shutdown)
+
+    while not shutdown_event.is_set():
         try:
             await process_due_posts()
         except Exception as e:
             logger.error(f"Worker loop error: {e}")
         
-        await asyncio.sleep(interval_seconds)
-
+        # Sleep with a timeout so it can be interrupted by shutdown event
+        try:
+            await asyncio.wait_for(shutdown_event.wait(), timeout=interval_seconds)
+        except asyncio.TimeoutError:
+            pass
+            
+    logger.info("Scheduler worker stopped cleanly.")
 
 if __name__ == "__main__":
     try:

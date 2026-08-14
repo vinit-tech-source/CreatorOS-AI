@@ -32,6 +32,7 @@ async def process_analytics_for_published_posts():
                 Post.external_post_id.is_not(None)
             )
             .limit(50)
+            .with_for_update(skip_locked=True)
         )
         
         result = await session.execute(stmt)
@@ -59,16 +60,37 @@ async def process_analytics_for_published_posts():
             except Exception as e:
                 logger.error(f"Failed to collect analytics for post {post.id}: {e}")
 
+shutdown_event = asyncio.Event()
+
+def handle_shutdown(sig, frame):
+    logger.info(f"Received signal {sig}. Shutting down gracefully...")
+    shutdown_event.set()
+
 async def analytics_worker_loop(interval_seconds: int = 3600):
     """Main loop for the analytics worker."""
     logger.info("Analytics worker started.")
-    while True:
+    
+    import signal
+    try:
+        loop = asyncio.get_running_loop()
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            loop.add_signal_handler(sig, lambda s=sig: shutdown_event.set())
+    except NotImplementedError:
+        signal.signal(signal.SIGINT, handle_shutdown)
+        signal.signal(signal.SIGTERM, handle_shutdown)
+
+    while not shutdown_event.is_set():
         try:
             await process_analytics_for_published_posts()
         except Exception as e:
             logger.error(f"Worker loop error: {e}")
         
-        await asyncio.sleep(interval_seconds)
+        try:
+            await asyncio.wait_for(shutdown_event.wait(), timeout=interval_seconds)
+        except asyncio.TimeoutError:
+            pass
+            
+    logger.info("Analytics worker stopped cleanly.")
 
 if __name__ == "__main__":
     try:

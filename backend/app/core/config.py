@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     # ─────────────────────────────────────────────────────────────────────────
     DEV_AUTH_BYPASS: bool = False
 
+    # CORS
+    ALLOWED_ORIGINS: list[str] = []
+
     # Database
     DATABASE_URL: str = ""
 
@@ -32,7 +35,7 @@ class Settings(BaseSettings):
     REDIS_URL: str = ""
 
     # Security config
-    SECRET_KEY: str = "changeme_in_production"
+    SECRET_KEY: str = ""
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
     
@@ -93,6 +96,26 @@ class Settings(BaseSettings):
                 "permitted when ENVIRONMENT=production. "
                 "Set DEV_AUTH_BYPASS=false before deploying to production."
             )
+        return self
+
+    @model_validator(mode="after")
+    def _check_production_config(self) -> Self:
+        """
+        Validate that all required production secrets and configurations are present.
+        """
+        if self.ENVIRONMENT.lower() == "production":
+            if not self.SECRET_KEY or self.SECRET_KEY == "changeme_in_production":
+                raise RuntimeError("CRITICAL SAFETY VIOLATION: SECRET_KEY must be set in production.")
+            if not self.ENCRYPTION_KEY:
+                raise RuntimeError("CRITICAL SAFETY VIOLATION: ENCRYPTION_KEY must be set in production.")
+            if not self.DATABASE_URL:
+                raise RuntimeError("CRITICAL SAFETY VIOLATION: DATABASE_URL must be set in production.")
+            if not self.REDIS_URL:
+                raise RuntimeError("CRITICAL SAFETY VIOLATION: REDIS_URL must be set in production.")
+            if not self.GEMINI_API_KEY:
+                raise RuntimeError("CRITICAL SAFETY VIOLATION: GEMINI_API_KEY must be set in production.")
+            if "*" in self.ALLOWED_ORIGINS:
+                raise RuntimeError("CRITICAL SAFETY VIOLATION: Wildcard ALLOWED_ORIGINS='*' is not permitted in production.")
         return self
 
 
