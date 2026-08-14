@@ -29,34 +29,47 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config;
-    
+
     // If error is 401 and we haven't already retried
     if (error.response?.status === 401 && originalRequest && !(originalRequest as any)._retry) {
       (originalRequest as any)._retry = true;
-      
+
+      // ── Dev bypass: re-fetch the dev token instead of a normal refresh ──
+      // Import lazily to keep the production bundle unaffected.
+      if (import.meta.env.DEV && import.meta.env.VITE_DEV_AUTH_BYPASS === 'true') {
+        try {
+          const { initDevAuth } = await import('../../lib/devAuth');
+          await initDevAuth();
+          const newToken = useAuthStore.getState().accessToken;
+          if (newToken && originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          }
+          return apiClient(originalRequest);
+        } catch {
+          useAuthStore.getState().logout();
+          return Promise.reject(error);
+        }
+      }
+
+      // ── Normal refresh flow ──
       try {
-        // Attempt to refresh token (placeholder URL depending on backend structure)
-        // If the backend has a /auth/refresh endpoint
         const refreshToken = localStorage.getItem('refresh_token');
         if (!refreshToken) throw new Error('No refresh token');
 
         const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-          refresh_token: refreshToken
+          refresh_token: refreshToken,
         });
 
-        // Save new token
         useAuthStore.getState().setAuth(
-          useAuthStore.getState().user!, 
+          useAuthStore.getState().user!,
           data.data.access_token
         );
-        
-        // Retry original request
+
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${data.data.access_token}`;
         }
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, logout
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);
       }

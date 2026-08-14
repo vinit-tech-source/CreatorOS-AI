@@ -1,11 +1,29 @@
+import logging
+
 from pydantic_settings import BaseSettings
-from pydantic import ConfigDict
+from pydantic import ConfigDict, model_validator
+from typing import Self
+
+logger = logging.getLogger(__name__)
 
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "CreatorOS AI"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
+
+    # Runtime environment — used for safety guards
+    # Values: "development" | "staging" | "production"
+    ENVIRONMENT: str = "development"
+
+    # ── Development Auth Bypass ───────────────────────────────────────────────
+    # When true, exposes GET /auth/dev-token which issues a real JWT for a
+    # deterministic dev@localhost identity WITHOUT interactive login.
+    #
+    # SAFETY: Automatically refused if ENVIRONMENT=production.
+    # DEFAULT: false — must be explicitly enabled in .env.
+    # ─────────────────────────────────────────────────────────────────────────
+    DEV_AUTH_BYPASS: bool = False
 
     # Database
     DATABASE_URL: str = ""
@@ -61,6 +79,21 @@ class Settings(BaseSettings):
     GEMINI_TEMPERATURE: float = 0.7
 
     model_config = ConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+    @model_validator(mode="after")
+    def _refuse_bypass_in_production(self) -> Self:
+        """
+        Safety guard: refuse to start if DEV_AUTH_BYPASS is enabled
+        while ENVIRONMENT is set to production.
+        Fail closed — never allow a bypass token endpoint in production.
+        """
+        if self.DEV_AUTH_BYPASS and self.ENVIRONMENT.lower() == "production":
+            raise RuntimeError(
+                "CRITICAL SAFETY VIOLATION: DEV_AUTH_BYPASS=true is not "
+                "permitted when ENVIRONMENT=production. "
+                "Set DEV_AUTH_BYPASS=false before deploying to production."
+            )
+        return self
 
 
 settings = Settings()

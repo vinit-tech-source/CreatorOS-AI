@@ -8,6 +8,7 @@ import { apiClient } from '../../services/api';
 export function Register() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,20 +21,25 @@ export function Register() {
     setIsLoading(true);
 
     try {
-      const response = await apiClient.post('/auth/register', { 
-        first_name: firstName,
-        last_name: lastName,
-        email, 
-        password 
+      const response = await apiClient.post('/auth/register', {
+        username,
+        full_name: `${firstName} ${lastName}`.trim(),
+        email,
+        password,
       });
-      
+
       if (response.data.success) {
         navigate('/login', { state: { message: 'Registration successful! Please login.' } });
       } else {
         setError(response.data.message || 'Registration failed');
       }
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || err.message || 'An error occurred during registration');
+      // Handle Pydantic validation errors (array of {msg, loc}) as well as app errors
+      const detail = err.response?.data?.detail;
+      const validationMsg = Array.isArray(detail)
+        ? detail.map((d: any) => d.msg).join(', ')
+        : undefined;
+      setError(validationMsg || err.response?.data?.error?.message || err.message || 'An error occurred during registration');
     } finally {
       setIsLoading(false);
     }
@@ -46,7 +52,7 @@ export function Register() {
           <h1 className="text-3xl font-bold mb-2">CreatorOS AI</h1>
           <p className="text-secondary">Create a new account.</p>
         </div>
-        
+
         <Card glass>
           <CardHeader title="Register" />
           <CardContent>
@@ -56,7 +62,7 @@ export function Register() {
                   {error}
                 </div>
               )}
-              
+
               <div className="flex gap-4">
                 <Input
                   label="First Name"
@@ -77,6 +83,15 @@ export function Register() {
               </div>
 
               <Input
+                label="Username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="johndoe"
+                required
+              />
+
+              <Input
                 label="Email Address"
                 type="email"
                 value={email}
@@ -84,7 +99,7 @@ export function Register() {
                 placeholder="you@example.com"
                 required
               />
-              
+
               <Input
                 label="Password"
                 type="password"
@@ -93,12 +108,12 @@ export function Register() {
                 placeholder="••••••••"
                 required
               />
-              
+
               <Button type="submit" fullWidth isLoading={isLoading} className="mt-2">
                 Sign Up
               </Button>
             </form>
-            
+
             <div className="mt-6 text-center text-sm text-secondary">
               Already have an account?{' '}
               <Link to="/login" className="text-primary hover:underline">

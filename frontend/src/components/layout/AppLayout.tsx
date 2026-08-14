@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { useWorkspaceStore } from '../../stores/workspaceStore';
+import { DevBanner } from '../dev/DevBanner';
 import styles from './AppLayout.module.css';
 
 interface AppLayoutProps {
@@ -24,6 +25,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           {children}
         </main>
       </div>
+      {/* Renders only when VITE_DEV_AUTH_BYPASS=true in a Vite dev build */}
+      <DevBanner />
     </div>
   );
 }

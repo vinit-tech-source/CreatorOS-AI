@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   accessToken: localStorage.getItem('access_token'),
   isAuthenticated: !!localStorage.getItem('access_token'),
-  isInitializing: true, // Used when checking session on load
+  isInitializing: false, // Auth is derived synchronously from localStorage — no async session check needed
 
   setAuth: (user, token) => {
     localStorage.setItem('access_token', token);

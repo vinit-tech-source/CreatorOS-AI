@@ -66,6 +66,21 @@ setup_logging()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    import logging
+    _log = logging.getLogger(__name__)
+
+    # ── Dev auth bypass warning ────────────────────────────────────────────
+    if settings.DEV_AUTH_BYPASS:
+        _log.warning(
+            "\n"
+            "  ╔══════════════════════════════════════════════════════╗\n"
+            "  ║  ⚠  DEVELOPMENT AUTH BYPASS ENABLED                 ║\n"
+            "  ║     GET /api/v1/auth/dev-token is active.            ║\n"
+            "  ║     NEVER use this in a production environment.      ║\n"
+            "  ╚══════════════════════════════════════════════════════╝"
+        )
+    # ─────────────────────────────────────────────────────────────────────
+
     # Application startup
     await redis_manager.connect()
     yield
@@ -136,3 +151,10 @@ app.include_router(posts_router, prefix=settings.API_V1_STR)
 app.include_router(media_router, prefix=settings.API_V1_STR)
 app.include_router(ai_router, prefix=settings.API_V1_STR)
 app.include_router(oauth_router, prefix=settings.API_V1_STR)
+
+# ── Development auth bypass (conditional) ─────────────────────────────────
+# This router is ONLY registered when DEV_AUTH_BYPASS=true.
+# config.py already rejects that flag in production at import time.
+if settings.DEV_AUTH_BYPASS:
+    from app.api.dev_auth import router as dev_auth_router  # noqa: E402
+    app.include_router(dev_auth_router, prefix=settings.API_V1_STR)
