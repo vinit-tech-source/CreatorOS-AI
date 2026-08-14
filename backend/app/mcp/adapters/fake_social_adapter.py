@@ -5,9 +5,16 @@ Fake Social Adapter for offline testing and foundation validation.
 """
 from typing import List
 from datetime import datetime
+import uuid
 
 from app.mcp.adapters.social_base import SocialAdapter
-from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics, SocialPublishResult
+from app.mcp.schemas.social import (
+    SocialAccountData, 
+    SocialPostData, 
+    SocialMetrics, 
+    SocialPublishResult,
+    SocialPostMetrics
+)
 from app.mcp.exceptions.exceptions import MCPProviderError
 
 
@@ -74,8 +81,25 @@ class FakeSocialAdapter(SocialAdapter):
             
         return SocialPublishResult(
             platform=self.platform,
-            external_post_id=f"fake_post_{idempotency_key}",
+            external_post_id=f"fake_post_{uuid.uuid4().hex[:8]}",
             published_at=datetime.utcnow(),
-            post_url=f"https://{self.platform.lower()}.com/posts/fake_{idempotency_key}",
+            post_url=f"https://fake-{self.platform.lower()}.com/post/mock",
             status="SUCCESS"
+        )
+
+    async def get_post_metrics(self, external_post_id: str) -> SocialPostMetrics:
+        import random
+        from datetime import datetime, timezone
+        
+        return SocialPostMetrics(
+            impressions=random.randint(100, 10000),
+            views=random.randint(100, 5000),
+            likes=random.randint(10, 1000),
+            comments=random.randint(0, 100),
+            shares=random.randint(0, 50),
+            saves=random.randint(0, 20),
+            clicks=random.randint(0, 200),
+            followers_at_time=random.randint(100, 50000),
+            engagement_rate=None,
+            collected_at=datetime.now(timezone.utc)
         )

@@ -8,6 +8,7 @@ from app.mcp.tools.social.get_account_info import GetAccountInfoTool
 from app.mcp.tools.social.get_profile_metrics import GetProfileMetricsTool
 from app.mcp.tools.social.get_recent_posts import GetRecentPostsTool
 from app.mcp.tools.social.publish_post import PublishPostTool
+from app.mcp.tools.social.get_post_metrics import GetPostMetricsTool
 
 
 class SocialServer(AbstractMCPServer):
@@ -23,3 +24,4 @@ class SocialServer(AbstractMCPServer):
         self.register_tool(GetProfileMetricsTool())
         self.register_tool(GetRecentPostsTool())
         self.register_tool(PublishPostTool())
+        self.register_tool(GetPostMetricsTool())

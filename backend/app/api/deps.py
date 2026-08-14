@@ -44,6 +44,8 @@ from app.integrations.ai.base import AbstractAIProvider
 from app.integrations.ai.gemini_client import GeminiClient
 from app.services.ai_service import AIService
 from app.services.context_service import ContextService
+from app.services.analytics_service import AnalyticsService
+from app.mcp.client.client import MCPClient
 from app.workflows.content_workflow import content_graph
 from langgraph.graph.state import CompiledStateGraph
 
@@ -222,6 +224,17 @@ async def get_context_service() -> ContextService:
 async def get_content_workflow() -> CompiledStateGraph:
     """Provide the compiled LangGraph workflow."""
     return content_graph
+
+async def get_mcp_client() -> MCPClient:
+    client = MCPClient()
+    await client.initialize()
+    return client
+
+async def get_analytics_service(
+    db=Depends(get_db),
+    mcp_client: MCPClient = Depends(get_mcp_client)
+) -> AnalyticsService:
+    return AnalyticsService(session=db, mcp_client=mcp_client)
 
 
 # ─────────────────────────────────────────────

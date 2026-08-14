@@ -39,6 +39,19 @@ class SocialMetrics(BaseModel):
     shares: Optional[int] = Field(default=None)
     collected_at: datetime = Field(default_factory=datetime.utcnow)
 
+class SocialPostMetrics(BaseModel):
+    """Normalized metrics for a specific post."""
+    impressions: Optional[int] = Field(default=None)
+    views: Optional[int] = Field(default=None)
+    likes: Optional[int] = Field(default=None)
+    comments: Optional[int] = Field(default=None)
+    shares: Optional[int] = Field(default=None)
+    saves: Optional[int] = Field(default=None)
+    clicks: Optional[int] = Field(default=None)
+    followers_at_time: Optional[int] = Field(default=None)
+    engagement_rate: Optional[float] = Field(default=None)
+    collected_at: datetime = Field(default_factory=datetime.utcnow)
+
 class SocialPublishResult(BaseModel):
     """Normalized data representing the result of publishing a post."""
     platform: str = Field(..., description="e.g., 'X', 'LINKEDIN', 'BLUESKY'")

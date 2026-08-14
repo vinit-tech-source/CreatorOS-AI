@@ -15,10 +15,12 @@ from typing import List
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.deps import get_current_user_id, get_workspace_service
+from app.api.deps import get_current_user_id, get_workspace_service, get_analytics_service
 from app.schemas.response import ApiResponse
 from app.schemas.workspace import WorkspaceCreate, WorkspaceResponse, WorkspaceUpdate
+from app.schemas.analytics import AnalyticsSummary, PostAnalyticsResponse
 from app.services.workspace_service import WorkspaceService
+from app.services.analytics_service import AnalyticsService
 
 router = APIRouter(prefix="/workspaces", tags=["Workspaces"])
 
@@ -131,3 +133,51 @@ async def delete_workspace(
         requesting_user_id=user_id,
     )
     return ApiResponse.ok(data=None, message="Workspace deleted successfully.")
+
+# ─────────────────────────────────────────────
+# GET /workspaces/{workspace_id}/analytics/summary
+# ─────────────────────────────────────────────
+
+@router.get(
+    "/{workspace_id}/analytics/summary",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[AnalyticsSummary],
+    summary="Get Workspace Analytics Summary",
+    description="Retrieve aggregated analytics for a workspace.",
+)
+async def get_workspace_analytics_summary(
+    workspace_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    workspace_service: WorkspaceService = Depends(get_workspace_service),
+    analytics_service: AnalyticsService = Depends(get_analytics_service),
+) -> ApiResponse[AnalyticsSummary]:
+    # Check if user has access to workspace
+    await workspace_service.get_workspace(workspace_id=workspace_id, requesting_user_id=user_id)
+    summary = await analytics_service.get_workspace_summary(workspace_id=workspace_id)
+    return ApiResponse.ok(data=summary)
+
+
+# ─────────────────────────────────────────────
+# GET /workspaces/{workspace_id}/analytics/posts
+# ─────────────────────────────────────────────
+
+@router.get(
+    "/{workspace_id}/analytics/posts",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[List[PostAnalyticsResponse]],
+    summary="List Workspace Posts Analytics",
+    description="Retrieve analytics for all posts in a workspace.",
+)
+async def list_workspace_posts_analytics(
+    workspace_id: uuid.UUID,
+    limit: int = 100,
+    offset: int = 0,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    workspace_service: WorkspaceService = Depends(get_workspace_service),
+    analytics_service: AnalyticsService = Depends(get_analytics_service),
+) -> ApiResponse[List[PostAnalyticsResponse]]:
+    # Check if user has access to workspace
+    await workspace_service.get_workspace(workspace_id=workspace_id, requesting_user_id=user_id)
+    posts_analytics = await analytics_service.analytics_repo.list_snapshots_by_workspace(workspace_id, limit, offset)
+    return ApiResponse.ok(data=posts_analytics)
+

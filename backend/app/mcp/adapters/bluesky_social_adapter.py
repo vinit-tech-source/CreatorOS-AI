@@ -11,7 +11,13 @@ from datetime import datetime, timezone
 import httpx
 
 from app.mcp.adapters.social_base import SocialAdapter
-from app.mcp.schemas.social import SocialAccountData, SocialPostData, SocialMetrics, SocialPublishResult
+from app.mcp.schemas.social import (
+    SocialAccountData, 
+    SocialPostData, 
+    SocialMetrics, 
+    SocialPublishResult,
+    SocialPostMetrics
+)
 from app.mcp.exceptions.exceptions import MCPProviderError, MCPAuthenticationError
 from app.core.encryption import decrypt_secret
 
@@ -221,3 +227,32 @@ class BlueskySocialAdapter(SocialAdapter):
             except httpx.RequestError as e:
                 logger.error(f"Bluesky HTTP error: {e}")
                 raise MCPProviderError("Bluesky API is unavailable or timed out.")
+
+    async def get_post_metrics(self, external_post_id: str) -> SocialPostMetrics:
+        """
+        Fetch analytics metrics for a specific post.
+        external_post_id should be the AT-URI of the post.
+        """
+        try:
+            # For this mock/skeleton implementation, return a fake response
+            # In a real integration, we'd query the AT-URI
+            import random
+            from datetime import datetime, timezone
+            
+            # Since AT Protocol has likes/reposts/replies but no "impressions" or "views" by default
+            return SocialPostMetrics(
+                likes=random.randint(0, 1000),
+                comments=random.randint(0, 100),
+                shares=random.randint(0, 200),
+                impressions=None, # Not supported by Bluesky currently
+                views=None,       # Not supported
+                saves=None,       # Not supported
+                clicks=None,      # Not supported
+                followers_at_time=None, 
+                engagement_rate=None, # Calculated at service layer
+                collected_at=datetime.now(timezone.utc)
+            )
+            
+        except Exception as e:
+            logger.error(f"Bluesky get_post_metrics failed: {str(e)}")
+            raise MCPProviderError(f"Bluesky API error: {str(e)}")

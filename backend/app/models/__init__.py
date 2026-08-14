@@ -8,6 +8,7 @@ from .post import Post, ContentType, PostStatus
 from .media_asset import MediaAsset, MediaType
 from .publishing_log import PublishingLog, PublishStatus
 from .approval_log import ApprovalLog, ApprovalAction
+from .post_analytics import PostAnalytics
 
 __all__ = [
     "Base",
@@ -28,4 +29,5 @@ __all__ = [
     "PublishStatus",
     "ApprovalLog",
     "ApprovalAction",
+    "PostAnalytics",
 ]

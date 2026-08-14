@@ -69,10 +69,14 @@ async def test_social_server_registers_tools(social_mcp_client):
     assert "get_profile_metrics" in tool_names
     assert "get_recent_posts" in tool_names
     assert "publish_post" in tool_names
+    assert "get_post_metrics" in tool_names
     
     for tool in tools:
         if tool.name == "publish_post":
             assert MCPPermission.SOCIAL_PUBLISH in tool.required_permissions
+            assert MCPPermission.SOCIAL_READ not in tool.required_permissions
+        elif tool.name == "get_post_metrics":
+            assert MCPPermission.ANALYTICS_READ in tool.required_permissions
             assert MCPPermission.SOCIAL_READ not in tool.required_permissions
         else:
             assert MCPPermission.SOCIAL_READ in tool.required_permissions

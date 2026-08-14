@@ -7,7 +7,7 @@ import uuid
 
 from fastapi import APIRouter, Depends, status
 
-from app.api.deps import get_current_user_id, get_post_service, get_scheduler_service
+from app.api.deps import get_current_user_id, get_post_service, get_scheduler_service, get_analytics_service, get_project_service
 from app.schemas.response import ApiResponse
 from app.schemas.post import (
     PostCreate,
@@ -16,8 +16,11 @@ from app.schemas.post import (
     PostReject,
     PostSchedule,
 )
+from app.schemas.analytics import PostAnalyticsResponse
 from app.services.post_service import PostService
+from app.services.project_service import ProjectService
 from app.services.scheduler_service import SchedulerService
+from app.services.analytics_service import AnalyticsService
 
 router = APIRouter(
     prefix="/projects/{project_id}/posts",
@@ -298,3 +301,21 @@ async def cancel_schedule(
         requesting_user_id=user_id,
     )
     return ApiResponse.ok(data=post, message="Schedule cancelled.")
+
+@router.get(
+    "/{post_id}/analytics",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[list[PostAnalyticsResponse]],
+    summary="Get Post Analytics",
+    description="Retrieve analytics history for a specific post.",
+)
+async def get_post_analytics(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    project_service: ProjectService = Depends(get_project_service),
+    analytics_service: AnalyticsService = Depends(get_analytics_service),
+) -> ApiResponse[list[PostAnalyticsResponse]]:
+    project = await project_service.get_project(project_id=project_id, requesting_user_id=user_id)
+    analytics = await analytics_service.get_post_analytics(post_id=post_id, workspace_id=project.workspace_id)
+    return ApiResponse.ok(data=analytics)
