@@ -1,12 +1,110 @@
 version: '3.8'
+
 services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: creatoros_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: creatoros
+      POSTGRES_PASSWORD: creatoros_pass
+      POSTGRES_DB: creatoros_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U creatoros -d creatoros_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: creatoros_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: creatoros_backend
+    restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - "8000:8000"
-    environment:
-      - ENV=dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  scheduler-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: creatoros_scheduler_worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["python", "-m", "app.workers.scheduler_worker"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+
+  analytics-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: creatoros_analytics_worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["python", "-m", "app.workers.analytics_worker"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      disable: true
+
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: creatoros_frontend
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
