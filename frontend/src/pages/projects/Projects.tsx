@@ -4,10 +4,13 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui/Table';
 import { Badge } from '../../components/ui/Badge';
-import { Plus, FolderKanban } from 'lucide-react';
+import { Plus, FolderKanban, PenTool } from 'lucide-react';
 import { Project } from '../../types';
+import { Link } from 'react-router-dom';
+import { useWorkspaceStore } from '../../stores/workspaceStore';
 
 export function Projects() {
+  const { activeWorkspace } = useWorkspaceStore();
   const [projects, _setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -71,7 +74,14 @@ export function Projects() {
                     </TableCell>
                     <TableCell>{new Date(project.created_at).toLocaleDateString()}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm">View</Button>
+                      <div className="flex gap-2">
+                        <Link to={`/workspaces/${activeWorkspace?.id}/projects/${project.id}/create`}>
+                          <Button variant="outline" size="sm">
+                            <PenTool size={14} className="mr-1" /> Create Post
+                          </Button>
+                        </Link>
+                        <Button variant="ghost" size="sm">View</Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

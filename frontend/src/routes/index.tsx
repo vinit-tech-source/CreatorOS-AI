@@ -11,6 +11,7 @@ import { Posts } from '../pages/posts/Posts';
 import { Analytics } from '../pages/analytics/Analytics';
 import { SocialAccounts } from '../pages/settings/SocialAccounts';
 import { Settings } from '../pages/settings/Settings';
+import { ContentCreation } from '../pages/content-creation/ContentCreation';
 
 export function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ export function AppRoutes() {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/social-accounts" element={<SocialAccounts />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/workspaces/:workspaceId/projects/:projectId/create" element={<ContentCreation />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Route>
 
