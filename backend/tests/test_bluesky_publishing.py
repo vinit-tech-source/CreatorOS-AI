@@ -154,7 +154,7 @@ async def test_tool_workspace_authorization(mock_session):
             await tool.execute({
                 "workspace_id": str(uuid.uuid4()),
                 "social_account_id": str(uuid.uuid4()),
-                "content": "Hello",
+                "post_id": str(uuid.uuid4()),
                 "idempotency_key": "idemp-1"
             })
 
@@ -179,7 +179,7 @@ async def test_duplicate_idempotency_key(mock_session):
     result = await tool.execute({
         "workspace_id": str(uuid.uuid4()),
         "social_account_id": str(uuid.uuid4()),
-        "content": "Hello",
+        "post_id": str(uuid.uuid4()),
         "idempotency_key": "idemp-existing"
     })
     

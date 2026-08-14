@@ -10,6 +10,7 @@ Responsibilities:
 """
 import uuid
 import logging
+from datetime import datetime, timezone
 from typing import Optional
 
 from app.core.exceptions import (
@@ -26,6 +27,8 @@ from app.schemas.post import (
     PostResponse,
     PostUpdate,
 )
+from app.core.database import AsyncSessionLocal
+from app.models.approval_log import ApprovalLog, ApprovalAction
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +37,9 @@ logger = logging.getLogger(__name__)
 # If a state is not in the keys, it's considered terminal or allows no outbound transitions.
 VALID_TRANSITIONS = {
     PostStatus.DRAFT: [PostStatus.PENDING_REVIEW, PostStatus.ARCHIVED],
-    PostStatus.PENDING_REVIEW: [PostStatus.APPROVED, PostStatus.DRAFT, PostStatus.ARCHIVED],
-    PostStatus.APPROVED: [PostStatus.SCHEDULED, PostStatus.DRAFT, PostStatus.ARCHIVED],
+    PostStatus.PENDING_REVIEW: [PostStatus.APPROVED, PostStatus.REJECTED, PostStatus.DRAFT, PostStatus.ARCHIVED],
+    PostStatus.APPROVED: [PostStatus.SCHEDULED, PostStatus.PUBLISHED, PostStatus.DRAFT, PostStatus.ARCHIVED],
+    PostStatus.REJECTED: [PostStatus.DRAFT, PostStatus.ARCHIVED],
     PostStatus.SCHEDULED: [PostStatus.PUBLISHED, PostStatus.FAILED, PostStatus.DRAFT, PostStatus.ARCHIVED],
     PostStatus.PUBLISHED: [PostStatus.ARCHIVED],
     PostStatus.FAILED: [PostStatus.DRAFT, PostStatus.ARCHIVED],
@@ -94,6 +98,27 @@ class PostService:
                 f"Cannot transition post status from {current.value} to {new.value}."
             )
 
+    async def _log_approval(
+        self,
+        post_id: uuid.UUID,
+        workspace_id: uuid.UUID,
+        actor_id: uuid.UUID,
+        action: ApprovalAction,
+        prev_status: PostStatus,
+        new_status: PostStatus,
+    ) -> None:
+        async with AsyncSessionLocal() as session:
+            log = ApprovalLog(
+                post_id=post_id,
+                workspace_id=workspace_id,
+                actor_user_id=actor_id,
+                action=action,
+                previous_status=prev_status,
+                new_status=new_status,
+            )
+            session.add(log)
+            await session.commit()
+
     # ─────────────────────────────────────────────
     # Create
     # ─────────────────────────────────────────────
@@ -150,6 +175,20 @@ class PostService:
         posts = await self._post_repo.list_by_project(project_id)
         return [PostResponse.model_validate(p) for p in posts]
 
+    async def list_pending_review_posts(
+        self,
+        project_id: uuid.UUID,
+        requesting_user_id: uuid.UUID,
+    ) -> list[PostResponse]:
+        """
+        List all posts for the project that are pending review.
+        """
+        await self._assert_project_ownership(project_id, requesting_user_id)
+
+        posts = await self._post_repo.list_by_project(project_id)
+        pending_posts = [p for p in posts if p.status == PostStatus.PENDING_REVIEW]
+        return [PostResponse.model_validate(p) for p in pending_posts]
+
     # ─────────────────────────────────────────────
     # Update
     # ─────────────────────────────────────────────
@@ -174,6 +213,86 @@ class PostService:
             self._validate_status_transition(post.status, data.status)
 
         updated = await self._post_repo.update(post, data)
+        return PostResponse.model_validate(updated)
+
+    # ─────────────────────────────────────────────
+    # Approval
+    # ─────────────────────────────────────────────
+
+    async def submit_for_review(
+        self,
+        project_id: uuid.UUID,
+        post_id: uuid.UUID,
+        requesting_user_id: uuid.UUID,
+    ) -> PostResponse:
+        await self._assert_project_ownership(project_id, requesting_user_id)
+        post = await self._post_repo.get_by_id(post_id)
+        if post is None or post.project_id != project_id:
+            raise PostNotFoundError()
+            
+        self._validate_status_transition(post.status, PostStatus.PENDING_REVIEW)
+        
+        project = await self._project_repo.get_by_id(project_id)
+        
+        prev_status = post.status
+        data = PostUpdate(status=PostStatus.PENDING_REVIEW, approval_status="SUBMITTED")
+        updated = await self._post_repo.update(post, data)
+        
+        await self._log_approval(post_id, project.workspace_id, requesting_user_id, ApprovalAction.SUBMIT, prev_status, PostStatus.PENDING_REVIEW)
+        return PostResponse.model_validate(updated)
+
+    async def approve_post(
+        self,
+        project_id: uuid.UUID,
+        post_id: uuid.UUID,
+        requesting_user_id: uuid.UUID,
+    ) -> PostResponse:
+        await self._assert_project_ownership(project_id, requesting_user_id)
+        post = await self._post_repo.get_by_id(post_id)
+        if post is None or post.project_id != project_id:
+            raise PostNotFoundError()
+            
+        self._validate_status_transition(post.status, PostStatus.APPROVED)
+        
+        project = await self._project_repo.get_by_id(project_id)
+        
+        prev_status = post.status
+        data = PostUpdate(
+            status=PostStatus.APPROVED, 
+            approval_status="APPROVED", 
+            approved_by=requesting_user_id, 
+            approved_at=datetime.now(timezone.utc)
+        )
+        updated = await self._post_repo.update(post, data)
+        
+        await self._log_approval(post_id, project.workspace_id, requesting_user_id, ApprovalAction.APPROVE, prev_status, PostStatus.APPROVED)
+        return PostResponse.model_validate(updated)
+
+    async def reject_post(
+        self,
+        project_id: uuid.UUID,
+        post_id: uuid.UUID,
+        reason: str,
+        requesting_user_id: uuid.UUID,
+    ) -> PostResponse:
+        await self._assert_project_ownership(project_id, requesting_user_id)
+        post = await self._post_repo.get_by_id(post_id)
+        if post is None or post.project_id != project_id:
+            raise PostNotFoundError()
+            
+        self._validate_status_transition(post.status, PostStatus.REJECTED)
+        
+        project = await self._project_repo.get_by_id(project_id)
+        
+        prev_status = post.status
+        data = PostUpdate(
+            status=PostStatus.REJECTED, 
+            approval_status="REJECTED", 
+            rejection_reason=reason
+        )
+        updated = await self._post_repo.update(post, data)
+        
+        await self._log_approval(post_id, project.workspace_id, requesting_user_id, ApprovalAction.REJECT, prev_status, PostStatus.REJECTED)
         return PostResponse.model_validate(updated)
 
     # ─────────────────────────────────────────────

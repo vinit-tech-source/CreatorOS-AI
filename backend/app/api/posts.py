@@ -13,6 +13,7 @@ from app.schemas.post import (
     PostCreate,
     PostResponse,
     PostUpdate,
+    PostReject,
 )
 from app.services.post_service import PostService
 
@@ -125,3 +126,87 @@ async def delete_post(
         requesting_user_id=user_id,
     )
     return ApiResponse.ok(data=None, message="Post deleted successfully.")
+
+
+@router.get(
+    "/status/pending-review",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[list[PostResponse]],
+    summary="List Posts Pending Review",
+    description="List all posts that are pending review in the project.",
+)
+async def list_pending_review_posts(
+    project_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: PostService = Depends(get_post_service),
+) -> ApiResponse[list[PostResponse]]:
+    posts = await service.list_pending_review_posts(
+        project_id=project_id,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=posts)
+
+
+@router.post(
+    "/{post_id}/submit-review",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[PostResponse],
+    summary="Submit Post for Review",
+    description="Transitions a DRAFT post to PENDING_REVIEW.",
+)
+async def submit_post_for_review(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: PostService = Depends(get_post_service),
+) -> ApiResponse[PostResponse]:
+    post = await service.submit_for_review(
+        project_id=project_id,
+        post_id=post_id,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=post, message="Post submitted for review.")
+
+
+@router.post(
+    "/{post_id}/approve",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[PostResponse],
+    summary="Approve Post",
+    description="Approves a PENDING_REVIEW post.",
+)
+async def approve_post(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: PostService = Depends(get_post_service),
+) -> ApiResponse[PostResponse]:
+    post = await service.approve_post(
+        project_id=project_id,
+        post_id=post_id,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=post, message="Post approved.")
+
+
+@router.post(
+    "/{post_id}/reject",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[PostResponse],
+    summary="Reject Post",
+    description="Rejects a PENDING_REVIEW post.",
+)
+async def reject_post(
+    project_id: uuid.UUID,
+    post_id: uuid.UUID,
+    data: PostReject,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    service: PostService = Depends(get_post_service),
+) -> ApiResponse[PostResponse]:
+    post = await service.reject_post(
+        project_id=project_id,
+        post_id=post_id,
+        reason=data.rejection_reason,
+        requesting_user_id=user_id,
+    )
+    return ApiResponse.ok(data=post, message="Post rejected.")

@@ -7,6 +7,7 @@ from .project import Project, ProjectStatus
 from .post import Post, ContentType, PostStatus
 from .media_asset import MediaAsset, MediaType
 from .publishing_log import PublishingLog, PublishStatus
+from .approval_log import ApprovalLog, ApprovalAction
 
 __all__ = [
     "Base",
@@ -25,4 +26,6 @@ __all__ = [
     "MediaType",
     "PublishingLog",
     "PublishStatus",
+    "ApprovalLog",
+    "ApprovalAction",
 ]

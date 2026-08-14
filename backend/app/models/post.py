@@ -37,6 +37,7 @@ class PostStatus(str, enum.Enum):
     DRAFT = "DRAFT"
     PENDING_REVIEW = "PENDING_REVIEW"
     APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
     SCHEDULED = "SCHEDULED"
     PUBLISHED = "PUBLISHED"
     FAILED = "FAILED"
@@ -98,6 +99,12 @@ class Post(Base):
         server_default=func.now(),
         onupdate=func.now(),
     )
+    
+    # Approval fields
+    approval_status: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    approved_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
     project: Mapped["Project"] = relationship(  # noqa: F821

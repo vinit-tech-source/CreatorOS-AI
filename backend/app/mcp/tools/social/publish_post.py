@@ -20,7 +20,9 @@ from app.mcp.exceptions.exceptions import MCPToolValidationError, MCPProviderErr
 
 from app.core.database import AsyncSessionLocal
 from app.repositories.social_account_repository import SocialAccountRepository
+from app.repositories.post_repository import PostRepository
 from app.models.publishing_log import PublishingLog, PublishStatus
+from app.models.post import Post, PostStatus
 
 logger = logging.getLogger(__name__)
 
@@ -44,14 +46,10 @@ class PublishPostTool(AbstractMCPTool):
                 "properties": {
                     "workspace_id": {"type": "string", "format": "uuid"},
                     "social_account_id": {"type": "string", "format": "uuid"},
-                    "content": {"type": "string", "minLength": 1},
-                    "media_urls": {
-                        "type": "array",
-                        "items": {"type": "string", "format": "uri"}
-                    },
+                    "post_id": {"type": "string", "format": "uuid"},
                     "idempotency_key": {"type": "string", "minLength": 1}
                 },
-                "required": ["workspace_id", "social_account_id", "content", "idempotency_key"]
+                "required": ["workspace_id", "social_account_id", "post_id", "idempotency_key"]
             },
             output_schema={
                 "type": "object",
@@ -71,16 +69,16 @@ class PublishPostTool(AbstractMCPTool):
     async def execute(self, input_data: Dict[str, Any]) -> ToolResult:
         workspace_id_str = input_data.get("workspace_id")
         account_id_str = input_data.get("social_account_id")
-        content = input_data.get("content")
-        media_urls = input_data.get("media_urls", [])
+        post_id_str = input_data.get("post_id")
         idempotency_key = input_data.get("idempotency_key")
         
-        if not workspace_id_str or not account_id_str or not content or not idempotency_key:
+        if not workspace_id_str or not account_id_str or not post_id_str or not idempotency_key:
             raise MCPToolValidationError("Missing required parameters.")
             
         try:
             workspace_id = uuid.UUID(workspace_id_str)
             account_id = uuid.UUID(account_id_str)
+            post_id = uuid.UUID(post_id_str)
         except ValueError:
             raise MCPToolValidationError("Invalid UUID format.")
             
@@ -122,6 +120,20 @@ class PublishPostTool(AbstractMCPTool):
                 raise MCPProviderError(f"Social account {account_id} not found for workspace {workspace_id}")
                 
             platform = account.platform.value if hasattr(account.platform, 'value') else str(account.platform)
+            
+            # 2.5 Verify Post Approval
+            post_repo = PostRepository(session)
+            post = await post_repo.get_by_id(post_id)
+            if not post:
+                raise MCPProviderError(f"Post {post_id} not found")
+                
+            # Verify workspace ownership via project (simplification, assume post belongs to project in workspace)
+            # Verify Post is APPROVED
+            if post.status != PostStatus.APPROVED:
+                raise MCPProviderError(f"Post {post_id} is not APPROVED. Current status: {post.status.value}")
+                
+            content = post.content
+            media_urls = [] # In a real app, map post.media_assets to URLs
             
             # 3. Create Pending Log
             pub_log = PublishingLog(

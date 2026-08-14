@@ -47,6 +47,16 @@ class PostUpdate(BaseModel):
     # by the publishing worker, but we allow it here for administrative overrides.
     published_at: Optional[datetime] = Field(None)
     external_post_id: Optional[str] = Field(None)
+    
+    # Approval fields
+    approval_status: Optional[str] = Field(None)
+    approved_by: Optional[uuid.UUID] = Field(None)
+    approved_at: Optional[datetime] = Field(None)
+    rejection_reason: Optional[str] = Field(None)
+
+class PostReject(BaseModel):
+    """Schema for rejecting a post."""
+    rejection_reason: str = Field(..., min_length=1, description="Reason for rejection.")
 
 
 # ─────────────────────────────────────────────
@@ -70,3 +80,9 @@ class PostResponse(BaseModel):
     external_post_id: Optional[str]
     created_at: datetime
     updated_at: datetime
+    
+    # Approval fields
+    approval_status: Optional[str] = None
+    approved_by: Optional[uuid.UUID] = None
+    approved_at: Optional[datetime] = None
+    rejection_reason: Optional[str] = None
