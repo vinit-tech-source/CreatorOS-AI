@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
+import { useWorkspaceStore } from '../../stores/workspaceStore';
 import styles from './AppLayout.module.css';
 
 interface AppLayoutProps {
@@ -8,6 +9,12 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
+  const { fetchWorkspaces } = useWorkspaceStore();
+
+  useEffect(() => {
+    fetchWorkspaces();
+  }, [fetchWorkspaces]);
+
   return (
     <div className={styles.layout}>
       <Sidebar className={styles.sidebar} />

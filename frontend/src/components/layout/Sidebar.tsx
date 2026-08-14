@@ -9,6 +9,7 @@ import {
   Settings 
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
+import { useWorkspaceStore } from '../../stores/workspaceStore';
 
 interface SidebarProps {
   className?: string;
@@ -25,6 +26,8 @@ const navItems = [
 ];
 
 export function Sidebar({ className }: SidebarProps) {
+  const { workspaces, activeWorkspace, setActiveWorkspace } = useWorkspaceStore();
+
   return (
     <aside className={`${styles.sidebar} ${className || ''}`}>
       <div className={styles.logoContainer}>
@@ -33,10 +36,23 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
       
       <div className={styles.workspaceSelector}>
-        {/* Placeholder for workspace selector */}
-        <div className={styles.workspaceSelectorButton}>
-          Default Workspace
-        </div>
+        <select 
+          className={styles.workspaceSelect}
+          value={activeWorkspace?.id || ''}
+          onChange={(e) => {
+            const ws = workspaces.find(w => w.id === e.target.value);
+            if (ws) setActiveWorkspace(ws);
+          }}
+          disabled={workspaces.length === 0}
+        >
+          {workspaces.length === 0 ? (
+            <option value="">Loading...</option>
+          ) : (
+            workspaces.map(ws => (
+              <option key={ws.id} value={ws.id}>{ws.name}</option>
+            ))
+          )}
+        </select>
       </div>
 
       <nav className={styles.navigation}>

@@ -1,101 +1,100 @@
-import { Card, CardContent, CardHeader } from '../../components/ui/Card';
-import { 
-  BarChart3, 
-  CalendarDays, 
-  CheckCircle2, 
-  FolderKanban,
-  Users
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useWorkspaceStore } from '../../stores/workspaceStore';
+import { dashboardService, DashboardData } from '../../services/api/dashboardService';
+import { KPICards } from './components/KPICards';
+import { AnalyticsOverview } from './components/AnalyticsOverview';
+import { RecentPosts } from './components/RecentPosts';
+import { UpcomingSchedule } from './components/UpcomingSchedule';
+import { SocialAccountsSummary } from './components/SocialAccountsSummary';
+import { QuickActions } from './components/QuickActions';
+import { Loader2, AlertCircle } from 'lucide-react';
+import { Button } from '../../components/ui/Button';
 import styles from './Dashboard.module.css';
 
 export function Dashboard() {
+  const { activeWorkspace, isLoading: isWorkspaceLoading } = useWorkspaceStore();
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchDashboardData = async () => {
+    if (!activeWorkspace) return;
+    
+    setIsLoading(true);
+    setError(null);
+    setData(null); // Clear stale data
+    
+    try {
+      const dashboardData = await dashboardService.fetchDashboardData(activeWorkspace.id);
+      setData(dashboardData);
+    } catch (err: any) {
+      setError(err.message || 'Failed to load dashboard data');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [activeWorkspace?.id]);
+
+  if (isWorkspaceLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-secondary">
+        <Loader2 className="animate-spin mb-4" size={32} />
+        <p>Loading workspaces...</p>
+      </div>
+    );
+  }
+
+  if (!activeWorkspace) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-secondary">
+        <p>No workspace selected or available.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex-col gap-6">
+    <div className="flex-col gap-6 w-full">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-secondary">Welcome back to CreatorOS AI.</p>
+          <p className="text-secondary">Welcome to {activeWorkspace.name}</p>
         </div>
       </div>
 
-      <div className={styles.metricsGrid}>
-        <Card glass>
-          <CardContent className="pt-6">
-            <div className={styles.metricCard}>
-              <div className={styles.metricIconWrapper} style={{ backgroundColor: 'rgba(99, 102, 241, 0.1)', color: '#6366f1' }}>
-                <FolderKanban size={24} />
-              </div>
-              <div className={styles.metricInfo}>
-                <span className={styles.metricLabel}>Active Projects</span>
-                <span className={styles.metricValue}>12</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center h-64 text-secondary">
+          <Loader2 className="animate-spin mb-4" size={32} />
+          <p>Loading dashboard data...</p>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center h-64 text-danger bg-danger/10 border border-danger/20 rounded-xl">
+          <AlertCircle size={32} className="mb-4" />
+          <p className="mb-4">{error}</p>
+          <Button variant="outline" onClick={fetchDashboardData}>Retry</Button>
+        </div>
+      ) : data ? (
+        <>
+          <KPICards data={data} />
+          
+          <div className="mb-6">
+            <AnalyticsOverview data={data} />
+          </div>
 
-        <Card glass>
-          <CardContent className="pt-6">
-            <div className={styles.metricCard}>
-              <div className={styles.metricIconWrapper} style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-                <CheckCircle2 size={24} />
-              </div>
-              <div className={styles.metricInfo}>
-                <span className={styles.metricLabel}>Published Posts</span>
-                <span className={styles.metricValue}>48</span>
-              </div>
+          <div className={styles.contentGrid}>
+            <div className="flex flex-col gap-6">
+              <RecentPosts posts={data.recentPosts} />
+              <UpcomingSchedule posts={data.upcomingScheduledPosts} />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card glass>
-          <CardContent className="pt-6">
-            <div className={styles.metricCard}>
-              <div className={styles.metricIconWrapper} style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-                <CalendarDays size={24} />
-              </div>
-              <div className={styles.metricInfo}>
-                <span className={styles.metricLabel}>Scheduled</span>
-                <span className={styles.metricValue}>5</span>
-              </div>
+            <div className="flex flex-col gap-6">
+              <QuickActions />
+              <SocialAccountsSummary accounts={data.accounts} />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card glass>
-          <CardContent className="pt-6">
-            <div className={styles.metricCard}>
-              <div className={styles.metricIconWrapper} style={{ backgroundColor: 'rgba(14, 165, 233, 0.1)', color: '#0ea5e9' }}>
-                <Users size={24} />
-              </div>
-              <div className={styles.metricInfo}>
-                <span className={styles.metricLabel}>Total Engagement</span>
-                <span className={styles.metricValue}>12.4k</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className={styles.contentGrid}>
-        <Card className={styles.recentActivity}>
-          <CardHeader title="Recent Activity" subtitle="Your latest content actions" />
-          <CardContent>
-            <div className="flex items-center justify-center h-48 text-secondary">
-              No recent activity to show.
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className={styles.engagementOverview}>
-          <CardHeader title="Engagement Overview" subtitle="Last 30 days" />
-          <CardContent>
-            <div className="flex items-center justify-center h-48 text-secondary">
-              <BarChart3 size={48} className="opacity-20 mb-2" />
-              <p>Analytics will appear here once posts are published.</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
