@@ -40,15 +40,15 @@ export function SocialAccountsSummary({ accounts }: SocialAccountsSummaryProps) 
               {accounts.map(acc => (
                 <TableRow key={acc.id}>
                   <TableCell className="font-medium">
-                    {acc.display_name} ({acc.platform})
+                    {acc.account_name}
                   </TableCell>
-                  <TableCell>@{acc.username}</TableCell>
+                  <TableCell>{acc.platform}</TableCell>
                   <TableCell>
                     <Badge variant={acc.is_active ? 'success' : 'danger'}>
                       {acc.is_active ? 'Active' : 'Disconnected'}
                     </Badge>
                   </TableCell>
-                  <TableCell>{new Date(acc.created_at).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(acc.connected_at).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

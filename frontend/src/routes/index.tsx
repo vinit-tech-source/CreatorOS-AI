@@ -29,6 +29,9 @@ export function AppRoutes() {
         <Route path="/workspaces/:workspaceId/projects/:projectId/posts" element={<PostList />} />
         <Route path="/workspaces/:workspaceId/projects/:projectId/posts/:postId" element={<PostDetails />} />
         <Route path="/analytics" element={<Analytics />} />
+        {/* Workspace-scoped social accounts route (preferred) */}
+        <Route path="/workspaces/:workspaceId/social-accounts" element={<SocialAccounts />} />
+        {/* Global social accounts route — falls back to activeWorkspace */}
         <Route path="/social-accounts" element={<SocialAccounts />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/workspaces/:workspaceId/projects/:projectId/create" element={<ContentCreation />} />
@@ -39,3 +42,4 @@ export function AppRoutes() {
     </Routes>
   );
 }
+

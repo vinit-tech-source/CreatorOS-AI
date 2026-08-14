@@ -36,13 +36,27 @@ export interface BrandKit {
 export interface SocialAccount {
   id: string;
   workspace_id: string;
-  platform: 'X' | 'LINKEDIN' | 'INSTAGRAM' | 'FACEBOOK' | 'BLUESKY' | 'FAKE';
+  /** Social media platform identifier */
+  platform: 'X' | 'LINKEDIN' | 'INSTAGRAM' | 'FACEBOOK' | 'BLUESKY';
+  /** Platform-assigned user identifier (e.g. DID for Bluesky) */
   platform_user_id: string;
-  username: string;
-  display_name: string;
+  /** Display name for the connected account */
+  account_name: string;
+  /** UTC timestamp when access token expires; null means no expiry info */
+  token_expires_at: string | null;
+  /** Space-separated OAuth scopes granted */
+  scopes: string | null;
+  /** Whether this account connection is currently active */
   is_active: boolean;
-  created_at: string;
+  /** When this account was first connected */
+  connected_at: string;
   updated_at: string;
+}
+
+/** Response returned by the OAuth connect initiation endpoint */
+export interface OAuthAuthorizationResponse {
+  authorization_url: string;
+  state_token: string;
 }
 
 export interface Project {

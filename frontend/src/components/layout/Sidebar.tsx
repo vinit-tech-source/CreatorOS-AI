@@ -15,18 +15,26 @@ interface SidebarProps {
   className?: string;
 }
 
-const navItems = [
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Projects', path: '/projects', icon: FolderKanban },
-  { name: 'Posts', path: '/projects', icon: PenTool },
-  { name: 'Analytics', path: '/analytics', icon: BarChart3 },
-  { name: 'Brand Kit', path: '/brand-kit', icon: Palette },
-  { name: 'Social Accounts', path: '/social-accounts', icon: Share2 },
-  { name: 'Settings', path: '/settings', icon: Settings },
-];
-
 export function Sidebar({ className }: SidebarProps) {
   const { workspaces, activeWorkspace, setActiveWorkspace } = useWorkspaceStore();
+
+  // Build nav items dynamically so Social Accounts deep-links into the active workspace
+  const navItems = [
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Projects', path: '/projects', icon: FolderKanban },
+    { name: 'Posts', path: '/projects', icon: PenTool },
+    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { name: 'Brand Kit', path: '/brand-kit', icon: Palette },
+    {
+      name: 'Social Accounts',
+      // Deep-link to workspace-scoped route when workspace is known
+      path: activeWorkspace
+        ? `/workspaces/${activeWorkspace.id}/social-accounts`
+        : '/social-accounts',
+      icon: Share2,
+    },
+    { name: 'Settings', path: '/settings', icon: Settings },
+  ];
 
   return (
     <aside className={`${styles.sidebar} ${className || ''}`}>
@@ -60,7 +68,7 @@ export function Sidebar({ className }: SidebarProps) {
           const Icon = item.icon;
           return (
             <NavLink
-              key={item.path}
+              key={item.name}
               to={item.path}
               className={({ isActive }) => 
                 isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
