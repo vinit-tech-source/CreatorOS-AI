@@ -12,6 +12,10 @@ from .post_repository import PostRepository
 from .post_repository_interface import AbstractPostRepository
 from .media_asset_repository import MediaAssetRepository
 from .media_asset_repository_interface import AbstractMediaAssetRepository
+from .knowledge_repository import KnowledgeRepository
+from .knowledge_repository_interface import KnowledgeRepositoryInterface
+from .automation_repository import AutomationRepository
+from .automation_repository_interface import AutomationRepositoryInterface
 
 __all__ = [
     "UserRepository",
@@ -28,4 +32,8 @@ __all__ = [
     "AbstractPostRepository",
     "MediaAssetRepository",
     "AbstractMediaAssetRepository",
+    "KnowledgeRepository",
+    "KnowledgeRepositoryInterface",
+    "AutomationRepository",
+    "AutomationRepositoryInterface",
 ]

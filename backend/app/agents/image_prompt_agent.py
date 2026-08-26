@@ -118,7 +118,7 @@ async def image_prompt_agent(state: ContentWorkflowState) -> dict:
             raise AIValidationError(f"Invalid aspect ratio '{output.aspect_ratio}'. Must be one of {ALLOWED_ASPECT_RATIOS}")
 
         return {
-            "image_prompt": output.model_dump()
+            "image_prompt": output.model_dump(mode='json')
         }
 
     except (AIProviderError, AIValidationError) as e:

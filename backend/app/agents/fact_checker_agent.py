@@ -77,7 +77,7 @@ async def fact_checker_agent(state: ContentWorkflowState) -> dict:
         )
         
         return {
-            "fact_check": output.model_dump()
+            "fact_check": output.model_dump(mode='json')
         }
 
     except AIProviderError as e:

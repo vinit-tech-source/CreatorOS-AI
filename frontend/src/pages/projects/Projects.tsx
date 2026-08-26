@@ -47,8 +47,11 @@ export function Projects() {
 
   if (!activeWorkspace) {
     return (
-      <div className="flex justify-center p-8 text-secondary">
-        Please select a workspace to view projects.
+      <div className="flex flex-col items-center justify-center p-8 text-secondary h-full">
+        <p className="mb-4">Please select a workspace to view projects.</p>
+        <Button onClick={() => window.location.href = '/workspaces'}>
+          Go to Workspaces
+        </Button>
       </div>
     );
   }

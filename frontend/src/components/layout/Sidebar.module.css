@@ -2,6 +2,10 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: linear-gradient(180deg, #1f1f22, #121214);
+  border-right: 1px solid var(--border-dark);
+  box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+  z-index: 20;
 }
 
 .logoContainer {
@@ -34,8 +38,10 @@
 .workspaceSelect {
   width: 100%;
   padding: var(--spacing-2) var(--spacing-3);
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-sunken);
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
@@ -85,8 +91,10 @@
 }
 
 .navItem.active {
-  background-color: rgba(99, 102, 241, 0.1);
-  color: var(--color-primary);
+  background: linear-gradient(145deg, #818cf8 0%, #4f46e5 100%);
+  color: white;
+  box-shadow: 0 4px 0 #3730a3, 0 5px 10px rgba(0,0,0,0.3);
+  transform: translateY(-2px);
 }
 
 .navIcon {

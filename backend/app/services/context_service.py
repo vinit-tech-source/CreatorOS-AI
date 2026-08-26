@@ -59,6 +59,7 @@ class ContextService:
         brand_kit: BrandKit | None,
         user_request: str,
         platform: str,
+        knowledge_base: list[str] | None = None,
     ) -> Dict[str, Any]:
         """
         Assemble the initial dictionary for LangGraph state.
@@ -69,6 +70,7 @@ class ContextService:
             "brand_kit": cls.build_brand_kit_context(brand_kit),
             "user_request": user_request,
             "platform": platform,
+            "knowledge_base": knowledge_base or [],
             "strategy": None,
             "trends": [],
             "research": [],

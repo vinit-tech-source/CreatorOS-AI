@@ -14,6 +14,7 @@ import logging
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import AsyncSessionLocal
 from app.core.exceptions import InvalidTokenError
@@ -32,6 +33,8 @@ from app.repositories.post_repository import PostRepository
 from app.repositories.post_repository_interface import AbstractPostRepository
 from app.repositories.media_asset_repository import MediaAssetRepository
 from app.repositories.media_asset_repository_interface import AbstractMediaAssetRepository
+from app.repositories.knowledge_repository import KnowledgeRepository
+from app.repositories.automation_repository import AutomationRepository
 from app.services.auth_service import AuthService
 from app.services.workspace_service import WorkspaceService
 from app.services.brand_kit_service import BrandKitService
@@ -39,6 +42,8 @@ from app.services.social_account_service import SocialAccountService
 from app.services.project_service import ProjectService
 from app.services.post_service import PostService
 from app.services.media_asset_service import MediaAssetService
+from app.services.knowledge_service import KnowledgeService
+from app.services.automation_service import AutomationService
 from app.services.scheduler_service import SchedulerService
 from app.integrations.ai.base import AbstractAIProvider
 from app.integrations.ai.gemini_client import GeminiClient
@@ -204,8 +209,42 @@ async def get_media_asset_service(
     )
 
 
+async def get_knowledge_service(
+    session: AsyncSession = Depends(get_db),
+) -> KnowledgeService:
+    from app.rag.ingestion.pipeline import IngestionPipeline
+    from app.rag.vectorstore.base import InMemoryVectorStore
+    from app.rag.embeddings.base import FakeEmbeddingProvider
+    
+    global_vector_store = InMemoryVectorStore()
+    embedding_provider = FakeEmbeddingProvider()
+    ingestion_pipeline = IngestionPipeline(embedding_provider, global_vector_store)
+    
+    return KnowledgeService(
+        knowledge_repo=KnowledgeRepository(session),
+        workspace_repo=WorkspaceRepository(session),
+        ingestion_pipeline=ingestion_pipeline,
+        vector_store=global_vector_store,
+    )
+
+async def get_automation_service(
+    session: AsyncSession = Depends(get_db),
+) -> AutomationService:
+    return AutomationService(
+        automation_repo=AutomationRepository(session),
+        workspace_repo=WorkspaceRepository(session),
+    )
+
+
 async def get_ai_provider() -> AbstractAIProvider:
     """Construct the configured AI provider."""
+    from app.core.config import settings
+    if settings.GROQ_API_KEY:
+        from app.integrations.ai.groq_client import GroqClient
+        return GroqClient(
+            api_key=settings.GROQ_API_KEY,
+            model_name=settings.GROQ_MODEL
+        )
     return GeminiClient()
 
 
@@ -225,9 +264,11 @@ async def get_content_workflow() -> CompiledStateGraph:
     """Provide the compiled LangGraph workflow."""
     return content_graph
 
+from app.mcp.client.client import get_default_mcp_client
+
 async def get_mcp_client() -> MCPClient:
-    client = MCPClient()
-    await client.initialize()
+    # Use the helper function that correctly configures the registry
+    client = get_default_mcp_client()
     return client
 
 async def get_analytics_service(
@@ -239,16 +280,23 @@ async def get_analytics_service(
 from app.services.content_generation_service import ContentGenerationService
 
 async def get_content_generation_service(
-    ws_repo: AbstractWorkspaceRepository = Depends(get_workspace_repository),
-    proj_repo: AbstractProjectRepository = Depends(get_project_repository),
-    bk_repo: AbstractBrandKitRepository = Depends(get_brand_kit_repository),
+    session: AsyncSession = Depends(get_db),
     workflow: CompiledStateGraph = Depends(get_content_workflow),
 ) -> ContentGenerationService:
+    """Dependency to get ContentGenerationService instance."""
+    from app.rag.vectorstore.base import InMemoryVectorStore
+    from app.rag.embeddings.base import FakeEmbeddingProvider
+    
+    global_vector_store = InMemoryVectorStore()
+    embedding_provider = FakeEmbeddingProvider()
+    
     return ContentGenerationService(
-        workspace_repo=ws_repo,
-        project_repo=proj_repo,
-        brand_kit_repo=bk_repo,
+        workspace_repo=WorkspaceRepository(session),
+        project_repo=ProjectRepository(session),
+        brand_kit_repo=BrandKitRepository(session),
         workflow=workflow,
+        vector_store=global_vector_store,
+        embedding_provider=embedding_provider,
     )
 
 

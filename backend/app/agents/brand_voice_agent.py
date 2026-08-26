@@ -49,8 +49,19 @@ async def brand_voice_agent(state: ContentWorkflowState) -> dict:
         raise ValueError("Missing 'draft' in workflow state.")
     if not platform:
         raise ValueError("Missing 'platform' in workflow state.")
+        
     if not brand_kit:
-        raise ValueError("Missing 'brand_kit' in workflow state.")
+        logger.info("No Brand Kit provided. Bypassing Brand Voice Agent.")
+        return {
+            "optimized_content": draft.get("content", ""),
+            "brand_voice": {
+                "score": 100,
+                "is_compliant": True,
+                "issues": ["No brand kit configured. Bypassing check."],
+                "changes_made": [],
+                "revised_content": draft.get("content", "")
+            }
+        }
         
     ai_service = await _get_service()
 
@@ -88,7 +99,7 @@ async def brand_voice_agent(state: ContentWorkflowState) -> dict:
 
         return {
             "optimized_content": output.revised_content,
-            "brand_voice": output.model_dump()
+            "brand_voice": output.model_dump(mode='json')
         }
 
     except (AIProviderError, AIValidationError) as e:

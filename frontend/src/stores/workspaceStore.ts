@@ -9,6 +9,7 @@ interface WorkspaceState {
   error: string | null;
   
   fetchWorkspaces: () => Promise<void>;
+  createWorkspace: (data: { name: string; slug: string; description?: string }) => Promise<void>;
   setActiveWorkspace: (workspace: Workspace | null) => void;
   clearWorkspaces: () => void;
 }
@@ -51,6 +52,30 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
         error: err.response?.data?.error?.message || err.message || 'An error occurred fetching workspaces', 
         isLoading: false 
       });
+    }
+  },
+
+  createWorkspace: async (data) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await apiClient.post('/workspaces', data);
+      if (response.data.success) {
+        const newWorkspace: Workspace = response.data.data;
+        const currentWorkspaces = get().workspaces;
+        
+        set({
+          workspaces: [...currentWorkspaces, newWorkspace],
+          activeWorkspace: newWorkspace,
+          isLoading: false
+        });
+      } else {
+        set({ error: response.data.message || 'Failed to create workspace', isLoading: false });
+        throw new Error(response.data.message);
+      }
+    } catch (err: any) {
+      const errMsg = err.response?.data?.error?.message || err.message || 'An error occurred creating the workspace';
+      set({ error: errMsg, isLoading: false });
+      throw new Error(errMsg);
     }
   },
 

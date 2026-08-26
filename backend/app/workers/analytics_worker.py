@@ -41,10 +41,10 @@ async def process_analytics_for_published_posts():
         if not published_posts:
             return
             
-        mcp_client = MCPClient()
+        from app.mcp.client.client import get_default_mcp_client
+        mcp_client = get_default_mcp_client()
         # Ensure MCP servers are initialized (in a real worker this would happen once at startup)
         # We will assume mcp_client works or we'll just initialize it here for safety
-        await mcp_client.initialize()
         
         service = AnalyticsService(session=session, mcp_client=mcp_client)
         

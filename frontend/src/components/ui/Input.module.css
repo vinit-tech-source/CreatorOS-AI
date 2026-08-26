@@ -16,8 +16,10 @@
 
 .input {
   padding: var(--spacing-2) var(--spacing-3);
-  background-color: var(--bg-surface-solid);
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-sunken);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   outline: none;
@@ -26,7 +28,7 @@
 
 .input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  box-shadow: var(--shadow-sunken), 0 0 0 2px rgba(79, 70, 229, 0.4);
 }
 
 .input::placeholder {

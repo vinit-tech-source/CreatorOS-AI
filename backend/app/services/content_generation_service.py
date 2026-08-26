@@ -16,6 +16,8 @@ from app.repositories.project_repository_interface import AbstractProjectReposit
 from app.repositories.brand_kit_repository_interface import AbstractBrandKitRepository
 from app.schemas.content import ContentGenerateRequest, ContentGenerateResponse
 from app.services.context_service import ContextService
+from app.rag.vectorstore.base import VectorStore
+from app.rag.embeddings.base import EmbeddingProvider
 
 logger = logging.getLogger(__name__)
 
@@ -27,11 +29,15 @@ class ContentGenerationService:
         project_repo: AbstractProjectRepository,
         brand_kit_repo: AbstractBrandKitRepository,
         workflow: CompiledStateGraph,
+        vector_store: VectorStore,
+        embedding_provider: EmbeddingProvider,
     ):
         self._ws_repo = workspace_repo
         self._proj_repo = project_repo
         self._bk_repo = brand_kit_repo
         self._workflow = workflow
+        self._vector_store = vector_store
+        self._embedding_provider = embedding_provider
 
     async def generate_content(
         self,
@@ -58,25 +64,42 @@ class ContentGenerationService:
             raise ProjectNotFoundError()
 
         # 3. Retrieve Brand Kit
-        brand_kit = await self._bk_repo.get_by_workspace(workspace.id)
+        brand_kit = await self._bk_repo.get_by_workspace_id(workspace.id)
 
-        # 4. Build State Context
+        # 4. RAG: Search Knowledge Base
+        knowledge_base = []
+        try:
+            query_embedding = await self._embedding_provider.embed_text(request.user_request)
+            retrieved_chunks = await self._vector_store.similarity_search(
+                query_embedding=query_embedding,
+                workspace_id=str(workspace.id),
+                top_k=3
+            )
+            for chunk in retrieved_chunks:
+                knowledge_base.append(chunk.content)
+            if knowledge_base:
+                logger.info(f"Retrieved {len(knowledge_base)} knowledge chunks for workspace {workspace.id}")
+        except Exception as e:
+            logger.error(f"Failed to search RAG knowledge base: {e}")
+
+        # 5. Build State Context
         initial_state = ContextService.assemble_initial_state(
             workspace=workspace,
             project=project,
             brand_kit=brand_kit,
             user_request=request.user_request,
             platform=request.platform,
+            knowledge_base=knowledge_base,
         )
         
         # Merge extra request info if necessary
         # e.g., tone and target_audience overriding project defaults could go into a specific state key
         
-        # 5. Invoke LangGraph
+        # 6. Invoke LangGraph
         logger.info(f"Invoking content graph for Project {project.id}")
         final_state = await self._workflow.ainvoke(initial_state)
 
-        # 6. Check for graph errors
+        # 7. Check for graph errors
         errors = final_state.get("errors", [])
         if errors:
             logger.error(f"LangGraph execution encountered errors: {errors}")
@@ -93,6 +116,8 @@ class ContentGenerationService:
         brand_voice_state = final_state.get("brand_voice") or {}
         seo_state = final_state.get("seo") or {}
         
+        image_prompt_state = final_state.get("image_prompt") or {}
+        
         return ContentGenerateResponse(
             title=draft.get("title", f"Draft for {request.platform}"),
             content=optimized,
@@ -100,17 +125,17 @@ class ContentGenerationService:
             contentType=request.content_type,
             hashtags=[
                 {"tag": tag, "isNiche": False, "relevanceScore": 80}
-                for tag in final_state.get("hashtags", [])
+                for tag in (final_state.get("hashtags") or [])
             ],
             cta="Let us know what you think in the comments!",
             imagePrompt={
-                "visualStyle": final_state.get("image_prompt", {}).get("visual_style", "Standard"),
-                "composition": final_state.get("image_prompt", {}).get("composition", "Standard"),
-                "aspectRatio": final_state.get("image_prompt", {}).get("aspect_ratio", "1:1"),
-                "lighting": final_state.get("image_prompt", {}).get("lighting", "Natural"),
-                "colorPalette": final_state.get("image_prompt", {}).get("color_palette", "Vibrant"),
-                "altText": final_state.get("image_prompt", {}).get("alt_text", ""),
-                "prompt": final_state.get("image_prompt", {}).get("prompt", ""),
+                "visualStyle": image_prompt_state.get("visual_style", "Standard"),
+                "composition": image_prompt_state.get("composition", "Standard"),
+                "aspectRatio": image_prompt_state.get("aspect_ratio", "1:1"),
+                "lighting": image_prompt_state.get("lighting", "Natural"),
+                "colorPalette": image_prompt_state.get("color_palette", "Vibrant"),
+                "altText": image_prompt_state.get("alt_text", ""),
+                "prompt": image_prompt_state.get("prompt", ""),
             },
             brandVoice={
                 "score": brand_voice_state.get("score", 100),

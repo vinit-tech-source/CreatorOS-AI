@@ -24,15 +24,7 @@ import {
   ArrowUp,
   ArrowDown
 } from 'lucide-react';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
+import { AnalyticsChart3D } from './components/3d/AnalyticsChart3D';
 
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Card, CardContent } from '../../components/ui/Card';
@@ -192,7 +184,10 @@ export function Analytics() {
             <div className={styles.emptyState}>
               <AlertCircle size={40} className={styles.emptyIcon} aria-hidden />
               <p style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)' }}>No workspace selected</p>
-              <p>Select a workspace from the sidebar to view its analytics.</p>
+              <p className="mb-4">Select a workspace from the sidebar to view its analytics.</p>
+              <Button onClick={() => window.location.href = '/workspaces'}>
+                Go to Workspaces
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -270,33 +265,8 @@ export function Analytics() {
             <div className={styles.chartContainer} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                <div className={styles.skeletonLine} style={{ height: '100%' }} />
             </div>
-          ) : chartData.length > 1 ? (
-            <div className={styles.chartContainer}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                  <XAxis dataKey="date" stroke="rgba(255,255,255,0.5)" fontSize={12} tickMargin={10} />
-                  <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} tickFormatter={(val) => `${val}%`} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--bg-surface-solid)', borderColor: 'var(--border-color)', borderRadius: 8 }}
-                    itemStyle={{ color: 'var(--color-primary)' }}
-                    formatter={(value: any) => [`${value}%`, 'Engagement']}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="engagement" 
-                    stroke="var(--color-primary)" 
-                    strokeWidth={3}
-                    dot={{ fill: 'var(--color-primary)', strokeWidth: 2 }}
-                    activeDot={{ r: 6, fill: '#fff', stroke: 'var(--color-primary)' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
           ) : (
-            <div className={styles.chartContainer} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-               <p style={{ color: 'var(--text-muted)' }}>Not enough data to display trends.</p>
-            </div>
+            <AnalyticsChart3D data={chartData} />
           )}
         </Card>
       )}

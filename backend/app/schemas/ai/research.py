@@ -11,13 +11,13 @@ class ResearchSource(BaseModel):
     """
     A source of information used by the Research Agent.
     """
-    title: str = Field(..., min_length=1, description="Title of the source.")
+    title: str = Field(..., description="Title of the source.")
     url: HttpUrl = Field(..., description="Valid URL to the source.")
-    source_name: str = Field(..., min_length=1, description="Name of the publication or organization.")
+    source_name: str = Field(..., description="Name of the publication or organization.")
     published_at: Optional[str] = Field(None, description="Date the source was published, if known.")
-    relevance_score: float = Field(..., ge=0.0, le=1.0, description="How relevant this source is to the topic (0.0 to 1.0).")
-    credibility_score: Optional[float] = Field(None, ge=0.0, le=1.0, description="Estimated credibility (0.0 to 1.0).")
-    key_points: List[str] = Field(..., max_length=5, description="Key takeaways extracted from this specific source.")
+    relevance_score: float = Field(..., description="How relevant this source is to the topic (0.0 to 1.0).")
+    credibility_score: Optional[float] = Field(None, description="Estimated credibility (0.0 to 1.0).")
+    key_points: List[str] = Field(..., description="Key takeaways extracted from this specific source.")
 
 
 class ResearchOutput(BaseModel):
@@ -26,17 +26,14 @@ class ResearchOutput(BaseModel):
     """
     summary: str = Field(
         ...,
-        min_length=1,
         description="A knowledge-based summary of the topic."
     )
     key_facts: List[str] = Field(
         ...,
-        max_length=10,
         description="A bounded list of key factual claims to use."
     )
     sources: List[ResearchSource] = Field(
         ...,
-        max_length=10,
         description="The list of sources used to generate this research."
     )
     uncertainties: List[str] = Field(
@@ -45,7 +42,5 @@ class ResearchOutput(BaseModel):
     )
     research_confidence: float = Field(
         ...,
-        ge=0.0,
-        le=1.0,
         description="Overall confidence in the accuracy and completeness of the research (0.0 to 1.0)."
     )

@@ -107,7 +107,7 @@ async def seo_agent(state: ContentWorkflowState) -> dict:
 
         return {
             "optimized_content": output.optimized_content,
-            "seo": output.model_dump()
+            "seo": output.model_dump(mode='json')
         }
 
     except (AIProviderError, AIValidationError) as e:

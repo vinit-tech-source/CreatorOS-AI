@@ -480,9 +480,12 @@ export function SocialAccounts() {
             <div className={styles.emptyState}>
               <AlertCircle size={40} className={styles.emptyIcon} aria-hidden />
               <p className={styles.emptyTitle}>No workspace selected</p>
-              <p className={styles.emptyDescription}>
+              <p className={styles.emptyDescription} style={{ marginBottom: '1rem' }}>
                 Select a workspace from the sidebar to manage its social accounts.
               </p>
+              <Button onClick={() => window.location.href = '/workspaces'}>
+                Go to Workspaces
+              </Button>
             </div>
           </CardContent>
         </Card>

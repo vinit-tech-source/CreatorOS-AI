@@ -105,7 +105,7 @@ async def content_generator_agent(state: ContentWorkflowState) -> dict:
                     f"(actual: {actual_char_count})."
                 )
 
-        return {"draft": output.model_dump()}
+        return {"draft": output.model_dump(mode='json')}
 
     except (AIProviderError, AIValidationError) as e:
         logger.error(f"Content Generator Agent failed due to AI error: {e}")

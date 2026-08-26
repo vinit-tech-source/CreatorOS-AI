@@ -4,6 +4,10 @@ import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { apiClient } from '../../services/api';
+import { Canvas } from '@react-three/fiber';
+import { Float, MeshDistortMaterial, Stars } from '@react-three/drei';
+import { Suspense } from 'react';
+import styles from './Login.module.css'; // Reusing the same auth layout styles
 
 export function Register() {
   const [firstName, setFirstName] = useState('');
@@ -45,41 +49,75 @@ export function Register() {
     }
   };
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   return (
-    <div className="flex h-screen w-full items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">CreatorOS AI</h1>
-          <p className="text-secondary">Create a new account.</p>
+    <div className={styles.container}>
+      <div className={styles.visualPane}>
+        <div className={styles.canvasContainer}>
+          <Canvas camera={{ position: [0, 0, 5], fov: 45 }} aria-hidden="true">
+            <color attach="background" args={['#09090b']} />
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 5]} intensity={1} color="#4F46E5" />
+            <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#0ea5e9" />
+            
+            <Suspense fallback={null}>
+              <Stars radius={100} depth={50} count={1500} factor={4} saturation={0} fade speed={prefersReducedMotion ? 0 : 1} />
+              <Float speed={prefersReducedMotion ? 0 : 2} rotationIntensity={prefersReducedMotion ? 0 : 1} floatIntensity={prefersReducedMotion ? 0 : 2}>
+                <mesh position={[2, 0, -2]}>
+                  <sphereGeometry args={[1.5, 64, 64]} />
+                  <MeshDistortMaterial color="#4F46E5" distort={prefersReducedMotion ? 0 : 0.4} speed={prefersReducedMotion ? 0 : 2} roughness={0.2} metalness={0.8} opacity={0.7} transparent />
+                </mesh>
+              </Float>
+              <Float speed={prefersReducedMotion ? 0 : 1.5} rotationIntensity={prefersReducedMotion ? 0 : 0.5} floatIntensity={prefersReducedMotion ? 0 : 1.5}>
+                <mesh position={[-2, -1, -3]}>
+                  <sphereGeometry args={[2, 64, 64]} />
+                  <MeshDistortMaterial color="#0ea5e9" distort={prefersReducedMotion ? 0 : 0.2} speed={prefersReducedMotion ? 0 : 1} roughness={0.4} metalness={0.9} opacity={0.4} transparent />
+                </mesh>
+              </Float>
+            </Suspense>
+          </Canvas>
+        </div>
+      </div>
+
+      <div className={styles.formPane}>
+        <div className={styles.contentWrapper}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>CreatorOS AI</h1>
+          <p className={styles.subtitle}>Create a new account.</p>
         </div>
 
         <Card glass>
           <CardHeader title="Register" />
           <CardContent>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className={styles.form}>
               {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-md text-red-500 text-sm">
+                <div className={styles.errorBox}>
                   {error}
                 </div>
               )}
 
-              <div className="flex gap-4">
-                <Input
-                  label="First Name"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="John"
-                  required
-                />
-                <Input
-                  label="Last Name"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Doe"
-                  required
-                />
+              <div className="flex gap-4 w-full">
+                <div className="w-full">
+                  <Input
+                    label="First Name"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="John"
+                    required
+                  />
+                </div>
+                <div className="w-full">
+                  <Input
+                    label="Last Name"
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Doe"
+                    required
+                  />
+                </div>
               </div>
 
               <Input
@@ -109,19 +147,20 @@ export function Register() {
                 required
               />
 
-              <Button type="submit" fullWidth isLoading={isLoading} className="mt-2">
+              <Button type="submit" fullWidth isLoading={isLoading} className={styles.submitBtn}>
                 Sign Up
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-secondary">
+            <div className={styles.footer}>
               Already have an account?{' '}
-              <Link to="/login" className="text-primary hover:underline">
+              <Link to="/login" className={styles.link}>
                 Sign in
               </Link>
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );

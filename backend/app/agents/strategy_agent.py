@@ -72,7 +72,7 @@ async def strategy_agent(state: ContentWorkflowState) -> dict:
         )
         
         # Return only the dictionary portion to update state
-        return {"strategy": output.model_dump()}
+        return {"strategy": output.model_dump(mode='json')}
 
     except (AIProviderError, AIValidationError) as e:
         logger.error(f"Strategy Agent failed due to AI error: {e}")

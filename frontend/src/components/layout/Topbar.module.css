@@ -1,7 +1,8 @@
 .topbar {
   height: 72px;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-surface);
+  background: linear-gradient(180deg, #1f1f22, #121214);
+  border-bottom: 1px solid var(--border-dark);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   backdrop-filter: var(--glass-backdrop);
   display: flex;
   align-items: center;
@@ -33,8 +34,10 @@
 .searchInput {
   width: 100%;
   padding: var(--spacing-2) var(--spacing-3) var(--spacing-2) 2.5rem;
-  background-color: var(--bg-surface-solid);
-  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-sunken);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   outline: none;

@@ -9,6 +9,8 @@ from .media_asset import MediaAsset, MediaType
 from .publishing_log import PublishingLog, PublishStatus
 from .approval_log import ApprovalLog, ApprovalAction
 from .post_analytics import PostAnalytics
+from .knowledge_source import KnowledgeSource
+from .automation_rule import AutomationRule
 
 __all__ = [
     "Base",
@@ -30,4 +32,6 @@ __all__ = [
     "ApprovalLog",
     "ApprovalAction",
     "PostAnalytics",
+    "KnowledgeSource",
+    "AutomationRule",
 ]

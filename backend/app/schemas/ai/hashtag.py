@@ -11,9 +11,9 @@ class HashtagItem(BaseModel):
     """
     A generated hashtag with metadata.
     """
-    hashtag: str = Field(..., min_length=1, description="The hashtag string itself.")
-    relevance_score: float = Field(..., ge=0.0, le=1.0, description="Score indicating relevance to the content.")
-    category: str = Field(..., min_length=1, description="Category of the hashtag (e.g., broad, niche).")
+    hashtag: str = Field(..., description="The hashtag string itself.")
+    relevance_score: float = Field(..., description="Score indicating relevance to the content.")
+    category: str = Field(..., description="Category of the hashtag (e.g., broad, niche).")
 
 
 class HashtagOutput(BaseModel):
@@ -23,4 +23,4 @@ class HashtagOutput(BaseModel):
     hashtags: List[HashtagItem] = Field(default_factory=list, description="All generated hashtags with metadata.")
     primary_hashtags: List[str] = Field(default_factory=list, description="Top-priority hashtags to include.")
     niche_hashtags: List[str] = Field(default_factory=list, description="Highly specific or niche hashtags.")
-    recommendations: List[str] = Field(default_factory=list, max_length=10, description="Usage recommendations.")
+    recommendations: List[str] = Field(default_factory=list, description="Usage recommendations.")

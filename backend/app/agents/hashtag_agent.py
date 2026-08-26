@@ -147,7 +147,7 @@ async def hashtag_agent(state: ContentWorkflowState) -> dict:
         output.primary_hashtags = normalized_hashtags
 
         return {
-            "hashtags": [output.model_dump()]  # State uses Annotated List
+            "hashtags": normalized_hashtags
         }
 
     except AIProviderError as e:

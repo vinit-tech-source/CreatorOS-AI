@@ -1,7 +1,5 @@
 .card {
-  background-color: var(--bg-surface-solid);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
+  /* background and border handled by extruded-panel / glass-panel */
   overflow: hidden;
   display: flex;
   flex-direction: column;

@@ -2,8 +2,11 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { Card, CardContent, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { useAuthStore } from '../../stores/authStore';
 
 export function Settings() {
+  const { user } = useAuthStore();
+
   return (
     <div className="flex-col gap-6">
       <PageHeader title="Settings" subtitle="Manage your account preferences" />
@@ -14,10 +17,10 @@ export function Settings() {
           <CardContent>
             <form className="flex flex-col gap-4">
               <div className="flex gap-4">
-                <Input label="First Name" defaultValue="John" />
-                <Input label="Last Name" defaultValue="Doe" />
+                <Input label="First Name" defaultValue={user?.first_name || ''} />
+                <Input label="Last Name" defaultValue={user?.last_name || ''} />
               </div>
-              <Input label="Email Address" type="email" defaultValue="john@example.com" disabled />
+              <Input label="Email Address" type="email" defaultValue={user?.email || ''} disabled />
               
               <div className="mt-4">
                 <Button>Save Changes</Button>

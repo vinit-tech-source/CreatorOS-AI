@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: creatoros-config
+  namespace: creatoros
+data:
+  ENVIRONMENT: "production"
+  DEV_AUTH_BYPASS: "false"
+  ALLOWED_ORIGINS: "[\"https://creatoros.local\", \"http://creatoros.local\"]"
+  MCP_ENABLED: "true"
+  MCP_DEFAULT_TIMEOUT: "30"
+  MCP_MAX_TOOL_CALLS: "10"
+  MCP_LOG_TOOL_CALLS: "true"
+  MCP_RESEARCH_SERVER_COMMAND: "python -m app.mcp.servers.research"
+  MCP_SOCIAL_SERVER_COMMAND: "python -m app.mcp.servers.social"

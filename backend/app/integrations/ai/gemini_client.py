@@ -9,6 +9,7 @@ from typing import Any, Type
 from google import genai
 from google.genai import types
 from pydantic import BaseModel, ValidationError
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
 
 from app.core.config import settings
 from app.core.exceptions import AIProviderError, AIValidationError
@@ -41,6 +42,18 @@ class GeminiClient(AbstractAIProvider):
     def model_name(self) -> str:
         return self._model
 
+    @retry(
+        wait=wait_exponential(multiplier=5, min=10, max=120),
+        stop=stop_after_attempt(8),
+        reraise=True,
+    )
+    async def _call_gemini(self, client: genai.Client, prompt: str, config: types.GenerateContentConfig):
+        return await client.aio.models.generate_content(
+            model=self._model,
+            contents=prompt,
+            config=config,
+        )
+
     async def generate_text(self, prompt: str, **kwargs: Any) -> str:
         client = self._get_client()
         
@@ -55,11 +68,7 @@ class GeminiClient(AbstractAIProvider):
 
         try:
             # We use the async client 'aio'
-            response = await client.aio.models.generate_content(
-                model=self._model,
-                contents=prompt,
-                config=config,
-            )
+            response = await self._call_gemini(client, prompt, config)
             if not response.text:
                 raise AIProviderError("Empty response from AI provider.")
             return response.text
@@ -85,11 +94,7 @@ class GeminiClient(AbstractAIProvider):
         )
 
         try:
-            response = await client.aio.models.generate_content(
-                model=self._model,
-                contents=prompt,
-                config=config,
-            )
+            response = await self._call_gemini(client, prompt, config)
             if not response.text:
                 raise AIProviderError("Empty structured response from AI provider.")
                 

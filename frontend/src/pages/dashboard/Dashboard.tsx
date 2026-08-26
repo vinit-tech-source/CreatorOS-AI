@@ -7,6 +7,7 @@ import { RecentPosts } from './components/RecentPosts';
 import { UpcomingSchedule } from './components/UpcomingSchedule';
 import { SocialAccountsSummary } from './components/SocialAccountsSummary';
 import { QuickActions } from './components/QuickActions';
+
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import styles from './Dashboard.module.css';
@@ -40,8 +41,8 @@ export function Dashboard() {
 
   if (isWorkspaceLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-secondary">
-        <Loader2 className="animate-spin mb-4" size={32} />
+      <div className={styles.loadingContainer}>
+        <Loader2 className="spinner" size={32} style={{ marginBottom: '1rem' }} />
         <p>Loading workspaces...</p>
       </div>
     );
@@ -49,51 +50,52 @@ export function Dashboard() {
 
   if (!activeWorkspace) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-secondary">
-        <p>No workspace selected or available.</p>
+      <div className={styles.emptyContainer}>
+        <p style={{ marginBottom: '1rem' }}>No workspace selected or available.</p>
+        <Button onClick={() => window.location.href = '/workspaces'}>
+          Go to Workspaces
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="flex-col gap-6 w-full">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-secondary">Welcome to {activeWorkspace.name}</p>
-        </div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Command Center</h1>
+        <p className={styles.subtitle}>Your content engine is running optimally.</p>
       </div>
 
       {isLoading ? (
-        <div className="flex flex-col items-center justify-center h-64 text-secondary">
-          <Loader2 className="animate-spin mb-4" size={32} />
-          <p>Loading dashboard data...</p>
+        <div className={styles.loadingContainer}>
+          <Loader2 className="spinner" size={32} style={{ marginBottom: '1rem' }} />
+          <p>Loading your command center...</p>
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center h-64 text-danger bg-danger/10 border border-danger/20 rounded-xl">
-          <AlertCircle size={32} className="mb-4" />
-          <p className="mb-4">{error}</p>
+        <div className={styles.errorContainer}>
+          <AlertCircle size={32} style={{ marginBottom: '1rem' }} />
+          <p style={{ marginBottom: '1rem' }}>{error}</p>
           <Button variant="outline" onClick={fetchDashboardData}>Retry</Button>
         </div>
       ) : data ? (
-        <>
+        <div className="flex flex-col gap-6">
+          {/* 1. Quick Create (The new primary entry point) */}
+          <QuickActions />
+          
+          {/* 2. Today / Content Engine Summary */}
           <KPICards data={data} />
           
-          <div className="mb-6">
-            <AnalyticsOverview data={data} />
-          </div>
-
           <div className={styles.contentGrid}>
             <div className="flex flex-col gap-6">
               <RecentPosts posts={data.recentPosts} />
               <UpcomingSchedule posts={data.upcomingScheduledPosts} />
             </div>
             <div className="flex flex-col gap-6">
-              <QuickActions />
+              <AnalyticsOverview data={data} />
               <SocialAccountsSummary accounts={data.accounts} />
             </div>
           </div>
-        </>
+        </div>
       ) : null}
     </div>
   );

@@ -10,7 +10,7 @@ interface CardProps {
 export function Card({ children, className = '', glass = false }: CardProps) {
   const classNames = [
     styles.card,
-    glass ? 'glass-panel' : '',
+    glass ? 'glass-panel' : 'extruded-panel',
     className
   ].filter(Boolean).join(' ');
 

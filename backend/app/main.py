@@ -23,6 +23,8 @@ from app.core.exception_handlers import (
     user_not_found_handler,
     username_exists_handler,
     workspace_not_found_handler,
+    ai_provider_error_handler,
+    ai_validation_error_handler,
 )
 from app.core.exceptions import (
     BrandKitAlreadyExistsError,
@@ -43,6 +45,8 @@ from app.core.exceptions import (
     UserNotFoundError,
     UsernameAlreadyExistsError,
     WorkspaceNotFoundError,
+    AIProviderError,
+    AIValidationError,
 )
 from app.core.logging import setup_logging
 from app.core.redis import redis_manager
@@ -57,6 +61,8 @@ from app.api.media import router as media_router
 from app.api.ai import router as ai_router
 from app.api.content import router as content_router
 from app.api.endpoints.oauth import router as oauth_router
+from app.api.knowledge import router as knowledge_router
+from app.api.automation import router as automation_router
 
 setup_logging()
 
@@ -70,7 +76,7 @@ async def lifespan(app: FastAPI):
     import logging
     _log = logging.getLogger(__name__)
 
-    # ── Dev auth bypass warning ────────────────────────────────────────────
+    # ── Dev auth bypass ──────────────────────────────────────────────────
     if settings.DEV_AUTH_BYPASS:
         _log.warning(
             "\n"
@@ -137,6 +143,8 @@ app.add_exception_handler(ProjectSlugAlreadyExistsError, project_slug_already_ex
 app.add_exception_handler(PostNotFoundError, post_not_found_handler)
 app.add_exception_handler(InvalidStatusTransitionError, invalid_status_transition_handler)
 app.add_exception_handler(MediaAssetNotFoundError, media_asset_not_found_handler)
+app.add_exception_handler(AIProviderError, ai_provider_error_handler)
+app.add_exception_handler(AIValidationError, ai_validation_error_handler)
 
 # ─────────────────────────────────────────────
 # Routers
@@ -153,6 +161,8 @@ app.include_router(media_router, prefix=settings.API_V1_STR)
 app.include_router(ai_router, prefix=settings.API_V1_STR)
 app.include_router(content_router, prefix=settings.API_V1_STR)
 app.include_router(oauth_router, prefix=settings.API_V1_STR)
+app.include_router(knowledge_router, prefix=settings.API_V1_STR)
+app.include_router(automation_router, prefix=settings.API_V1_STR)
 
 # ── Development auth bypass (conditional) ─────────────────────────────────
 # This router is ONLY registered when DEV_AUTH_BYPASS=true.

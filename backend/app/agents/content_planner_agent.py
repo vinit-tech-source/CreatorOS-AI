@@ -84,7 +84,7 @@ async def content_planner_agent(state: ContentWorkflowState) -> dict:
         
         # Return the dictionary portion to update state
         # The LangGraph state defines 'outline' as Optional[Dict[str, Any]]
-        return {"outline": output.model_dump()}
+        return {"outline": output.model_dump(mode='json')}
 
     except (AIProviderError, AIValidationError) as e:
         logger.error(f"Content Planner Agent failed due to AI error: {e}")

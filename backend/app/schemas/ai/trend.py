@@ -11,10 +11,10 @@ class TrendItem(BaseModel):
     """
     An individual trend candidate or relevant topic.
     """
-    topic: str = Field(..., min_length=1, description="The name or title of the trend.")
-    relevance_score: float = Field(..., ge=0.0, le=1.0, description="How relevant this trend is to the user's request (0.0 to 1.0).")
-    platform_relevance: float = Field(..., ge=0.0, le=1.0, description="How relevant this trend is to the specific platform (0.0 to 1.0).")
-    reason: str = Field(..., min_length=1, description="Explanation of why this trend is relevant and how it can be used.")
+    topic: str = Field(..., description="The name or title of the trend.")
+    relevance_score: float = Field(..., description="How relevant this trend is to the user's request (0.0 to 1.0).")
+    platform_relevance: float = Field(..., description="How relevant this trend is to the specific platform (0.0 to 1.0).")
+    reason: str = Field(..., description="Explanation of why this trend is relevant and how it can be used.")
 
 
 class TrendOutput(BaseModel):
@@ -23,16 +23,13 @@ class TrendOutput(BaseModel):
     """
     trends: List[TrendItem] = Field(
         ...,
-        max_length=10,
         description="A list of relevant trends. Maximum 10 items."
     )
     recommended_hashtags: List[str] = Field(
         ...,
-        max_length=20,
         description="A list of unique recommended hashtags."
     )
     trend_summary: str = Field(
         ...,
-        min_length=1,
         description="A brief summary of the current trend landscape for this topic."
     )

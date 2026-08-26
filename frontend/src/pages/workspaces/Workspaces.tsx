@@ -6,11 +6,14 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '.
 import { Plus, Building2 } from 'lucide-react';
 import { apiClient } from '../../services/api';
 import { Workspace } from '../../types';
+import { CreateWorkspaceModal } from '../../components/ui/CreateWorkspaceModal';
 
 export function Workspaces() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // We should refresh the list whenever the modal is closed in case a new workspace was created
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
@@ -26,15 +29,20 @@ export function Workspaces() {
     };
 
     fetchWorkspaces();
-  }, []);
+  }, [isModalOpen]);
 
   return (
     <div className="flex-col gap-6">
+      <CreateWorkspaceModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+
       <PageHeader 
         title="Workspaces" 
         subtitle="Manage your organizations and teams"
         action={
-          <Button>
+          <Button onClick={() => setIsModalOpen(true)}>
             <Plus size={16} /> New Workspace
           </Button>
         }
@@ -48,7 +56,9 @@ export function Workspaces() {
             <div className="flex flex-col items-center justify-center p-12 text-secondary">
               <Building2 size={48} className="opacity-20 mb-4" />
               <p>No workspaces found.</p>
-              <Button variant="outline" className="mt-4">Create your first workspace</Button>
+              <Button variant="outline" className="mt-4" onClick={() => setIsModalOpen(true)}>
+                Create your first workspace
+              </Button>
             </div>
           ) : (
             <Table>

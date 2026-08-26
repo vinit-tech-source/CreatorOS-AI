@@ -58,6 +58,12 @@ class Workspace(Base):
     media_assets: Mapped[list["MediaAsset"]] = relationship(  # noqa: F821
         "MediaAsset", back_populates="workspace", cascade="all, delete-orphan"
     )
+    knowledge_sources: Mapped[list["KnowledgeSource"]] = relationship(  # noqa: F821
+        "KnowledgeSource", back_populates="workspace", cascade="all, delete-orphan"
+    )
+    automation_rules: Mapped[list["AutomationRule"]] = relationship(  # noqa: F821
+        "AutomationRule", back_populates="workspace", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"<Workspace id={self.id} slug={self.slug} owner={self.owner_id}>"

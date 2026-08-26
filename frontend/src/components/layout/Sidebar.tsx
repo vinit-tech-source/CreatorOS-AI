@@ -2,11 +2,17 @@ import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   FolderKanban, 
-  PenTool, 
   BarChart3, 
   Palette, 
   Share2, 
-  Settings 
+  Settings,
+  Building2,
+  Sparkles,
+  Calendar,
+  FolderOpen,
+  Bot,
+  Database,
+  CheckSquare
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 import { useWorkspaceStore } from '../../stores/workspaceStore';
@@ -18,27 +24,46 @@ interface SidebarProps {
 export function Sidebar({ className }: SidebarProps) {
   const { workspaces, activeWorkspace, setActiveWorkspace } = useWorkspaceStore();
 
-  // Build nav items dynamically so Social Accounts deep-links into the active workspace
-  const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Projects', path: '/projects', icon: FolderKanban },
-    { name: 'Posts', path: '/projects', icon: PenTool },
-    {
-      name: 'Analytics',
-      path: activeWorkspace ? `/workspaces/${activeWorkspace.id}/analytics` : '/analytics',
-      icon: BarChart3
-    },
-    { name: 'Brand Kit', path: '/brand-kit', icon: Palette },
+  const primaryNav = [
+    { name: 'Home', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Create', path: '/create', icon: Sparkles },
+    { name: 'Calendar', path: '/calendar', icon: Calendar },
+    { name: 'Content', path: '/content', icon: FolderOpen },
+    { name: 'Approval', path: '/approval', icon: CheckSquare },
+    { name: 'Automation', path: '/automation', icon: Bot },
+    { name: 'Insights', path: '/analytics', icon: BarChart3 },
+  ];
+
+  const secondaryNav = [
     {
       name: 'Social Accounts',
-      // Deep-link to workspace-scoped route when workspace is known
-      path: activeWorkspace
-        ? `/workspaces/${activeWorkspace.id}/social-accounts`
-        : '/social-accounts',
+      path: activeWorkspace ? `/workspaces/${activeWorkspace.id}/social-accounts` : '/social-accounts',
       icon: Share2,
     },
+    { name: 'Brand Kit', path: '/brand-kit', icon: Palette },
+    { name: 'Knowledge', path: '/knowledge', icon: Database },
+    { name: 'Projects', path: '/projects', icon: FolderKanban },
+    { name: 'Workspaces', path: '/workspaces', icon: Building2 },
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
+
+  const renderNavGroup = (items: typeof primaryNav) => (
+    items.map((item) => {
+      const Icon = item.icon;
+      return (
+        <NavLink
+          key={item.name}
+          to={item.path}
+          className={({ isActive }) => 
+            isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
+          }
+        >
+          <Icon className={styles.navIcon} size={18} />
+          <span>{item.name}</span>
+        </NavLink>
+      );
+    })
+  );
 
   return (
     <aside className={`${styles.sidebar} ${className || ''}`}>
@@ -70,21 +95,16 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
 
       <nav className={styles.navigation}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={({ isActive }) => 
-                isActive ? `${styles.navItem} ${styles.active}` : styles.navItem
-              }
-            >
-              <Icon className={styles.navIcon} size={20} />
-              <span>{item.name}</span>
-            </NavLink>
-          );
-        })}
+        <div className="mb-6">
+          {renderNavGroup(primaryNav)}
+        </div>
+        
+        <div>
+          <div className="text-xs font-semibold text-secondary/50 uppercase tracking-wider mb-2 px-3">
+            Configuration
+          </div>
+          {renderNavGroup(secondaryNav)}
+        </div>
       </nav>
     </aside>
   );

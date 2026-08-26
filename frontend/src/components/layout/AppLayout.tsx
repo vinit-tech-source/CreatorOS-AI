@@ -3,6 +3,7 @@ import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { useWorkspaceStore } from '../../stores/workspaceStore';
 import { DevBanner } from '../dev/DevBanner';
+import { AppShell3D } from '../3d/AppShell3D';
 import styles from './AppLayout.module.css';
 
 interface AppLayoutProps {
@@ -18,6 +19,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className={styles.layout}>
+      <AppShell3D />
       <Sidebar className={styles.sidebar} />
       <div className={styles.mainWrapper}>
         <Topbar />

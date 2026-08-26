@@ -77,7 +77,7 @@ async def trend_agent(state: ContentWorkflowState) -> dict:
         # Return the dictionary portion to update state
         # The LangGraph state defines 'trends' as Annotated[List[Dict[str, Any]], operator.add]
         # We append a single item (the dictionary containing all TrendOutput fields) to this list.
-        return {"trends": [output.model_dump()]}
+        return {"trends": [output.model_dump(mode='json')]}
 
     except (AIProviderError, AIValidationError) as e:
         logger.error(f"Trend Agent failed due to AI error: {e}")

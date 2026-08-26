@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { CreationForm } from './components/CreationForm';
-import { GenerationProgress } from './components/GenerationProgress';
+import { AIStudio3D } from './components/3d/AIStudio3D';
 import { DraftResult } from './components/DraftResult';
 import { contentGenerationService, ContentRequest, GenerationResult } from '../../services/api/contentGenerationService';
 import { apiClient } from '../../services/api';
@@ -124,7 +124,7 @@ export function ContentCreation() {
       )}
 
       {stage === 'GENERATING' && (
-        <GenerationProgress />
+        <AIStudio3D />
       )}
 
       {stage === 'RESULT' && result && (

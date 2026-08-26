@@ -2,6 +2,11 @@ import { apiClient } from './client';
 import { Post } from '../../types';
 
 export const postManagementService = {
+  createPost: async (projectId: string, data: any): Promise<Post> => {
+    const response = await apiClient.post(`/projects/${projectId}/posts`, data);
+    return response.data.data;
+  },
+
   getPosts: async (projectId: string): Promise<Post[]> => {
     const response = await apiClient.get(`/projects/${projectId}/posts`);
     return response.data.data;
