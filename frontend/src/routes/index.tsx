@@ -36,7 +36,6 @@ export function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         
         {/* Core Product Routes */}
-        <Route path="/create" element={<CreateStudio />} />
         <Route path="/content" element={<ContentLibrary />} />
         <Route path="/calendar" element={<ContentCalendar />} />
         <Route path="/approval" element={<ApprovalCenter />} />
@@ -55,6 +54,10 @@ export function AppRoutes() {
         <Route path="/workspaces" element={<Workspaces />} />
         <Route path="/workspaces/:workspaceId/analytics" element={<Analytics />} />
         <Route path="/workspaces/:workspaceId/social-accounts" element={<SocialAccounts />} />
+      </Route>
+
+      <Route element={<ProtectedRoute noLayout />}>
+        <Route path="/create" element={<CreateStudio />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

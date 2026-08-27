@@ -1,0 +1,198 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.canvasLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.canvasDims {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.canvasOuter {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.canvasChecker {
+  position: absolute;
+  inset: -1px;
+  border-radius: 12px;
+  z-index: 0;
+  background-image: 
+    linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255,255,255,0.02) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.02) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.02) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.canvas {
+  position: relative;
+  border-radius: 12px;
+  border: 1.5px solid;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  user-select: none;
+}
+
+.element {
+  position: absolute;
+  cursor: grab;
+}
+.element:active { cursor: grabbing; }
+
+.elementSelected {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.textEl {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 4px 8px;
+  font-family: inherit;
+  line-height: 1.25;
+}
+
+.textEditor {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid #6366f1;
+  border-radius: 4px;
+  outline: none;
+  resize: none;
+  padding: 4px 8px;
+  font-family: inherit;
+  line-height: 1.25;
+}
+
+.shapeEl { pointer-events: none; }
+
+.selectionOverlay {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  background: rgba(20,20,30,0.95);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 3px 6px;
+  z-index: 100;
+}
+
+.deleteBtn, .editBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.deleteBtn:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
+.editBtn:hover { background: rgba(99,102,241,0.2); color: #818cf8; }
+
+.moveHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--text-muted);
+  cursor: move;
+}
+
+/* Corner decorations */
+.cornerTL, .cornerTR, .cornerBL, .cornerBR {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(99,102,241,0.5);
+}
+.cornerTL { top: -4px; left: -4px; }
+.cornerTR { top: -4px; right: -4px; }
+.cornerBL { bottom: -4px; left: -4px; }
+.cornerBR { bottom: -4px; right: -4px; }
+
+/* Empty state */
+.emptyState {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  pointer-events: none;
+}
+
+.emptyIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  border: 1.5px dashed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyText {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+/* Character counter */
+.charCounter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  width: 100%;
+  max-width: 480px;
+}
+
+.charCountBar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.charCountFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.charCountOver { color: #ef4444; font-weight: 600; }

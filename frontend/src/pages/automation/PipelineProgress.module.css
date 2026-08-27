@@ -1,26 +1,154 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
   width: 100%;
-  max-width: 1600px;
+  max-width: 1200px;
   margin: 0 auto;
-  height: calc(100vh - 8rem);
+  padding-bottom: var(--spacing-8);
 }
 
-.canvasCard {
+.header {
+  margin-bottom: var(--spacing-8);
+}
+
+.liveRunBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--color-warning);
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-2);
+}
+
+/* Override PageHeader default margins if necessary */
+.header > div {
+  margin-bottom: 0;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.agentsList {
   flex: 1;
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--border-dark);
+  gap: var(--spacing-4);
+  max-width: 600px;
 }
 
-.canvasContainer {
-  position: absolute;
-  top: 0;
-  left: 0;
+.agentCard {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4) var(--spacing-5);
+  transition: all var(--transition-normal);
+}
+
+.agentCard:hover {
+  background-color: var(--bg-surface);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.agentNumber {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  opacity: 0.5;
+  width: 2.5rem;
+  flex-shrink: 0;
+}
+
+.agentInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.agentName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.agentDescription {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.agentStatus {
+  margin-left: var(--spacing-4);
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: lowercase;
+}
+
+.statusSidebar {
   width: 100%;
-  height: 100%;
+}
+
+@media (min-width: 1024px) {
+  .statusSidebar {
+    width: 320px;
+    position: sticky;
+    top: var(--spacing-8);
+  }
+}
+
+.statusCard {
+  background-color: var(--bg-surface-sunken);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow-lg);
+}
+
+.statusTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.statusText {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--spacing-6) 0;
+}
+
+.runButton {
+  background-color: var(--color-warning);
+  color: #000;
+  font-weight: 600;
+}
+
+.runButton:hover {
+  background-color: #f59e0b; /* Slightly darker orange on hover */
+  color: #000;
 }

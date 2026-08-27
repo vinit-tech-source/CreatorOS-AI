@@ -38,3 +38,10 @@
   padding: var(--spacing-6);
   background-color: transparent;
 }
+
+/* Used by full-bleed pages like the Create Studio */
+.mainContent:has(.studioFullBleed) {
+  padding: 0;
+  overflow: hidden;
+}
+

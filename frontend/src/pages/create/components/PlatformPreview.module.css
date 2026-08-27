@@ -1,0 +1,197 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  min-height: 100%;
+  width: 100%;
+}
+
+.previewLabel {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.previewLabel span:first-child { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+.previewSub { font-size: 0.8125rem; color: var(--text-secondary); }
+
+.deviceFrame {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Instagram Preview */
+.igContainer {
+  background: #000;
+  border-radius: 12px;
+  border: 1px solid #262626;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.igHeader {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  gap: 10px;
+}
+
+.igAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+}
+
+.igAuthorInfo { flex: 1; }
+.igUsername { font-size: 13px; font-weight: 600; color: #fff; }
+.igFollowed { font-size: 13px; color: #0095f6; }
+.igMore { font-size: 18px; color: #fff; cursor: pointer; }
+
+.igCanvas {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #111;
+  position: relative;
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+.igPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 2.5rem;
+}
+
+.igPlaceholderText { font-size: 0.8125rem; color: rgba(255,255,255,0.3); }
+
+.igActions {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+}
+
+.igActionLeft { display: flex; gap: 8px; }
+.igActionBtn { background: none; border: none; font-size: 22px; cursor: pointer; }
+.igLikes { font-size: 13px; font-weight: 600; color: #fff; padding: 0 12px 4px; }
+.igCaption { font-size: 13px; color: #fff; padding: 2px 12px 12px; line-height: 1.4; }
+.igCaptionUser { font-weight: 600; }
+.igHashtags { color: #0095f6; margin-top: 4px; font-size: 13px; }
+
+/* TikTok Preview */
+.ttContainer {
+  display: flex;
+  position: relative;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 9/16;
+  max-height: 500px;
+}
+
+.ttVideoArea {
+  flex: 1;
+  background: linear-gradient(180deg, #111, #000);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+.ttOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.ttBottomInfo { color: #fff; }
+.ttUsername { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.ttCaption { font-size: 13px; line-height: 1.4; margin-bottom: 6px; }
+.ttHashtags { font-size: 13px; color: #aaa; }
+
+.ttSidebar {
+  width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px 0 20px;
+  gap: 20px;
+}
+
+.ttAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 22px;
+  color: #fff;
+}
+.ttAction span { font-size: 10px; color: #ccc; }
+
+/* Generic Preview */
+.genericContainer {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.genericContent {
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+/* ReadOnly Canvas Elements */
+.roCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.roElement {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.roText {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.roShape {
+  width: 100%;
+  height: 100%;
+}
+
+.genericLabel { font-size: 1rem; font-weight: 700; color: #fff; }
+.genericCaption { padding: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }

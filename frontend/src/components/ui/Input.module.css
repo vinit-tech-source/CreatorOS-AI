@@ -24,6 +24,35 @@
   color: var(--text-primary);
   outline: none;
   transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWithIcon {
+  padding-right: 2.5rem; /* space for the eye icon */
+}
+
+.toggleButton {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.toggleButton:hover {
+  color: var(--text-primary);
 }
 
 .input:focus {

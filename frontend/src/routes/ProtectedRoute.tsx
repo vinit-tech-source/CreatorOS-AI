@@ -16,7 +16,7 @@ import { AppLayout } from '../components/layout/AppLayout';
  *   - isAuthenticated is true → normal render path (no special casing here).
  *   - A DevBanner renders inside AppLayout to signal the bypass is active.
  */
-export function ProtectedRoute() {
+export function ProtectedRoute({ noLayout }: { noLayout?: boolean }) {
   const { isAuthenticated, isInitializing } = useAuthStore();
   const location = useLocation();
 
@@ -30,6 +30,10 @@ export function ProtectedRoute() {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (noLayout) {
+    return <Outlet />;
   }
 
   return (

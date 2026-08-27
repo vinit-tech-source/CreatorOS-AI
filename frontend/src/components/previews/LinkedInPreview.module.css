@@ -1,0 +1,142 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #1d2226; /* LinkedIn Dark Mode card bg */
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  width: 100%;
+  max-width: 550px;
+  margin: 0 auto;
+  border: 1px solid #38434f;
+  padding-top: 12px;
+}
+
+.header {
+  display: flex;
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #0a66c2;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.authorInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.degree {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.headline {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+}
+
+.globeIcon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.moreAction {
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.body {
+  padding: 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 12px;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px 8px;
+  border-bottom: 1px solid #38434f;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.likeIcon {
+  background-color: #0a66c2;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 4px 8px;
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.actionItem:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}

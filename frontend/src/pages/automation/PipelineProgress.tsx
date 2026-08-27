@@ -1,60 +1,59 @@
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { Float, OrbitControls, Text } from '@react-three/drei';
 import { PageHeader } from '../../components/layout/PageHeader';
-import { Card } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
 import styles from './PipelineProgress.module.css';
 
-function AgentNode({ position, color, label }: { position: [number, number, number], color: string, label: string }) {
-  return (
-    <group position={position}>
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-        <mesh>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color={color} roughness={0.2} metalness={0.8} />
-        </mesh>
-        <Text
-          position={[0, 1.2, 0]}
-          fontSize={0.3}
-          color="#ffffff"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {label}
-        </Text>
-      </Float>
-    </group>
-  );
-}
+const agents = [
+  { id: '01', name: 'Strategy Agent', description: 'Sets goal, audience, and format', status: 'waiting' },
+  { id: '02', name: 'Trend Agent', description: 'Finds current trends and keywords', status: 'waiting' },
+  { id: '03', name: 'Research Agent', description: 'Gathers facts and statistics', status: 'waiting' },
+  { id: '04', name: 'Content Planner', description: 'Builds a logical outline', status: 'waiting' },
+  { id: '05', name: 'Content Generator', description: 'Drafts the post', status: 'waiting' },
+  { id: '06', name: 'Brand Voice Agent', description: 'Checks tone against your rules', status: 'waiting' },
+  { id: '07', name: 'Fact Check Agent', description: 'Verifies every claim', status: 'waiting' },
+  { id: '08', name: 'SEO Agent', description: 'Optimizes for discovery', status: 'waiting' },
+  { id: '09', name: 'Hashtag Agent', description: 'Adds relevant tags', status: 'waiting' },
+  { id: '10', name: 'Image Prompt Agent', description: 'Writes the visual brief', status: 'waiting' },
+];
 
 export function PipelineProgress() {
   return (
     <div className={styles.container}>
-      <PageHeader 
-        title="Active Agent Pipeline" 
-        subtitle="Live 3D telemetry of your LangGraph content factory." 
-      />
+      <div className={styles.header}>
+        <span className={styles.liveRunBadge}>LIVE RUN</span>
+        <PageHeader 
+          title="Pipeline" 
+          subtitle="Ten agents, run in order. Each one reads what the last one wrote." 
+        />
+      </div>
       
-      <Card glass className={styles.canvasCard}>
-        <div className={styles.canvasContainer}>
-          <Canvas camera={{ position: [0, 3, 8], fov: 60 }}>
-            <color attach="background" args={['#09090b']} />
-            <ambientLight intensity={0.3} />
-            <directionalLight position={[10, 10, 5]} intensity={1.5} color="#4F46E5" />
-            <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#0ea5e9" />
-            
-            <Suspense fallback={null}>
-              <AgentNode position={[-4, 0, 0]} color="#4F46E5" label="Strategy" />
-              <AgentNode position={[-2, 0, -2]} color="#0ea5e9" label="Research" />
-              <AgentNode position={[0, 0, 0]} color="#10b981" label="Drafting" />
-              <AgentNode position={[2, 0, -2]} color="#f59e0b" label="Review" />
-              <AgentNode position={[4, 0, 0]} color="#8b5cf6" label="Publish" />
-              
-              <OrbitControls enableZoom={true} autoRotate autoRotateSpeed={0.5} />
-            </Suspense>
-          </Canvas>
+      <div className={styles.layout}>
+        {/* Left Column: Agents List */}
+        <div className={styles.agentsList}>
+          {agents.map((agent) => (
+            <div key={agent.id} className={styles.agentCard}>
+              <div className={styles.agentNumber}>{agent.id}</div>
+              <div className={styles.agentInfo}>
+                <h3 className={styles.agentName}>{agent.name}</h3>
+                <p className={styles.agentDescription}>{agent.description}</p>
+              </div>
+              <div className={styles.agentStatus}>
+                <span className={styles.statusBadge}>{agent.status}</span>
+              </div>
+            </div>
+          ))}
         </div>
-      </Card>
+
+        {/* Right Column: Run Status */}
+        <div className={styles.statusSidebar}>
+          <div className={styles.statusCard}>
+            <h3 className={styles.statusTitle}>Run status</h3>
+            <p className={styles.statusText}>Idle — no run in progress.</p>
+            <Button className={styles.runButton} fullWidth>
+              Run pipeline
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
