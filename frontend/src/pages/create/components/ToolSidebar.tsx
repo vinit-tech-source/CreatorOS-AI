@@ -6,6 +6,7 @@ interface ToolSidebarProps {
   activeTool: string;
   onSelectTool: (tool: any) => void;
   onAddText: () => void;
+  onAddMedia: () => void;
   onAddShape: (shape: 'rect' | 'circle') => void;
   platformConfig: PlatformConfig;
   format: ContentFormat;
@@ -21,10 +22,11 @@ const tools = [
   { id: 'ai', icon: Sparkles, label: 'AI' },
 ];
 
-export function ToolSidebar({ activeTool, onSelectTool, onAddText, onAddShape, platformConfig }: Omit<ToolSidebarProps, 'format'> & { format: ContentFormat }) {
+export function ToolSidebar({ activeTool, onSelectTool, onAddText, onAddMedia, onAddShape, platformConfig }: Omit<ToolSidebarProps, 'format'> & { format: ContentFormat }) {
   const handleToolClick = (toolId: string) => {
     onSelectTool(toolId);
     if (toolId === 'text') onAddText();
+    if (toolId === 'media') onAddMedia();
   };
 
   return (
@@ -60,6 +62,26 @@ export function ToolSidebar({ activeTool, onSelectTool, onAddText, onAddShape, p
             <div className={styles.shapeCircle} style={{ borderColor: platformConfig.accentColor }} />
             Circle
           </button>
+        </div>
+      )}
+
+      {/* Captions sub-panel */}
+      {activeTool === 'captions' && (
+        <div className={styles.subPanel}>
+          <div className={styles.subPanelTitle}>Captions</div>
+          <div style={{ fontSize: 12, color: '#888', padding: '10px 0' }}>
+            Tip: Edit your caption text directly in the Properties Panel on the right.
+          </div>
+        </div>
+      )}
+
+      {/* Templates sub-panel */}
+      {activeTool === 'templates' && (
+        <div className={styles.subPanel}>
+          <div className={styles.subPanelTitle}>Templates</div>
+          <div style={{ fontSize: 12, color: '#888', padding: '10px 0' }}>
+            Template library coming soon...
+          </div>
         </div>
       )}
     </div>
