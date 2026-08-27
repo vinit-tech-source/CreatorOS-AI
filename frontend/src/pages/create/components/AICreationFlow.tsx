@@ -3,6 +3,7 @@ import { PlatformConfig, ContentFormat } from '../../../constants/platformConfig
 import { StudioState, CanvasElement } from '../CreateStudio';
 import { Sparkles, ArrowRight, ChevronRight, Check, Pencil, Wand2, Loader2, MessageSquarePlus, RotateCcw, ImagePlus, Link, MapPin, X, ArrowLeft } from 'lucide-react';
 import styles from './AICreationFlow.module.css';
+import { apiClient } from '../../../services/api/client';
 
 interface AICreationFlowProps {
   platformConfig: PlatformConfig;
@@ -30,20 +31,21 @@ function getQuestions(_platform: string, formatLabel: string, _concept: string):
       question: `Who is your target audience for this ${formatLabel.toLowerCase()}?`,
       placeholder: 'e.g., Young entrepreneurs aged 18–30, fitness enthusiasts, tech beginners…',
       hint: 'Being specific helps tailor the tone and language of your content.',
+      options: ['General Audience', 'Young Professionals', 'Entrepreneurs', 'Students', 'Tech Enthusiasts', 'Fitness Fans', 'Parents', 'Creators & Influencers', 'B2B/Corporate', 'Small Business Owners', 'Gamers', 'Foodies'],
     },
     {
       id: 'tone',
       question: 'What tone or style should the content have?',
       placeholder: 'e.g., Inspirational & motivating, Funny & casual, Professional & authoritative…',
       hint: 'Your tone defines how viewers connect with your message.',
-      options: ['Inspirational', 'Educational', 'Entertaining', 'Professional', 'Casual & Friendly', 'Bold & Direct'],
+      options: ['Inspirational', 'Educational', 'Entertaining', 'Professional', 'Casual & Friendly', 'Bold & Direct', 'Humorous/Sarcastic', 'Empathetic', 'Controversial/Provocative', 'Minimalist & Calm'],
     },
     {
       id: 'goal',
       question: 'What is the main goal of this content?',
       placeholder: 'e.g., Get more followers, Promote a product, Drive website traffic, Build trust…',
       hint: 'A clear goal shapes the call-to-action and content structure.',
-      options: ['Grow followers', 'Promote a product/service', 'Educate my audience', 'Go viral', 'Build brand trust', 'Drive traffic'],
+      options: ['Grow followers', 'Promote a product/service', 'Educate my audience', 'Go viral', 'Build brand trust', 'Drive traffic', 'Start a conversation', 'Generate leads/emails', 'Showcase behind-the-scenes'],
     },
     {
       id: 'hook',
@@ -54,13 +56,14 @@ function getQuestions(_platform: string, formatLabel: string, _concept: string):
         ? 'e.g., Start with a shocking fact, a bold question, or a dramatic visual…'
         : 'e.g., Start with a powerful quote, a surprising question, or a bold statement…',
       hint: 'The hook determines whether viewers stop scrolling or keep going.',
+      options: ['Shocking Fact', 'Bold Question', 'Relatable Scenario', 'Inspiring Quote', 'Direct Statement', 'Visual Teaser', 'Common Myth Busted', 'Controversial Opinion', 'Story/Anecdote', '"How-to" Teaser'],
     },
     {
       id: 'cta',
       question: 'What should viewers do after consuming this content?',
       placeholder: 'e.g., Follow for more, Comment your thoughts, Visit the link in bio, Share with a friend…',
       hint: 'Every great piece of content ends with a clear next step.',
-      options: ['Follow for more', 'Comment below', 'Share with friends', 'Visit link in bio', 'Save this post', 'DM me'],
+      options: ['Follow for more', 'Comment below', 'Share with friends', 'Visit link in bio', 'Save this post', 'DM me', 'Tag a friend', 'Subscribe/Sign up', 'Check out my stories'],
     },
   ];
 }
@@ -147,78 +150,94 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
     setFlowStep('generating');
     setGenerationStep(0);
 
-    // Simulate progressive generation steps
-    for (let i = 0; i < generationSteps.length; i++) {
-      await new Promise(res => setTimeout(res, 900 + Math.random() * 400));
+    // Initial rapid steps
+    for (let i = 0; i < 2; i++) {
+      await new Promise(res => setTimeout(res, 800));
       setGenerationStep(i + 1);
     }
 
-    // Generate a realistic AI result based on answers
-    const tone = finalAnswers.tone || 'Professional';
-    const goal = finalAnswers.goal || 'Grow followers';
-    const cta = finalAnswers.cta || 'Follow for more';
-    const audience = finalAnswers.audience || 'general audience';
-    const hook = finalAnswers.hook || '';
+    try {
+      const response = await apiClient.post('/ai/generate-post', {
+        platform: platformConfig.name,
+        concept,
+        tone: finalAnswers.tone || 'Professional',
+        goal: finalAnswers.goal || 'Grow followers',
+        audience: finalAnswers.audience || 'general audience',
+        hook: finalAnswers.hook || 'Direct Statement',
+      });
 
-    const hookLine = hook
-      ? hook.length < 80 ? hook : hook.slice(0, 80) + '…'
-      : `Did you know that ${concept.split(' ').slice(0, 4).join(' ')} changes everything?`;
+      const apiResult = response.data;
+      
+      setGenerationStep(3);
+      await new Promise(res => setTimeout(res, 500));
+      setGenerationStep(4);
+      await new Promise(res => setTimeout(res, 500));
 
-    const caption = `${hookLine}\n\n${concept}\n\nCreated for ${audience} with a ${tone.toLowerCase()} voice — designed to ${goal.toLowerCase()}.\n\n${cta} 👇`;
+      const { title, caption, hashtags } = apiResult.data;
 
-    const hashtags = generateHashtags(platformConfig.name, concept, tone);
+      const elements: Omit<CanvasElement, 'id' | 'zIndex'>[] = [
+        {
+          type: 'text',
+          x: 40,
+          y: 40,
+          w: format.canvasW - 80,
+          h: 60,
+          content: title,
+          fontSize: 24,
+          color: '#ffffff',
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          type: 'text',
+          x: 40,
+          y: 110,
+          w: format.canvasW - 80,
+          h: 60,
+          content: caption.split('\n')[0],
+          fontSize: 16,
+          color: 'rgba(255,255,255,0.75)',
+          fontWeight: '500',
+          textAlign: 'center',
+        },
+        {
+          type: 'shape',
+          x: format.canvasW / 2 - 75,
+          y: format.canvasH - 70,
+          w: 150,
+          h: 36,
+          backgroundColor: platformConfig.accentColor,
+          borderRadius: 18,
+        },
+        {
+          type: 'text',
+          x: format.canvasW / 2 - 75,
+          y: format.canvasH - 62,
+          w: 150,
+          h: 36,
+          content: (finalAnswers.cta || 'Follow for more').split(',')[0],
+          fontSize: 13,
+          color: '#ffffff',
+          fontWeight: '700',
+          textAlign: 'center',
+        },
+      ];
 
-    const elements: Omit<CanvasElement, 'id' | 'zIndex'>[] = [
-      {
-        type: 'text',
-        x: 40,
-        y: 50,
-        w: format.canvasW - 80,
-        h: 80,
-        content: hookLine,
-        fontSize: 30,
-        color: '#ffffff',
-        fontWeight: '800',
-        textAlign: 'center',
-      },
-      {
-        type: 'text',
-        x: 40,
-        y: 160,
-        w: format.canvasW - 80,
-        h: 50,
-        content: concept,
-        fontSize: 18,
-        color: 'rgba(255,255,255,0.75)',
-        fontWeight: '500',
-        textAlign: 'center',
-      },
-      {
-        type: 'shape',
-        x: format.canvasW / 2 - 60,
-        y: format.canvasH - 90,
-        w: 120,
-        h: 40,
-        backgroundColor: platformConfig.accentColor,
-        borderRadius: 20,
-      },
-      {
-        type: 'text',
-        x: format.canvasW / 2 - 60,
-        y: format.canvasH - 87,
-        w: 120,
-        h: 36,
-        content: cta,
-        fontSize: 13,
-        color: '#ffffff',
-        fontWeight: '700',
-        textAlign: 'center',
-      },
-    ];
-
-    const generated: AIResult = { caption, title: hookLine, hashtags, elements };
-    setResult(generated);
-    setFlowStep('result');
+      const generated: AIResult = { caption, title, hashtags, elements };
+      setResult(generated);
+      setFlowStep('result');
+    } catch (error) {
+      console.error('Failed to generate post:', error);
+      // Fallback to mock generation if the backend is down
+      const fallbackCaption = `Here's what nobody tells you about this topic.\n\nFocus on what matters.\n\n${(finalAnswers.cta || 'Follow for more').split(',')[0]}! 👇`;
+      setResult({
+        title: "Are you ready for the truth?",
+        caption: fallbackCaption,
+        hashtags: ['#socialmedia', '#tips'],
+        elements: [] // Simplified fallback
+      });
+      setFlowStep('result');
+    }
   };
 
   const handleEditWithPrompt = async () => {
@@ -401,17 +420,27 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
             {/* Quick options if available */}
             {questions[currentQ].options && (
               <div className={styles.quickOptions}>
-                {questions[currentQ].options!.map(opt => (
-                  <button
-                    key={opt}
-                    className={`${styles.optionPill} ${currentAnswer === opt ? styles.optionPillActive : ''}`}
-                    style={currentAnswer === opt ? { borderColor: platformConfig.accentColor, color: platformConfig.accentColor } : {}}
-                    onClick={() => setCurrentAnswer(opt)}
-                  >
-                    {currentAnswer === opt && <Check size={12} />}
-                    {opt}
-                  </button>
-                ))}
+                {questions[currentQ].options!.map(opt => {
+                  const currentOpts = currentAnswer.split(',').map(s => s.trim()).filter(Boolean);
+                  const isActive = currentOpts.includes(opt);
+                  return (
+                    <button
+                      key={opt}
+                      className={`${styles.optionPill} ${isActive ? styles.optionPillActive : ''}`}
+                      style={isActive ? { borderColor: platformConfig.accentColor, color: platformConfig.accentColor } : {}}
+                      onClick={() => {
+                        if (isActive) {
+                          setCurrentAnswer(currentOpts.filter(o => o !== opt).join(', '));
+                        } else {
+                          setCurrentAnswer([...currentOpts, opt].join(', '));
+                        }
+                      }}
+                    >
+                      {isActive && <Check size={12} />}
+                      {opt}
+                    </button>
+                  );
+                })}
               </div>
             )}
 

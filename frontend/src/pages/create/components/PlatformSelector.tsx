@@ -54,6 +54,7 @@ export function PlatformSelector({ initialCountry, initialPlatform, onEnterStudi
 
   const handleSelectFormat = (f: ContentFormat) => {
     setSelectedFormat(f);
+    onEnterStudio(country, platform, f);
   };
 
   const handleEnter = () => {
@@ -228,22 +229,7 @@ export function PlatformSelector({ initialCountry, initialPlatform, onEnterStudi
             ))}
           </div>
 
-          {selectedFormat && (
-            <div className={styles.enterStudioBar}>
-              <div className={styles.enterStudioInfo}>
-                <span className={styles.enterStudioPlatform}>
-                  <span className={styles.formatLogoWrap}><img src={getPlatformLogoUrl(platform)} alt={platform} className={styles.formatPlatformLogo} /></span> {platform}
-                </span>
-                <span className={styles.enterStudioSep}>→</span>
-                <span className={styles.enterStudioFormat}>{selectedFormat.icon} {selectedFormat.label}</span>
-                <span className={styles.enterStudioRatio}>{selectedFormat.aspectRatio}</span>
-              </div>
-              <button className={styles.enterStudioBtn} onClick={handleEnter}>
-                <Play size={16} fill="currentColor" />
-                Enter Studio
-              </button>
-            </div>
-          )}
+          {/* Removed Enter Studio Bar as it now navigates directly */}
         </div>
       )}
     </div>

@@ -6,8 +6,9 @@ import { ToolSidebar } from './ToolSidebar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { PlatformPreview } from './PlatformPreview';
 import { AICreationFlow, AIResult } from './AICreationFlow';
+import { apiClient } from '../../../services/api/client';
 import {
-  ArrowLeft, Save, Share2, Eye, Zap, ChevronDown, Sparkles, Wand2
+  ArrowLeft, Save, Share2, Eye, Zap, ChevronDown, Sparkles, Wand2, Loader2, Check
 } from 'lucide-react';
 import styles from './CreationWorkspace.module.css';
 
@@ -28,6 +29,10 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
   const [aiPrompt, setAiPrompt] = useState('');
   const [showAiPanel, setShowAiPanel] = useState(false);
   const [aiFlowComplete, setAiFlowComplete] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishSuccess, setPublishSuccess] = useState(false);
   const nextId = useRef(1);
 
   const format = state.format!;
@@ -117,6 +122,22 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
     setActiveTool('select');
   };
 
+  const handleAddMedia = () => {
+    addElement({
+      type: 'shape', // Using shape as a placeholder since CanvasArea might not render images natively yet
+      x: 40,
+      y: 40,
+      w: 200,
+      h: 150,
+      backgroundColor: '#2a2a2a',
+      content: '🖼 Media Placeholder',
+      color: '#888',
+      fontSize: 14,
+      textAlign: 'center',
+    });
+    setActiveTool('select');
+  };
+
   const handleAddShape = (shape: 'rect' | 'circle') => {
     addElement({
       type: 'shape',
@@ -133,16 +154,66 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
   const handleAiGenerate = async () => {
     if (!aiPrompt.trim()) return;
     setIsAiLoading(true);
-    // Simulate AI — generate a caption and title
-    await new Promise(res => setTimeout(res, 1800));
-    const generatedCaption = `🚀 ${aiPrompt}\n\nThis is your AI-generated caption crafted for ${platformConfig.name}. Tailored to your audience and optimised for maximum engagement.\n\n${state.hashtags.length === 0 ? '#content #socialmedia #creatorstudio' : state.hashtags.join(' ')}`;
-    onStateChange({ caption: generatedCaption });
-    if (state.elements.length === 0) {
-      addElement({ type: 'text', x: 40, y: 40, w: format.canvasW - 80, h: 80, content: aiPrompt, fontSize: 32, color: '#ffffff', fontWeight: '800', textAlign: 'center' });
+    try {
+      const response = await apiClient.post('/ai/generate-caption', {
+        prompt: aiPrompt,
+        platform: platformConfig.name,
+      });
+
+      const apiResult = response.data;
+      
+      const generatedCaption = apiResult.data.caption;
+      onStateChange({ caption: generatedCaption });
+      if (state.elements.length === 0) {
+        addElement({ type: 'text', x: 40, y: 40, w: format.canvasW - 80, h: 80, content: aiPrompt, fontSize: 32, color: '#ffffff', fontWeight: '800', textAlign: 'center' });
+      }
+    } catch (error) {
+      console.error('Failed to generate caption:', error);
+      // Fallback
+      const fallbackCaption = `🚀 ${aiPrompt}\n\nThis is your fallback caption crafted for ${platformConfig.name}.`;
+      onStateChange({ caption: fallbackCaption });
     }
     setIsAiLoading(false);
     setShowAiPanel(false);
     setAiPrompt('');
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    // Simulate save delay
+    await new Promise(r => setTimeout(r, 1000));
+    setIsSaving(false);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 2000);
+  };
+
+  const handlePublish = async () => {
+    setIsPublishing(true);
+    setPublishSuccess(false);
+    try {
+      // Connect to the standalone publisher service on port 3000
+      const res = await fetch('http://localhost:3000/posts/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          connectedAccountId: 1, // Dev/Local testing account
+          text: state.caption
+        })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        setPublishSuccess(true);
+        setTimeout(() => setPublishSuccess(false), 3000);
+        alert('Published successfully! View it at: ' + data.tweetUrl);
+      } else {
+        alert('Failed to publish: ' + (data.error || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('Network error: Could not reach publisher service on port 3000');
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const selectedElement = state.elements.find(el => el.id === state.selectedElementId) || null;
@@ -206,7 +277,10 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
                       </div>
                       <div className={styles.repurposeFormats}>
                         {plat.formats.map(f => (
-                          <button key={f.id} className={styles.repurposeFormatBtn} onClick={() => handleRepurpose(plat.name, f.id)}>
+                          <button key={f.id} className={styles.repurposeFormatBtn} onClick={() => {
+                            handleRepurpose(plat.name, f.id);
+                            setShowRepurpose(false);
+                          }}>
                             <span>{f.icon}</span> {f.label}
                           </button>
                         ))}
@@ -222,8 +296,14 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
             <Sparkles size={15} />
             AI Assist
           </button>
-          <button className={styles.actionBtn}><Save size={15} /><span>Save</span></button>
-          <button className={styles.publishBtn}><Share2 size={15} /><span>Publish</span></button>
+          <button className={styles.actionBtn} onClick={handleSave} disabled={isSaving}>
+            {isSaving ? <Loader2 size={15} className={styles.spinner} /> : saveSuccess ? <Check size={15} color="#10b981" /> : <Save size={15} />}
+            <span>{isSaving ? 'Saving...' : saveSuccess ? 'Saved' : 'Save'}</span>
+          </button>
+          <button className={styles.publishBtn} onClick={handlePublish} disabled={isPublishing}>
+            {isPublishing ? <Loader2 size={15} className={styles.spinner} /> : publishSuccess ? <Check size={15} /> : <Share2 size={15} />}
+            <span>{isPublishing ? 'Publishing...' : publishSuccess ? 'Published!' : 'Publish'}</span>
+          </button>
         </div>
       </header>
 
@@ -263,9 +343,16 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
         {/* Left Tool Sidebar */}
         <ToolSidebar
           activeTool={activeTool}
-          onSelectTool={setActiveTool}
+          onSelectTool={(tool) => {
+            if (tool === 'ai') {
+              setShowAiPanel(true);
+            } else {
+              setActiveTool(tool);
+            }
+          }}
           onAddText={handleAddText}
           onAddShape={handleAddShape}
+          onAddMedia={handleAddMedia}
           platformConfig={platformConfig}
           format={format}
         />
