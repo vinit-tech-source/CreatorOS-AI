@@ -592,7 +592,7 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
 }
 
 // Helper: generate relevant hashtags
-function generateHashtags(platform: string, concept: string, tone: string): string[] {
+export function generateHashtags(platform: string, concept: string, tone: string): string[] {
   const words = concept.toLowerCase().split(' ').filter(w => w.length > 3).slice(0, 4);
   const base = words.map(w => '#' + w.replace(/[^a-z0-9]/g, ''));
   const toneMap: Record<string, string[]> = {

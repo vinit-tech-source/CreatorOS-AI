@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { countryPlatforms } from '../../../constants/countryPlatforms';
 import { platformConfigs, getPlatformConfig, ContentFormat, getPlatformLogoUrl } from '../../../constants/platformConfigs';
-import { Globe, ChevronRight, Sparkles, Zap, Play, ArrowLeft } from 'lucide-react';
+import { Globe, ChevronRight, Sparkles, Zap, ArrowLeft } from 'lucide-react';
 import styles from './PlatformSelector.module.css';
 
 interface PlatformSelectorProps {
@@ -55,12 +55,6 @@ export function PlatformSelector({ initialCountry, initialPlatform, onEnterStudi
   const handleSelectFormat = (f: ContentFormat) => {
     setSelectedFormat(f);
     onEnterStudio(country, platform, f);
-  };
-
-  const handleEnter = () => {
-    if (selectedFormat) {
-      onEnterStudio(country, platform, selectedFormat);
-    }
   };
 
   return (

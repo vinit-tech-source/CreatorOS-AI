@@ -86,8 +86,15 @@ export function Login() {
       <div className={styles.formPane}>
         <div className={styles.contentWrapper}>
         <div className={styles.header}>
-          <h1 className={styles.title}>CreatorOS AI</h1>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <h1 className={styles.title} style={{ cursor: 'pointer' }}>CreatorOS AI</h1>
+          </Link>
           <p className={styles.subtitle}>Welcome back! Please login to your account.</p>
+          <div style={{ marginTop: '0.5rem' }}>
+            <Link to="/" style={{ color: '#818cf8', fontSize: '0.875rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+              ← Back to Home
+            </Link>
+          </div>
         </div>
         
         <Card glass>

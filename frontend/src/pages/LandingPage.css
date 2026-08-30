@@ -1973,3 +1973,535 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   STEP-BY-STEP CREATION FLOW SIMULATION (DOWNSIDE SECTION)
+   ============================================================ */
+.creation-flow-section {
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+
+.simulation-flow-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.big-simulation-card {
+  border-radius: 20px;
+  background: rgba(10, 14, 28, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.creation-stepper-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #080c1a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stepper-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.stepper-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #9ba6c5;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.stepper-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.stepper-pill-btn.active {
+  background: rgba(94, 82, 246, 0.25);
+  border-color: rgba(94, 82, 246, 0.7);
+  color: #fff;
+}
+
+.stepper-pill-btn.done {
+  color: #82e55d;
+}
+
+.stepper-active-glow {
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: #5e52f6;
+  border-radius: 999px;
+  box-shadow: 0 0 10px #5e52f6;
+}
+
+.live-demo-tag {
+  font-size: 11px;
+  font-weight: 800;
+  color: #82e55d;
+  background: rgba(130, 229, 93, 0.12);
+  border: 1px solid rgba(130, 229, 93, 0.3);
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+/* Step Views */
+.flow-step-view {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 440px;
+}
+
+.flow-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.flow-step-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: #a599ff;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.flow-step-header h3 {
+  margin: 4px 0 0;
+  font-size: 19px;
+  font-weight: 800;
+  color: white;
+}
+
+.flow-step-counter {
+  font-size: 12px;
+  color: #a599ff;
+  font-weight: 700;
+  background: rgba(165, 153, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+
+/* Step 1: Regions Grid */
+.regions-grid-flow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.region-flow-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  border-radius: 14px;
+  background: #0a0f21;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.region-flow-card:hover {
+  background: #111833;
+  border-color: rgba(140, 120, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.region-flow-card.selected-flow {
+  background: linear-gradient(135deg, rgba(94, 82, 246, 0.25), #0e1530);
+  border-color: rgba(94, 82, 246, 0.8);
+  box-shadow: 0 0 25px rgba(94, 82, 246, 0.25);
+}
+
+.rf-icon {
+  font-size: 34px;
+}
+
+.rf-info strong {
+  display: block;
+  font-size: 16px;
+  color: white;
+}
+
+.rf-info span {
+  display: block;
+  font-size: 12px;
+  color: #8f9bb8;
+  margin-top: 3px;
+}
+
+.rf-check {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  color: #82e55d;
+  background: rgba(130, 229, 93, 0.15);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* Step 2: Countries Grid */
+.countries-grid-flow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.country-flow-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 14px;
+  background: #0a0f21;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.country-flow-card:hover {
+  background: #111833;
+  border-color: rgba(140, 120, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.country-flow-card.selected-flow {
+  background: linear-gradient(135deg, rgba(94, 82, 246, 0.25), #0e1530);
+  border-color: rgba(94, 82, 246, 0.8);
+  box-shadow: 0 0 25px rgba(94, 82, 246, 0.25);
+}
+
+.cf-flag {
+  font-size: 36px;
+}
+
+.cf-info strong {
+  display: block;
+  font-size: 16px;
+  color: white;
+}
+
+.cf-info span {
+  display: block;
+  font-size: 12px;
+  color: #8f9bb8;
+  margin: 2px 0 6px;
+}
+
+.cf-platforms {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cf-plat-tag {
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #b1bad6;
+}
+
+.cf-check {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  color: #82e55d;
+  background: rgba(130, 229, 93, 0.15);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* Step 3: Platforms Grid */
+.platforms-grid-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.platform-flow-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+  border-radius: 14px;
+  background: #0a0f21;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.platform-flow-card:hover {
+  background: #111833;
+  border-color: rgba(140, 120, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.platform-flow-card.selected-flow {
+  background: linear-gradient(135deg, rgba(94, 82, 246, 0.25), #0e1530);
+  border-color: rgba(94, 82, 246, 0.8);
+  box-shadow: 0 0 25px rgba(94, 82, 246, 0.25);
+}
+
+.pf-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.pf-icon {
+  color: #a599ff;
+  display: flex;
+}
+
+.pf-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd4ec;
+}
+
+.platform-flow-card strong {
+  font-size: 16px;
+  color: white;
+}
+
+.pf-format {
+  font-size: 12px;
+  color: #929dbb;
+}
+
+.pf-check {
+  margin-top: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #82e55d;
+  background: rgba(130, 229, 93, 0.15);
+  padding: 3px 8px;
+  border-radius: 5px;
+  width: fit-content;
+}
+
+/* Step 4: Big Grid & Tweet Card */
+.big-grid-view {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+}
+
+.big-tweet-card {
+  background: #070a14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+}
+
+.tweet-author-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tweet-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.tweet-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.tweet-name-row strong {
+  color: white;
+  font-weight: 700;
+}
+
+.verified-badge {
+  font-size: 10px;
+  background: #1d9bf0;
+  color: white;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+}
+
+.tweet-handle, .tweet-time {
+  color: #71767b;
+  font-size: 12px;
+}
+
+.tweet-bio {
+  font-size: 11px;
+  color: #8a94af;
+}
+
+.tweet-text {
+  margin: 0;
+  font-size: 15px;
+  color: #e7e9ea;
+  line-height: 1.6;
+}
+
+.tweet-media-frame {
+  margin-top: 6px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1b213b, #0b0f20);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tweet-media-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: #82e55d;
+  letter-spacing: 0.06em;
+}
+
+.tweet-media-frame h4 {
+  margin: 4px 0 0;
+  font-size: 16px;
+  color: white;
+  font-weight: 800;
+}
+
+.tweet-media-frame p {
+  margin: 0;
+  font-size: 12px;
+  color: #b5bed6;
+}
+
+.tweet-media-cta {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #a599ff;
+}
+
+.tweet-hashtags {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.tweet-hashtags span {
+  font-size: 12px;
+  color: #1d9bf0;
+  font-weight: 600;
+}
+
+.tweet-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  color: #889098;
+}
+
+.tweet-share-btn {
+  color: #82e55d;
+  font-weight: 700;
+  background: rgba(130, 229, 93, 0.12);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.big-meta-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ai-hook-box {
+  font-size: 13px;
+  color: #cbd4ea;
+  background: rgba(94, 82, 246, 0.12);
+  border: 1px solid rgba(94, 82, 246, 0.3);
+  padding: 12px 14px;
+  border-radius: 10px;
+  line-height: 1.5;
+}
+
+.repurpose-formats-mini {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mini-fmt {
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #9aa5c3;
+}
+
+.mini-fmt.active {
+  background: rgba(94, 82, 246, 0.25);
+  border: 1px solid rgba(94, 82, 246, 0.6);
+  color: #d6ccff;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .big-grid-view {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .regions-grid-flow,
+  .countries-grid-flow,
+  .platforms-grid-flow {
+    grid-template-columns: 1fr;
+  }
+}

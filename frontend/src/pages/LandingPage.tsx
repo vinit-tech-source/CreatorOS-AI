@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
 
@@ -301,6 +301,18 @@ export function LandingPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [promptText, setPromptText] = useState("Make the hook bolder and add a call to action");
 
+  // Step-by-step post creation simulation state (0: Region, 1: Country, 2: Platform, 3: Post Creation)
+  const [creationStep, setCreationStep] = useState(3);
+  const [selectedRegion, setSelectedRegion] = useState("North America");
+
+  // Auto-advancing simulation for the lower section
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCreationStep((prev) => (prev + 1) % 4);
+    }, 3800);
+    return () => clearInterval(timer);
+  }, []);
+
   const currentStudioFeature = studioFeatures.find((f) => f.id === activeStudioTab) || studioFeatures[0];
 
   const handleSimulateAI = () => {
@@ -309,6 +321,20 @@ export function LandingPage() {
       setIsGenerating(false);
     }, 900);
   };
+
+  const demoRegionsList = [
+    { id: "na", name: "North America", count: "3 Countries", icon: "🌎", audience: "380M+ Users" },
+    { id: "eu", name: "Europe", count: "25 Countries", icon: "🌍", audience: "420M+ Users" },
+    { id: "sa", name: "South Asia", count: "5 Countries", icon: "🌏", audience: "560M+ Users" },
+    { id: "ea", name: "East Asia", count: "6 Countries", icon: "🌏", audience: "310M+ Users" },
+  ];
+
+  const demoCountriesList = [
+    { id: "us", name: "United States", flag: "🇺🇸", lang: "English (US)", platforms: ["X (Twitter)", "Instagram", "YouTube", "TikTok"] },
+    { id: "ca", name: "Canada", flag: "🇨🇦", lang: "English & French", platforms: ["X (Twitter)", "LinkedIn", "Instagram"] },
+    { id: "mx", name: "Mexico", flag: "🇲🇽", lang: "Spanish", platforms: ["Instagram", "TikTok", "YouTube"] },
+    { id: "in", name: "India", flag: "🇮🇳", lang: "Hindi & English", platforms: ["YouTube", "Instagram", "LinkedIn", "X"] },
+  ];
 
   return (
     <div className="landing-page">
@@ -322,6 +348,7 @@ export function LandingPage() {
         <AppLogo />
         <nav className="nav-links">
           <a href="#features">Features</a>
+          <a href="#simulator">Creation Flow</a>
           <a href="#studio">Studio</a>
           <a href="#intelligence">Global Intelligence</a>
           <a href="#workflow">Workflow</a>
@@ -362,10 +389,6 @@ export function LandingPage() {
                 <span>Start Creating Free</span>
                 <span className="btn-arrow">→</span>
               </Link>
-              <a href="#studio" className="secondary-btn">
-                <span className="play-icon">▶</span>
-                <span>Watch Interactive Demo</span>
-              </a>
             </div>
 
             <div className="trusted-row">
@@ -393,8 +416,8 @@ export function LandingPage() {
             </div>
           </div>
 
-          {/* HERO INTERACTIVE SHOWCASE */}
-          <div className="hero-showcase-wrapper">
+          {/* HERO ORIGINAL INTERACTIVE SHOWCASE */}
+          <div className="hero-showcase-wrapper" id="hero-showcase">
             <div className="showcase-glow-card">
               {/* Platform Selector Tabs */}
               <div className="showcase-platform-tabs">
@@ -510,7 +533,7 @@ export function LandingPage() {
                   <strong>One Master Input</strong>
                   <span>Instant sync to 5 platform safe zones</span>
                 </div>
-                <span className="repurpose-count">5 Formats Ready</span>
+                <span className="repurpose-count">5+ Formats Ready</span>
               </div>
             </div>
           </div>
@@ -537,6 +560,271 @@ export function LandingPage() {
             <span className="stat-number">3.8x</span>
             <span className="stat-label">Higher Engagement</span>
             <span className="stat-sub">Platform-native formatting</span>
+          </div>
+        </section>
+
+        {/* DEDICATED STEP-BY-STEP CREATION FLOW SIMULATION (DOWNSIDE SECTION) */}
+        <section id="simulator" className="section section-shell creation-flow-section">
+          <div className="section-heading centered">
+            <div className="eyebrow">STEP-BY-STEP SIMULATION</div>
+            <h2>How You Create Posts in CreatorOS</h2>
+            <p>Select your region, country market, and platform to generate platform-native posts in seconds.</p>
+          </div>
+
+          <div className="simulation-flow-container">
+            <div className="showcase-glow-card big-simulation-card">
+              {/* Creation Flow Stepper Top Bar */}
+              <div className="creation-stepper-header">
+                <div className="stepper-pills-row">
+                  {[
+                    { step: 0, label: "1. Select Region", icon: "🌐" },
+                    { step: 1, label: "2. Select Country", icon: "📍" },
+                    { step: 2, label: "3. Choose Platform", icon: "📱" },
+                    { step: 3, label: "4. Create Post (X / Twitter)", icon: "✍️" },
+                  ].map((s) => (
+                    <button
+                      key={s.step}
+                      className={`stepper-pill-btn ${creationStep === s.step ? "active" : ""} ${creationStep > s.step ? "done" : ""}`}
+                      onClick={() => setCreationStep(s.step)}
+                    >
+                      <span className="stepper-pill-icon">{s.icon}</span>
+                      <span className="stepper-pill-label">{s.label}</span>
+                      {creationStep === s.step && <span className="stepper-active-glow" />}
+                    </button>
+                  ))}
+                </div>
+                <span className="live-demo-tag">● Live Simulation</span>
+              </div>
+
+              {/* Main Simulation Showcase Stage */}
+              <div className="hero-preview-container big-preview-container">
+                {/* STEP 0: REGION SELECTION */}
+                {creationStep === 0 && (
+                  <div className="flow-step-view animate-fade-in">
+                    <div className="flow-step-header">
+                      <div>
+                        <span className="flow-step-badge">STEP 1</span>
+                        <h3>Select Target Region</h3>
+                      </div>
+                      <span className="flow-step-counter">Next: Country Market →</span>
+                    </div>
+
+                    <div className="regions-grid-flow">
+                      {demoRegionsList.map((r) => (
+                        <div
+                          key={r.id}
+                          className={`region-flow-card ${selectedRegion === r.name ? "selected-flow" : ""}`}
+                          onClick={() => {
+                            setSelectedRegion(r.name);
+                            setCreationStep(1);
+                          }}
+                        >
+                          <span className="rf-icon">{r.icon}</span>
+                          <div className="rf-info">
+                            <strong>{r.name}</strong>
+                            <span>{r.count} • {r.audience}</span>
+                          </div>
+                          {selectedRegion === r.name && <span className="rf-check">✓ Selected</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 1: COUNTRY SELECTION */}
+                {creationStep === 1 && (
+                  <div className="flow-step-view animate-fade-in">
+                    <div className="flow-step-header">
+                      <div>
+                        <span className="flow-step-badge">STEP 2</span>
+                        <h3>Select Country ({selectedRegion})</h3>
+                      </div>
+                      <span className="flow-step-counter">Next: Platform →</span>
+                    </div>
+
+                    <div className="countries-grid-flow">
+                      {demoCountriesList.map((c) => (
+                        <div
+                          key={c.id}
+                          className={`country-flow-card ${selectedCountry.name === c.name ? "selected-flow" : ""}`}
+                          onClick={() => {
+                            setSelectedCountry(countriesData.find(x => x.name === c.name) || countriesData[1]);
+                            setCreationStep(2);
+                          }}
+                        >
+                          <span className="cf-flag">{c.flag}</span>
+                          <div className="cf-info">
+                            <strong>{c.name}</strong>
+                            <span>{c.lang}</span>
+                            <div className="cf-platforms">
+                              {c.platforms.map(p => <span key={p} className="cf-plat-tag">{p}</span>)}
+                            </div>
+                          </div>
+                          {selectedCountry.name === c.name && <span className="cf-check">✓ Selected</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 2: PLATFORM SELECTION */}
+                {creationStep === 2 && (
+                  <div className="flow-step-view animate-fade-in">
+                    <div className="flow-step-header">
+                      <div>
+                        <span className="flow-step-badge">STEP 3</span>
+                        <h3>Choose Social Platform ({selectedCountry.name} {selectedCountry.flag})</h3>
+                      </div>
+                      <span className="flow-step-counter">Next: AI Creation →</span>
+                    </div>
+
+                    <div className="platforms-grid-flow">
+                      {platformsData.map((plat) => (
+                        <div
+                          key={plat.id}
+                          className={`platform-flow-card ${selectedPlatform.id === plat.id ? "selected-flow" : ""}`}
+                          onClick={() => {
+                            setSelectedPlatform(plat);
+                            setCreationStep(3);
+                          }}
+                        >
+                          <div className="pf-top">
+                            <span className="pf-icon">{plat.icon}</span>
+                            <span className="pf-badge">{plat.badge}</span>
+                          </div>
+                          <strong>{plat.name}</strong>
+                          <span className="pf-format">{plat.formatName}</span>
+                          {selectedPlatform.id === plat.id && <span className="pf-check">✓ Selected</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 3: STEP-BY-STEP POST CREATION (TWITTER / X MOCKUP) */}
+                {creationStep === 3 && (
+                  <div className="flow-step-view animate-fade-in">
+                    <div className="preview-topbar">
+                      <div className="preview-dots">
+                        <span />
+                        <span />
+                        <span />
+                      </div>
+                      <div className="preview-title-badge">
+                        <span className="live-dot" />
+                        <span>Step 4: AI Post Studio — <strong>X / Twitter (United States 🇺🇸)</strong></span>
+                      </div>
+                      <div className="preview-actions">
+                        <span className="format-ratio-tag">16:9 Safe Zone</span>
+                        <button className="preview-export-btn" onClick={handleSimulateAI}>
+                          {isGenerating ? "Adapting..." : "✦ AI Re-Hook"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="preview-content-grid big-grid-view">
+                      {/* Left: Authentic Twitter / X Post Card Simulation */}
+                      <div className="twitter-post-card big-tweet-card">
+                        <div className="tweet-author-row">
+                          <div className="tweet-avatar">V</div>
+                          <div className="tweet-author-info">
+                            <div className="tweet-name-row">
+                              <strong>CreatorOS AI</strong>
+                              <span className="verified-badge">✓</span>
+                              <span className="tweet-handle">@creatoros_ai</span>
+                              <span className="tweet-time">• 2m</span>
+                            </div>
+                            <span className="tweet-bio">AI Multi-Platform Engine for Creators</span>
+                          </div>
+                        </div>
+
+                        <div className="tweet-body">
+                          <p className="tweet-text">
+                            5 AI workflows transforming content creation in 2026 🧵👇
+                            <br /><br />
+                            Scale from 1 raw concept to 5+ high-performing formats in seconds.
+                          </p>
+                          
+                          {/* Visual Safe Zone Artwork Inside Tweet */}
+                          <div className="tweet-media-frame">
+                            <div className="tweet-media-badge">SAFE ZONE: 1200 × 675 (16:9)</div>
+                            <h4>THE 2026 AI CREATOR PLAYBOOK</h4>
+                            <p>High-impact multi-channel content system.</p>
+                            <span className="tweet-media-cta">READ CASE STUDY →</span>
+                          </div>
+
+                          <div className="tweet-hashtags">
+                            <span>#CreatorEconomy</span>
+                            <span>#AItools</span>
+                            <span>#BuildInPublic</span>
+                          </div>
+                        </div>
+
+                        {/* Tweet Metrics Action Row */}
+                        <div className="tweet-actions-row">
+                          <span>💬 48</span>
+                          <span>🔁 219</span>
+                          <span>❤️ 1,840</span>
+                          <span>📊 54.2K views</span>
+                          <span className="tweet-share-btn">⚡ 5+ Formats Ready</span>
+                        </div>
+                      </div>
+
+                      {/* Right: Live Copilot & Repurposing Matrix */}
+                      <div className="preview-meta-panel big-meta-panel">
+                        <div className="meta-block">
+                          <div className="meta-label">1. RAW MASTER INPUT</div>
+                          <div className="meta-value-row">
+                            <span className="meta-platform-name">5 AI Trends in 2026</span>
+                            <span className="meta-pill">Loaded</span>
+                          </div>
+                        </div>
+
+                        <div className="meta-block">
+                          <div className="meta-label">2. VIRAL HOOK</div>
+                          <div className="ai-hook-box">
+                            "5 AI workflows transforming content creation in 2026 🧵"
+                          </div>
+                        </div>
+
+                        <div className="meta-block">
+                          <div className="meta-label">3. INSTANT AUTO-REPURPOSE</div>
+                          <div className="repurpose-formats-mini">
+                            <span className="mini-fmt active">🐦 X (Thread)</span>
+                            <span className="mini-fmt">📸 IG (1:1)</span>
+                            <span className="mini-fmt">▶️ YT (9:16)</span>
+                            <span className="mini-fmt">💼 In (4:5)</span>
+                          </div>
+                        </div>
+
+                        {/* Interactive Copilot Trigger */}
+                        <div className="ai-command-box">
+                          <div className="ai-command-header">
+                            <span className="spark-icon">✨</span>
+                            <strong>AI Studio Copilot</strong>
+                          </div>
+                          <div className="ai-input-wrapper">
+                            <input
+                              type="text"
+                              value="5 AI trends that will redefine creators in 2026"
+                              readOnly
+                              className="ai-prompt-input"
+                            />
+                            <button
+                              className="ai-send-btn"
+                              onClick={handleSimulateAI}
+                              disabled={isGenerating}
+                            >
+                              {isGenerating ? "..." : "→"}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </section>
 
