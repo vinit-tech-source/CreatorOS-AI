@@ -44,7 +44,7 @@
   border-radius: 12px;
   border: 1.5px solid;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px var(--panel-2);
   user-select: none;
 }
 
@@ -55,7 +55,7 @@
 .element:active { cursor: grabbing; }
 
 .elementSelected {
-  outline: 2px solid #6366f1;
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -75,8 +75,8 @@
 .textEditor {
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid #6366f1;
+  background: var(--border);
+  border: 1px solid var(--primary);
   border-radius: 4px;
   outline: none;
   resize: none;
@@ -115,7 +115,7 @@
   transition: all 0.15s;
 }
 .deleteBtn:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
-.editBtn:hover { background: rgba(99,102,241,0.2); color: #818cf8; }
+.editBtn:hover { background: rgba(99,102,241,0.2); color: var(--pink); }
 
 .moveHandle {
   display: flex;
@@ -184,7 +184,7 @@
 .charCountBar {
   flex: 1;
   height: 3px;
-  background: rgba(255,255,255,0.08);
+  background: var(--border);
   border-radius: 9999px;
   overflow: hidden;
 }

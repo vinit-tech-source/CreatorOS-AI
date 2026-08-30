@@ -3,8 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-right: 1px solid rgba(255,255,255,0.06);
-  background: rgba(10,10,15,0.95);
+  border-right: 1px solid var(--border);
+  background: var(--page-bg);
   padding: 0.75rem 0;
   gap: 0.25rem;
   flex-shrink: 0;
@@ -34,11 +34,11 @@
   transition: all 0.15s;
   width: 100%;
 }
-.toolBtn:hover { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+.toolBtn:hover { background: var(--border); color: var(--text-secondary); }
 
 .toolBtnActive {
-  background: rgba(99,102,241,0.15) !important;
-  color: #818cf8 !important;
+  background: rgba(94, 82, 246, 0.15) !important;
+  color: var(--pink) !important;
 }
 
 .toolLabel {
@@ -55,7 +55,7 @@
   top: 0;
   width: 140px;
   background: rgba(15,15,22,0.98);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.75rem;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
@@ -89,7 +89,7 @@
   transition: all 0.15s;
   margin-bottom: 0.25rem;
 }
-.shapeBtn:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+.shapeBtn:hover { background: var(--border); color: var(--text-primary); }
 
 .shapeRect {
   width: 20px;

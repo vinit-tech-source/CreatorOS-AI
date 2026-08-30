@@ -150,7 +150,7 @@
   border-radius: 12px;
   overflow: hidden;
   background: #111;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
 }
 
 .genericContent {

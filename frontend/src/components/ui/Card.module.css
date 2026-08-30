@@ -1,5 +1,5 @@
 .card {
-  /* background and border handled by extruded-panel / glass-panel */
+  /* background and border handled by extruded-panel / glass-panel (redefined in index.css) */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -14,15 +14,16 @@
 
 .title {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--fs-md);
+  font-weight: 700;
   color: var(--text-primary);
 }
 
 .subtitle {
   margin: var(--spacing-1) 0 0;
-  font-size: 0.875rem;
+  font-size: var(--fs-xs);
   color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .content {
@@ -37,8 +38,8 @@
 
 .footer {
   padding: var(--spacing-4) var(--spacing-5);
-  border-top: 1px solid var(--border-color);
-  background-color: rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--border);
+  background-color: rgba(255, 255, 255, 0.02);
   display: flex;
   align-items: center;
   gap: var(--spacing-3);

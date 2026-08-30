@@ -8,7 +8,7 @@
 /* Platform Section */
 .platformSection {
   padding: 0.875rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 .platformGradientBar {
@@ -27,7 +27,7 @@
 }
 .specs span {
   font-size: 0.6875rem;
-  background: rgba(255,255,255,0.05);
+  background: var(--panel-2);
   color: var(--text-muted);
   padding: 0.125rem 0.5rem;
   border-radius: 9999px;
@@ -36,7 +36,7 @@
 /* Sections */
 .section {
   padding: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
@@ -77,7 +77,7 @@
   appearance: none;
   height: 4px;
   border-radius: 9999px;
-  background: rgba(255,255,255,0.1);
+  background: var(--border);
   outline: none;
   cursor: pointer;
 }
@@ -86,9 +86,9 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #6366f1;
+  background: var(--primary);
   cursor: pointer;
-  box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+  box-shadow: 0 0 0 2px rgba(94, 82, 246, 0.3);
 }
 
 .rangeValue { font-size: 0.75rem; color: var(--text-muted); text-align: right; }
@@ -97,7 +97,7 @@
   width: 48px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--border);
   background: none;
   cursor: pointer;
   padding: 2px;
@@ -112,15 +112,15 @@
   flex: 1;
   padding: 0.375rem;
   border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  background: var(--panel-2);
   color: var(--text-secondary);
   cursor: pointer;
   font-size: 0.75rem;
   transition: all 0.15s;
 }
-.alignBtn:hover { background: rgba(255,255,255,0.08); }
-.alignBtnActive { background: rgba(99,102,241,0.15) !important; border-color: rgba(99,102,241,0.4) !important; }
+.alignBtn:hover { background: var(--border); }
+.alignBtnActive { background: rgba(94, 82, 246, 0.15) !important; border-color: rgba(94, 82, 246, 0.4) !important; }
 
 .deleteBtn {
   display: flex;
@@ -142,7 +142,7 @@
 /* Caption */
 .captionInput {
   width: 100%;
-  background: rgba(255,255,255,0.04);
+  background: var(--panel-2);
   border: 1px solid;
   border-radius: 10px;
   padding: 0.625rem 0.75rem;
@@ -154,7 +154,7 @@
   line-height: 1.5;
   transition: border-color 0.2s;
 }
-.captionInput:focus { border-color: #6366f1 !important; }
+.captionInput:focus { border-color: var(--primary) !important; }
 .captionInput::placeholder { color: var(--text-muted); }
 
 .charCount { font-size: 0.6875rem; color: var(--text-muted); }
@@ -163,8 +163,8 @@
 /* Hashtags */
 .hashInput {
   width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   font-size: 0.8125rem;
@@ -172,7 +172,7 @@
   outline: none;
 }
 .hashInput::placeholder { color: var(--text-muted); }
-.hashInput:focus { border-color: #6366f1; }
+.hashInput:focus { border-color: var(--primary); }
 
 .tagList { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.25rem; }
 .tag {

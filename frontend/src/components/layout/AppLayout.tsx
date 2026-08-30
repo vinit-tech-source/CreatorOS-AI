@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { useWorkspaceStore } from '../../stores/workspaceStore';
@@ -12,17 +12,28 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const { fetchWorkspaces } = useWorkspaceStore();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchWorkspaces();
   }, [fetchWorkspaces]);
 
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
   return (
     <div className={styles.layout}>
       <AppShell3D />
-      <Sidebar className={styles.sidebar} />
+      
+      {/* Mobile overlay */}
+      {isMobileMenuOpen && (
+        <div className={styles.mobileOverlay} onClick={closeMobileMenu} />
+      )}
+      
+      <Sidebar className={`${styles.sidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`} />
+      
       <div className={styles.mainWrapper}>
-        <Topbar />
+        <Topbar onMenuToggle={toggleMobileMenu} />
         <main className={styles.mainContent}>
           {children}
         </main>

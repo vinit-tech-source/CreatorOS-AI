@@ -67,10 +67,10 @@ export function Sidebar({ className }: SidebarProps) {
 
   return (
     <aside className={`${styles.sidebar} ${className || ''}`}>
-      <div className={styles.logoContainer}>
+      <NavLink to="/" className={styles.logoContainer} style={{ textDecoration: 'none' }}>
         <span className={styles.logoIcon}></span>
         <span className={styles.logoText}>CreatorOS AI</span>
-      </div>
+      </NavLink>
       
       <div className={styles.workspaceSelector}>
         <select 

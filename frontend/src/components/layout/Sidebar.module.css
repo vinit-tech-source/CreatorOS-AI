@@ -2,9 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: linear-gradient(180deg, #1f1f22, #121214);
-  border-right: 1px solid var(--border-dark);
-  box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+  background-color: var(--page-bg);
+  border-right: 1px solid var(--border);
   z-index: 20;
 }
 
@@ -13,51 +12,49 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
 }
 
 .logoIcon {
   width: 28px;
   height: 28px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(135deg, var(--primary), var(--pink));
 }
 
 .logoText {
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.025em;
 }
 
 .workspaceSelector {
   padding: var(--spacing-4);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
 }
 
 .workspaceSelect {
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-3);
-  background-color: var(--bg-surface-sunken);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: var(--shadow-sunken);
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  padding: 10px 12px;
+  background-color: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: var(--fs-xs);
   font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
   outline: none;
   transition: all var(--transition-fast);
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23838ba3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: right 0.5rem center;
+  background-position: right 0.75rem center;
   background-size: 1em;
 }
 
 .workspaceSelect:hover, .workspaceSelect:focus {
-  border-color: var(--color-primary);
+  border-color: rgba(140, 120, 255, 0.4);
 }
 
 .workspaceSelect:disabled {
@@ -70,7 +67,7 @@
   padding: var(--spacing-4);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: 2px;
   overflow-y: auto;
 }
 
@@ -78,23 +75,23 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--muted);
   font-weight: 500;
+  font-size: var(--fs-sm);
   transition: all var(--transition-fast);
 }
 
 .navItem:hover {
-  background-color: var(--bg-surface);
-  color: var(--text-primary);
+  background-color: var(--panel-2);
+  color: var(--text);
 }
 
 .navItem.active {
-  background: linear-gradient(145deg, #818cf8 0%, #4f46e5 100%);
-  color: white;
-  box-shadow: 0 4px 0 #3730a3, 0 5px 10px rgba(0,0,0,0.3);
-  transform: translateY(-2px);
+  background-color: rgba(94, 82, 246, 0.15);
+  color: #a599ff;
+  font-weight: 600;
 }
 
 .navIcon {

@@ -9,22 +9,21 @@
 }
 
 .label {
-  font-size: 0.875rem;
+  font-size: var(--fs-xs);
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .input {
-  padding: var(--spacing-2) var(--spacing-3);
-  background-color: var(--bg-surface-sunken);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: var(--shadow-sunken);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
+  padding: 9px 12px;
+  background-color: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
   outline: none;
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   width: 100%;
+  font-size: var(--fs-xs);
 }
 
 .inputContainer {
@@ -42,7 +41,7 @@
   right: 0.75rem;
   background: transparent;
   border: none;
-  color: var(--text-muted);
+  color: var(--muted-2);
   cursor: pointer;
   padding: 0.25rem;
   display: flex;
@@ -52,35 +51,35 @@
 }
 
 .toggleButton:hover {
-  color: var(--text-primary);
+  color: var(--text);
 }
 
 .input:focus {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-sunken), 0 0 0 2px rgba(79, 70, 229, 0.4);
+  border-color: rgba(140, 120, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(94, 82, 246, 0.15);
 }
 
 .input::placeholder {
-  color: var(--text-muted);
+  color: var(--muted-2);
 }
 
 .input:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: var(--bg-surface);
+  background-color: var(--panel);
 }
 
 .hasError {
-  border-color: var(--color-danger);
+  border-color: var(--danger);
 }
 
 .hasError:focus {
-  border-color: var(--color-danger);
+  border-color: var(--danger);
   box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
 .errorText {
-  font-size: 0.75rem;
-  color: var(--color-danger);
+  font-size: var(--fs-3xs);
+  color: var(--danger);
   margin-top: 2px;
 }

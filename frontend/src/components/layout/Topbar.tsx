@@ -1,13 +1,22 @@
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Menu } from 'lucide-react';
 import styles from './Topbar.module.css';
 import { useAuthStore } from '../../stores/authStore';
 
-export function Topbar() {
+interface TopbarProps {
+  onMenuToggle?: () => void;
+}
+
+export function Topbar({ onMenuToggle }: TopbarProps) {
   const { user, logout } = useAuthStore();
 
   return (
     <header className={styles.topbar}>
       <div className={styles.left}>
+        {onMenuToggle && (
+          <button className={styles.menuButton} onClick={onMenuToggle} aria-label="Toggle menu">
+            <Menu size={20} />
+          </button>
+        )}
         <div className={styles.searchContainer}>
           <Search className={styles.searchIcon} size={18} />
           <input 

@@ -1,9 +1,7 @@
 .topbar {
   height: 72px;
-  background: linear-gradient(180deg, #1f1f22, #121214);
-  border-bottom: 1px solid var(--border-dark);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  backdrop-filter: var(--glass-backdrop);
+  background-color: var(--page-bg);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,6 +15,21 @@
   flex: 1;
 }
 
+.menuButton {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 8px;
+  margin-right: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menuButton:hover {
+  background-color: var(--panel-2);
+}
+
 .searchContainer {
   position: relative;
   width: 100%;
@@ -25,28 +38,29 @@
 
 .searchIcon {
   position: absolute;
-  left: var(--spacing-3);
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-muted);
+  color: var(--muted-2);
+  width: 16px;
+  height: 16px;
 }
 
 .searchInput {
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-3) var(--spacing-2) 2.5rem;
-  background-color: var(--bg-surface-sunken);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: var(--shadow-sunken);
-  border-radius: var(--radius-md);
+  padding: 9px 12px 9px 2.25rem;
+  background-color: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   color: var(--text-primary);
+  font-size: var(--fs-xs);
   outline: none;
   transition: all var(--transition-fast);
 }
 
 .searchInput:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  border-color: rgba(140, 120, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(94, 82, 246, 0.15);
 }
 
 .right {
@@ -58,10 +72,10 @@
 .iconButton {
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: var(--muted);
   cursor: pointer;
-  padding: var(--spacing-2);
-  border-radius: var(--radius-full);
+  padding: 8px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,7 +83,7 @@
 }
 
 .iconButton:hover {
-  background-color: var(--bg-surface-hover);
+  background-color: var(--panel-2);
   color: var(--text-primary);
 }
 
@@ -78,20 +92,20 @@
   align-items: center;
   gap: var(--spacing-3);
   padding-left: var(--spacing-4);
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--border);
 }
 
 .avatar {
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--pink));
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: var(--fs-sm);
 }
 
 .userInfo {
@@ -100,30 +114,44 @@
 }
 
 .userName {
-  font-size: 0.875rem;
+  font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .userRole {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  font-size: var(--fs-3xs);
+  color: var(--muted-2);
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .searchContainer {
+    max-width: 180px;
+  }
+  .userInfo {
+    display: none;
+  }
 }
 
 .logoutButton {
   margin-left: var(--spacing-3);
   background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: var(--fs-3xs);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .logoutButton:hover {
-  background-color: var(--bg-surface-hover);
-  color: var(--color-danger);
-  border-color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.2);
 }
