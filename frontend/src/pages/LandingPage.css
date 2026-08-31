@@ -39,6 +39,12 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+section[id],
+div[id] {
+  scroll-margin-top: 100px;
 }
 
 body {
@@ -63,9 +69,10 @@ button {
 
 .landing-page {
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   background-color: var(--page-bg);
+  padding-top: 80px;
 }
 
 /* Ambient Radial Glows */
@@ -112,19 +119,23 @@ button {
    NAVIGATION
    ============================================================ */
 .nav {
+  height: 80px;
   min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background: rgba(6, 9, 20, 0.75);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  padding: 0 24px;
+  background: rgba(6, 9, 20, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 32px;
 }
 
 .brand {
@@ -194,14 +205,38 @@ button {
 }
 
 .nav-links a {
+  position: relative;
   font-size: var(--fs-sm);
-  color: #cfd4e6;
+  color: #9ea8c2;
   font-weight: 500;
-  transition: color 0.15s ease;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: var(--text);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-links a.active-nav {
+  color: #ffffff;
+  font-weight: 600;
+  background: rgba(94, 82, 246, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(121, 87, 255, 0.4), 0 0 16px rgba(94, 82, 246, 0.15);
+}
+
+.nav-links a.active-nav::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 2px;
+  background: linear-gradient(90deg, #5e52f6, #c084fc);
+  border-radius: 4px;
+  box-shadow: 0 0 8px #7957ff;
 }
 
 .nav-actions {
@@ -898,7 +933,8 @@ button {
    SECTIONS COMMON
    ============================================================ */
 .section {
-  padding-top: 110px;
+  padding-top: 40px;
+  margin-top: 30px;
 }
 
 .section-heading {

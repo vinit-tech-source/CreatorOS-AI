@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../stores/authStore";
 import "./LandingPage.css";
 
 interface PlatformData {
@@ -294,6 +295,9 @@ function AppLogo() {
 }
 
 export function LandingPage() {
+  const { isAuthenticated } = useAuthStore();
+  const ctaLink = isAuthenticated ? "/dashboard" : "/register";
+
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformData>(platformsData[0]);
   const [selectedCountry, setSelectedCountry] = useState<CountryData>(countriesData[0]);
   const [activeStudioTab, setActiveStudioTab] = useState<string>("ai-copy");
@@ -304,6 +308,76 @@ export function LandingPage() {
   // Step-by-step post creation simulation state (0: Region, 1: Country, 2: Platform, 3: Post Creation)
   const [creationStep, setCreationStep] = useState(3);
   const [selectedRegion, setSelectedRegion] = useState("North America");
+
+  // Active section indicator for scrollspy
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  // Smooth scroll handler with exact fixed header offset compensation
+  const scrollToSection = (e: React.MouseEvent<HTMLElement>, id: string) => {
+    e.preventDefault();
+    setActiveSection(id);
+    const element = document.getElementById(id);
+    if (element) {
+      const navHeight = 80;
+      const rect = element.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const targetY = rect.top + scrollTop - navHeight - 20;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: "smooth",
+      });
+      window.history.pushState(null, "", `#${id}`);
+    }
+  };
+
+  // Real-time ScrollSpy to highlight the current section in the navbar
+  useEffect(() => {
+    const sectionIds = ["features", "simulator", "workflow", "studio", "intelligence", "testimonials", "pricing"];
+
+    const handleScroll = () => {
+      const scrollPos = window.scrollY + 160;
+
+      let current = "";
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPos >= top && scrollPos < top + height) {
+            current = id;
+          }
+        }
+      }
+      if (current) {
+        setActiveSection(current);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Support direct initial URL hash loading with exact positioning
+  useEffect(() => {
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1);
+      setActiveSection(targetId);
+      const element = document.getElementById(targetId);
+      if (element) {
+        setTimeout(() => {
+          const navHeight = 80;
+          const rect = element.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const targetY = rect.top + scrollTop - navHeight - 20;
+          window.scrollTo({
+            top: Math.max(0, targetY),
+            behavior: "smooth",
+          });
+        }, 180);
+      }
+    }
+  }, []);
 
   // Auto-advancing simulation for the lower section
   useEffect(() => {
@@ -347,17 +421,63 @@ export function LandingPage() {
       <header className="nav">
         <AppLogo />
         <nav className="nav-links">
-          <a href="#features">Features</a>
-          <a href="#simulator">Creation Flow</a>
-          <a href="#studio">Studio</a>
-          <a href="#intelligence">Global Intelligence</a>
-          <a href="#workflow">Workflow</a>
-          <a href="#testimonials">Testimonials</a>
-          <a href="#pricing">Pricing</a>
+          <a
+            href="#features"
+            className={`nav-link-item ${activeSection === "features" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "features")}
+          >
+            Features
+          </a>
+          <a
+            href="#simulator"
+            className={`nav-link-item ${activeSection === "simulator" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "simulator")}
+          >
+            Creation Flow
+          </a>
+          <a
+            href="#studio"
+            className={`nav-link-item ${activeSection === "studio" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "studio")}
+          >
+            Studio
+          </a>
+          <a
+            href="#intelligence"
+            className={`nav-link-item ${activeSection === "intelligence" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "intelligence")}
+          >
+            Global Intelligence
+          </a>
+          <a
+            href="#workflow"
+            className={`nav-link-item ${activeSection === "workflow" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "workflow")}
+          >
+            Workflow
+          </a>
+          <a
+            href="#testimonials"
+            className={`nav-link-item ${activeSection === "testimonials" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "testimonials")}
+          >
+            Testimonials
+          </a>
+          <a
+            href="#pricing"
+            className={`nav-link-item ${activeSection === "pricing" ? "active-nav" : ""}`}
+            onClick={(e) => scrollToSection(e, "pricing")}
+          >
+            Pricing
+          </a>
         </nav>
         <div className="nav-actions">
-          <Link to="/login" className="signin">Sign In</Link>
-          <Link to="/dashboard" className="primary-btn small">
+          {isAuthenticated ? (
+            <Link to="/dashboard" className="signin">Dashboard</Link>
+          ) : (
+            <Link to="/login" className="signin">Sign In</Link>
+          )}
+          <Link to={ctaLink} className="primary-btn small">
             Start Creating Free →
           </Link>
         </div>
@@ -365,7 +485,7 @@ export function LandingPage() {
 
       <main>
         {/* HERO SECTION */}
-        <section className="hero section-shell">
+        <section id="hero" className="hero section-shell">
           <div className="hero-copy">
             <div className="announcement-pill">
               <span className="pill-dot">✦</span>
@@ -385,7 +505,7 @@ export function LandingPage() {
             </p>
 
             <div className="hero-buttons">
-              <Link to="/dashboard" className="primary-btn hero-cta">
+              <Link to={ctaLink} className="primary-btn hero-cta">
                 <span>Start Creating Free</span>
                 <span className="btn-arrow">→</span>
               </Link>
@@ -417,7 +537,7 @@ export function LandingPage() {
           </div>
 
           {/* HERO ORIGINAL INTERACTIVE SHOWCASE */}
-          <div className="hero-showcase-wrapper" id="hero-showcase">
+          <div className="hero-showcase-wrapper" id="features">
             <div className="showcase-glow-card">
               {/* Platform Selector Tabs */}
               <div className="showcase-platform-tabs">
@@ -540,7 +660,7 @@ export function LandingPage() {
         </section>
 
         {/* FEATURE STATS BAR */}
-        <section className="stats-ticker section-shell">
+        <section id="features" className="stats-ticker section-shell">
           <div className="stat-card">
             <span className="stat-number">10x</span>
             <span className="stat-label">Faster Content Creation</span>
@@ -922,7 +1042,7 @@ export function LandingPage() {
               </div>
 
               <div className="studio-actions-group">
-                <Link to="/create" className="primary-btn">
+                <Link to={isAuthenticated ? "/create" : "/register"} className="primary-btn">
                   <span>Open Creation Studio</span>
                   <span>→</span>
                 </Link>
@@ -952,15 +1072,15 @@ export function LandingPage() {
                       <div className="art-layer-badge">ACTIVE CANVAS • 1080 × 1080</div>
                       <h4>THE FUTURE OF AI WORKFLOWS</h4>
                       <p>Create Once. Adapt Everywhere.</p>
-                      <button className="art-btn">EXPLORE NOW</button>
+                      <button className="art-btn" onClick={(e) => scrollToSection(e, "studio")}>EXPLORE NOW</button>
                     </div>
                   </div>
 
                   <div className="mock-right-inspector">
                     <div className="inspector-title">AI Toolset</div>
-                    <button className="inspector-btn">⚡ Rewrite Tone</button>
-                    <button className="inspector-btn">🎯 Enhance Hook</button>
-                    <button className="inspector-btn">🌐 Localize Text</button>
+                    <button className="inspector-btn" onClick={handleSimulateAI}>⚡ Rewrite Tone</button>
+                    <button className="inspector-btn" onClick={handleSimulateAI}>🎯 Enhance Hook</button>
+                    <button className="inspector-btn" onClick={handleSimulateAI}>🌐 Localize Text</button>
                     <div className="inspector-title" style={{ marginTop: "12px" }}>Active Layers</div>
                     <div className="layer-item"><span>Headline Text</span><span>👁</span></div>
                     <div className="layer-item"><span>Brand Backdrop</span><span>👁</span></div>
@@ -1052,7 +1172,13 @@ export function LandingPage() {
                 </div>
               </div>
 
-              <button className="primary-btn full-width" onClick={() => setSelectedPlatform(platformsData[0])}>
+              <button
+                className="primary-btn full-width"
+                onClick={(e) => {
+                  setSelectedPlatform(platformsData[0]);
+                  scrollToSection(e, "simulator");
+                }}
+              >
                 <span>Create Content for {selectedCountry.name}</span>
                 <span>→</span>
               </button>
@@ -1061,7 +1187,7 @@ export function LandingPage() {
         </section>
 
         {/* AUDIENCE PROFILES (FIXED DARK THEME) */}
-        <section className="section section-shell audience-section">
+        <section id="audiences" className="section section-shell audience-section">
           <div className="section-heading centered">
             <div className="eyebrow">WHO CREATOROS IS BUILT FOR</div>
             <h2>Tailored for Every Stage of Creative Growth</h2>
@@ -1129,7 +1255,7 @@ export function LandingPage() {
         </section>
 
         {/* FAQ SECTION */}
-        <section className="section section-shell faq-section">
+        <section id="faq" className="section section-shell faq-section">
           <div className="section-heading centered">
             <div className="eyebrow">FREQUENTLY ASKED QUESTIONS</div>
             <h2>Everything You Need to Know</h2>
@@ -1168,13 +1294,19 @@ export function LandingPage() {
               <p>Join 10,000+ creators and brands saving 15+ hours every week with CreatorOS.</p>
 
               <div className="cta-action-row">
-                <Link to="/dashboard" className="primary-btn large-cta">
+                <Link to={ctaLink} className="primary-btn large-cta">
                   <span>Get Started for Free</span>
                   <span>→</span>
                 </Link>
-                <Link to="/login" className="secondary-btn">
-                  <span>Sign In to Account</span>
-                </Link>
+                {isAuthenticated ? (
+                  <Link to="/dashboard" className="secondary-btn">
+                    <span>Go to Dashboard</span>
+                  </Link>
+                ) : (
+                  <Link to="/login" className="secondary-btn">
+                    <span>Sign In to Account</span>
+                  </Link>
+                )}
               </div>
 
               <div className="cta-guarantees">
@@ -1189,7 +1321,7 @@ export function LandingPage() {
       </main>
 
       {/* FOOTER */}
-      <footer className="footer section-shell">
+      <footer id="footer" className="footer section-shell">
         <div className="footer-brand">
           <AppLogo />
           <p className="footer-tagline">
@@ -1216,29 +1348,29 @@ export function LandingPage() {
 
         <div className="footer-column">
           <h4>Features</h4>
-          <a href="#studio">Dynamic Smart Canvas</a>
-          <a href="#studio">1-Click Repurposing</a>
-          <a href="#intelligence">Country Intelligence</a>
-          <a href="#studio">Brand Brain</a>
+          <a href="#studio" onClick={(e) => scrollToSection(e, "studio")}>Dynamic Smart Canvas</a>
+          <a href="#studio" onClick={(e) => scrollToSection(e, "studio")}>1-Click Repurposing</a>
+          <a href="#intelligence" onClick={(e) => scrollToSection(e, "intelligence")}>Country Intelligence</a>
+          <a href="#studio" onClick={(e) => scrollToSection(e, "studio")}>Brand Brain</a>
           <Link to="/brand-kit">Brand Kit Assets</Link>
         </div>
 
         <div className="footer-column">
           <h4>Resources</h4>
-          <a href="#workflow">Workflow Guide</a>
-          <a href="#testimonials">Creator Case Studies</a>
-          <a href="#pricing">Pricing Plans</a>
-          <a href="#faq">FAQ</a>
+          <a href="#workflow" onClick={(e) => scrollToSection(e, "workflow")}>Workflow Guide</a>
+          <a href="#testimonials" onClick={(e) => scrollToSection(e, "testimonials")}>Creator Case Studies</a>
+          <a href="#pricing" onClick={(e) => scrollToSection(e, "pricing")}>Pricing Plans</a>
+          <a href="#faq" onClick={(e) => scrollToSection(e, "faq")}>FAQ</a>
           <Link to="/knowledge">Knowledge Base</Link>
         </div>
 
         <div className="footer-column">
           <h4>Company</h4>
-          <a href="#company">About Us</a>
-          <a href="#contact">Contact</a>
-          <a href="#privacy">Privacy Policy</a>
-          <a href="#terms">Terms of Service</a>
-          <a href="#security">Security</a>
+          <a href="#audiences" onClick={(e) => scrollToSection(e, "audiences")}>About Us</a>
+          <a href="#pricing" onClick={(e) => scrollToSection(e, "pricing")}>Contact</a>
+          <a href="#faq" onClick={(e) => scrollToSection(e, "faq")}>Privacy Policy</a>
+          <a href="#faq" onClick={(e) => scrollToSection(e, "faq")}>Terms of Service</a>
+          <a href="#features" onClick={(e) => scrollToSection(e, "features")}>Security</a>
         </div>
 
         <div className="footer-bottom">
