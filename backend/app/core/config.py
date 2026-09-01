@@ -75,6 +75,7 @@ class Settings(BaseSettings):
     ENCRYPTION_KEY: str = ""
 
     # AI Configuration
+    USE_MOCK_AI: bool = True  # When True, uses dynamic local dummy generator to preserve Gemini API quota
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-3.5-flash"
     GEMINI_TIMEOUT: int = 60

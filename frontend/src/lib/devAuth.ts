@@ -71,6 +71,8 @@ export async function initDevAuth(): Promise<void> {
       username: string;
       full_name: string;
       role: string;
+      region?: string | null;
+      country?: string | null;
       is_active: boolean;
       is_verified: boolean;
       created_at: string | null;
@@ -89,6 +91,8 @@ export async function initDevAuth(): Promise<void> {
     last_name,
     email: user.email,
     username: user.username,
+    region: user.region,
+    country: user.country,
     is_active: user.is_active,
     created_at: user.created_at ?? new Date().toISOString(),
     updated_at: user.updated_at ?? new Date().toISOString(),

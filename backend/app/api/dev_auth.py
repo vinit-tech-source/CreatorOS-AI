@@ -148,6 +148,8 @@ async def get_dev_token(session: AsyncSession = Depends(_get_db)):
                 "role": dev_user.role.value,
                 "is_active": dev_user.is_active,
                 "is_verified": dev_user.is_verified,
+                "region": dev_user.region,
+                "country": dev_user.country,
                 "created_at": dev_user.created_at.isoformat() if dev_user.created_at else None,
                 "updated_at": dev_user.updated_at.isoformat() if dev_user.updated_at else None,
             },

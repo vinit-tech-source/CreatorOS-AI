@@ -6,9 +6,10 @@ interface TwitterPreviewProps {
   name?: string;
   handle?: string;
   avatarUrl?: string;
+  mediaSlot?: React.ReactNode;
 }
 
-export function TwitterPreview({ content, name = "Creator", handle = "@creator", avatarUrl }: TwitterPreviewProps) {
+export function TwitterPreview({ content, name = "Creator", handle = "@creator", avatarUrl, mediaSlot }: TwitterPreviewProps) {
   return (
     <div className={styles.tweetContainer}>
       <div className={styles.avatarCol}>
@@ -29,6 +30,11 @@ export function TwitterPreview({ content, name = "Creator", handle = "@creator",
         <div className={styles.body}>
           {content || "Your post text will appear here."}
         </div>
+        {mediaSlot && (
+          <div style={{ borderRadius: '12px', overflow: 'hidden', margin: '10px 0 6px', border: '1px solid #2f3336' }}>
+            {mediaSlot}
+          </div>
+        )}
         <div className={styles.actions}>
           <div className={styles.actionItem}>
             <MessageCircle size={16} />

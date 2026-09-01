@@ -29,6 +29,8 @@ class UserRepository(AbstractUserRepository):
             password_hash=password_hash,
             full_name=data.full_name,
             role=data.role,
+            region=data.region,
+            country=data.country,
         )
         self.session.add(user)
         await self.session.commit()

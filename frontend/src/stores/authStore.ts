@@ -8,6 +8,7 @@ interface AuthState {
   isInitializing: boolean;
   
   setAuth: (user: User, token: string) => void;
+  updateUser: (updates: Partial<User>) => void;
   logout: () => void;
   setInitializing: (status: boolean) => void;
 }
@@ -23,6 +24,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user, accessToken: token, isAuthenticated: true });
   },
 
+  updateUser: (updates) => {
+    set((state) => {
+      if (!state.user) return state;
+      const updated = { ...state.user, ...updates };
+      return { user: updated };
+    });
+  },
+
   logout: () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -31,3 +40,4 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   setInitializing: (status) => set({ isInitializing: status }),
 }));
+

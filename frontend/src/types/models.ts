@@ -5,6 +5,8 @@ export interface User {
   email: string;
   username: string;
   avatar_url?: string;
+  region?: string | null;
+  country?: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;

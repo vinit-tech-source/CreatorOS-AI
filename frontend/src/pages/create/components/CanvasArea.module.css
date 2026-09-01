@@ -2,197 +2,255 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem;
+  gap: 1.25rem;
+  padding: 1.5rem 2rem 2.5rem;
+  width: 100%;
+  max-width: 900px;
 }
 
-.canvasLabel {
+/* ─── Canvas Top Control Bar ─── */
+.canvasTopBar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 0.875rem;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 0.5rem 0.875rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.canvasMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
   font-weight: 700;
+  color: #fff;
+}
+.formatIcon { font-size: 1.1rem; }
+.formatName { color: #fff; }
+.formatDimensions {
+  font-size: 0.6875rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
 }
 
-.canvasDims {
+/* ── Theme Selector ── */
+.themeSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  padding: 2px 4px;
+}
+
+.themeIcon {
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0 4px;
+}
+
+.themePill {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  background: none;
+  border: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.themePill:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.themePillActive {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #fff !important;
+}
+
+/* ── Quick Actions ── */
+.canvasQuickActions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.canvasActionBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 400;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.canvasActionBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
+/* ── Canvas Outer ── */
 .canvasOuter {
   position: relative;
   flex-shrink: 0;
 }
 
-.canvasChecker {
-  position: absolute;
-  inset: -1px;
-  border-radius: 12px;
-  z-index: 0;
-  background-image: 
-    linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(255,255,255,0.02) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.02) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.02) 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-}
-
 .canvas {
   position: relative;
-  border-radius: 12px;
+  border-radius: 20px;
   border: 1.5px solid;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px var(--panel-2);
   user-select: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+/* ── Canvas Elements ── */
 .element {
   position: absolute;
   cursor: grab;
+  box-sizing: border-box;
 }
 .element:active { cursor: grabbing; }
 
 .elementSelected {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
 .textEl {
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   white-space: pre-wrap;
   word-break: break-word;
-  padding: 4px 8px;
+  padding: 6px 10px;
   font-family: inherit;
-  line-height: 1.25;
+  line-height: 1.35;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .textEditor {
   width: 100%;
   height: 100%;
-  background: var(--border);
-  border: 1px solid var(--primary);
-  border-radius: 4px;
+  background: rgba(20, 20, 30, 0.95);
+  border: 1.5px solid #6366f1;
+  border-radius: 6px;
   outline: none;
   resize: none;
-  padding: 4px 8px;
+  padding: 6px 10px;
   font-family: inherit;
-  line-height: 1.25;
+  line-height: 1.35;
+  box-sizing: border-box;
+  color: #fff;
 }
 
-.shapeEl { pointer-events: none; }
+.shapeEl {
+  pointer-events: none;
+  transition: background-color 0.2s;
+}
 
+.imageEl {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Floating selection overlay ── */
 .selectionOverlay {
   position: absolute;
-  top: -28px;
+  top: -36px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 4px;
-  background: rgba(20,20,30,0.95);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 8px;
+  align-items: center;
+  gap: 3px;
+  background: rgba(14, 14, 24, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
   padding: 3px 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   z-index: 100;
+  white-space: nowrap;
 }
 
-.deleteBtn, .editBtn {
+.deleteBtn, .editBtn, .moveHandle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  padding: 0.25rem 0.375rem;
+  background: none;
   border: none;
-  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
-  background: transparent;
-  color: var(--text-secondary);
+  border-radius: 6px;
   transition: all 0.15s;
 }
-.deleteBtn:hover { background: rgba(239,68,68,0.2); color: #ef4444; }
-.editBtn:hover { background: rgba(99,102,241,0.2); color: var(--pink); }
-
-.moveHandle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  color: var(--text-muted);
-  cursor: move;
+.deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
 }
-
-/* Corner decorations */
-.cornerTL, .cornerTR, .cornerBL, .cornerBR {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: rgba(99,102,241,0.5);
+.editBtn:hover, .moveHandle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
-.cornerTL { top: -4px; left: -4px; }
-.cornerTR { top: -4px; right: -4px; }
-.cornerBL { bottom: -4px; left: -4px; }
-.cornerBR { bottom: -4px; right: -4px; }
+.moveHandle { cursor: grab; }
 
-/* Empty state */
+/* ── Empty State ── */
 .emptyState {
-  position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  pointer-events: none;
+  gap: 0.75rem;
+  padding: 2rem;
+  text-align: center;
 }
 
 .emptyIcon {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   border-radius: 16px;
-  border: 1.5px dashed;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.emptyTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
 .emptyText {
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.3);
-  text-align: center;
-  max-width: 200px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 320px;
   line-height: 1.5;
+  margin: 0;
 }
-
-/* Character counter */
-.charCounter {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  width: 100%;
-  max-width: 480px;
-}
-
-.charCountBar {
-  flex: 1;
-  height: 3px;
-  background: var(--border);
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.charCountFill {
-  height: 100%;
-  border-radius: 9999px;
-  transition: width 0.3s ease;
-}
-
-.charCountOver { color: #ef4444; font-weight: 600; }

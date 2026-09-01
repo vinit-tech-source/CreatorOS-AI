@@ -36,6 +36,12 @@ function ReadOnlyCanvas({ elements, format }: { elements: CanvasElement[]; forma
                 className={styles.roShape}
                 style={{ backgroundColor: el.backgroundColor, borderRadius: el.borderRadius || 0 }}
               />
+            ) : el.type === 'image' ? (
+              <img
+                src={el.src || el.content}
+                alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: (el.borderRadius || 8), display: 'block' }}
+              />
             ) : null}
           </div>
         );
@@ -136,7 +142,10 @@ export function PlatformPreview({ state, platformConfig, format }: PlatformPrevi
 
       <div className={styles.deviceFrame}>
         {platformConfig.id === 'twitter' ? (
-          <TwitterPreview content={caption || 'Your content will appear here.'} />
+          <TwitterPreview
+            content={caption || 'Your content will appear here.'}
+            mediaSlot={state.elements.length > 0 ? <ReadOnlyCanvas elements={state.elements} format={format} /> : undefined}
+          />
         ) : platformConfig.id === 'linkedin' ? (
           <LinkedInPreview content={caption || 'Your content will appear here.'} />
         ) : platformConfig.id === 'instagram' ? (

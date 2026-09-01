@@ -85,3 +85,26 @@ export const countryPlatforms: CountryPlatformData[] = [
   { country: "Uruguay", flag: "🇺🇾", code: "uy", platforms: ["WhatsApp", "Instagram", "Facebook", "YouTube", "TikTok"] },
   { country: "Ecuador", flag: "🇪🇨", code: "ec", platforms: ["WhatsApp", "Facebook", "Instagram", "YouTube", "TikTok"] }
 ];
+
+export const regions: Record<string, string[]> = {
+  'South Asia': ['India', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Afghanistan'],
+  'East Asia': ['China', 'Japan', 'South Korea', 'Taiwan', 'Mongolia'],
+  'Southeast Asia': ['Indonesia', 'Philippines', 'Vietnam', 'Thailand', 'Malaysia', 'Singapore', 'Cambodia', 'Myanmar', 'Laos'],
+  'North America': ['United States', 'Canada', 'Mexico'],
+  'Latin America': ['Brazil', 'Colombia', 'Argentina', 'Chile', 'Peru', 'Ecuador', 'Uruguay', 'Dominican Republic', 'Panama', 'Costa Rica'],
+  'Europe': ['Germany', 'United Kingdom', 'France', 'Spain', 'Italy', 'Netherlands', 'Poland', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Ireland', 'Portugal', 'Greece', 'Czechia', 'Romania', 'Hungary', 'Austria', 'Switzerland', 'Belgium', 'Serbia', 'Croatia', 'Slovenia', 'Bulgaria', 'Slovakia'],
+  'Middle East': ['Saudi Arabia', 'UAE', 'Egypt', 'Israel', 'Turkey'],
+  'Africa': ['Nigeria', 'South Africa', 'Kenya', 'Ghana', 'Morocco'],
+  'Eastern Europe & CIS': ['Russia', 'Ukraine', 'Kazakhstan', 'Uzbekistan', 'Georgia', 'Armenia', 'Azerbaijan'],
+  'Oceania': ['Australia', 'New Zealand'],
+};
+
+export function getRegionForCountry(countryName: string): string | null {
+  for (const [region, countries] of Object.entries(regions)) {
+    if (countries.includes(countryName)) {
+      return region;
+    }
+  }
+  return null;
+}
+

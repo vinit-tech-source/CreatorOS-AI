@@ -18,6 +18,8 @@ class UserCreate(BaseModel):
     password: str = Field(..., min_length=8)
     full_name: str = Field(..., min_length=1, max_length=255)
     role: UserRole = UserRole.CREATOR
+    region: Optional[str] = Field(None, max_length=100)
+    country: Optional[str] = Field(None, max_length=100)
 
 
 class UserUpdate(BaseModel):
@@ -27,6 +29,8 @@ class UserUpdate(BaseModel):
     role: Optional[UserRole] = None
     is_active: Optional[bool] = None
     is_verified: Optional[bool] = None
+    region: Optional[str] = Field(None, max_length=100)
+    country: Optional[str] = Field(None, max_length=100)
 
 
 # ─────────────────────────────────────────────
@@ -44,6 +48,8 @@ class UserResponse(BaseModel):
     role: UserRole
     is_active: bool
     is_verified: bool
+    region: Optional[str] = None
+    country: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
@@ -58,3 +64,5 @@ class UserSummary(BaseModel):
     full_name: str
     role: UserRole
     is_active: bool
+    region: Optional[str] = None
+    country: Optional[str] = None

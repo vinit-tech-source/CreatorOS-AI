@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { getPlatformConfig, ContentFormat } from '../../constants/platformConfigs';
 import { PlatformSelector } from './components/PlatformSelector';
 import { CreationWorkspace } from './components/CreationWorkspace';
+import { useAuthStore } from '../../stores/authStore';
 
 export type StudioStep = 'select' | 'create';
 
@@ -35,9 +36,12 @@ export interface StudioState {
 }
 
 export function CreateStudio() {
+  const { user } = useAuthStore();
+  const savedCountry = user?.country || localStorage.getItem('creatoros_default_country') || 'India';
+
   const [step, setStep] = useState<StudioStep>('select');
   const [state, setState] = useState<StudioState>({
-    country: 'India',
+    country: savedCountry,
     platform: 'Instagram',
     format: null,
     elements: [],
@@ -46,6 +50,12 @@ export function CreateStudio() {
     hashtags: [],
     selectedElementId: null,
   });
+
+  useEffect(() => {
+    if (savedCountry && state.country !== savedCountry) {
+      setState(prev => ({ ...prev, country: savedCountry }));
+    }
+  }, [savedCountry]);
 
   const platformConfig = getPlatformConfig(state.platform);
 
@@ -83,7 +93,7 @@ export function CreateStudio() {
   }
 
   return (
-    <div className="studioFullBleed" style={{ height: '100%', overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', background: 'var(--background, #07070c)' }}>
       <CreationWorkspace
         state={state}
         platformConfig={platformConfig!}

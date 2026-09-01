@@ -1,0 +1,225 @@
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 900px;
+}
+
+.sectionGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cardHeaderFlex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cardTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(94, 82, 246, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(94, 82, 246, 0.25);
+}
+
+.cardIconGreen {
+  background: rgba(130, 229, 93, 0.12);
+  color: var(--green);
+  border: 1px solid rgba(130, 229, 93, 0.25);
+}
+
+.badgeActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  background: rgba(94, 82, 246, 0.15);
+  border: 1px solid rgba(94, 82, 246, 0.35);
+  border-radius: 9999px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.badgeActive img,
+.badgeActive span.flag {
+  font-size: 1rem;
+}
+
+.sectionDescription {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.regionPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.regionPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.regionPill:hover {
+  background: var(--panel-3);
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.regionPillActive {
+  background: rgba(94, 82, 246, 0.18);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(94, 82, 246, 0.25);
+}
+
+.pillCount {
+  padding: 0.1rem 0.4rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  font-size: var(--fs-3xs);
+}
+
+.countryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.countryCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.countryCard:hover {
+  background: var(--panel-3);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.countryCardSelected {
+  background: rgba(94, 82, 246, 0.14) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 16px rgba(94, 82, 246, 0.2);
+}
+
+.countryCardLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.flagIcon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.flagImg {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.countryMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.countryName {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.countryPlatformsCount {
+  font-size: var(--fs-3xs);
+  color: var(--muted-2);
+}
+
+.checkMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.saveRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.statusMessage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.statusSuccess {
+  color: var(--green);
+}
+
+.statusError {
+  color: var(--danger);
+}

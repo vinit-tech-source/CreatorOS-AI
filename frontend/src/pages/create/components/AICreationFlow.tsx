@@ -4,6 +4,7 @@ import { StudioState, CanvasElement } from '../CreateStudio';
 import { Sparkles, ArrowRight, ChevronRight, Check, Pencil, Wand2, Loader2, MessageSquarePlus, RotateCcw, ImagePlus, Link, MapPin, X, ArrowLeft } from 'lucide-react';
 import styles from './AICreationFlow.module.css';
 import { apiClient } from '../../../services/api/client';
+import { LocationAutocomplete } from './LocationAutocomplete';
 
 interface AICreationFlowProps {
   platformConfig: PlatformConfig;
@@ -21,7 +22,6 @@ export interface AIResult {
   elements: Omit<CanvasElement, 'id' | 'zIndex'>[];
 }
 
-// Platform-specific questions tailored per format
 function getQuestions(_platform: string, formatLabel: string, _concept: string): Question[] {
   const isVideo = ['reel', 'video', 'short', 'tiktok-video', 'story'].some(v => formatLabel.toLowerCase().includes(v));
 
@@ -96,13 +96,13 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
   const [result, setResult] = useState<AIResult | null>(null);
   const [editPrompt, setEditPrompt] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const [postLink, setPostLink] = useState('');
   const [postLocation, setPostLocation] = useState('');
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [showLocationInput, setShowLocationInput] = useState(false);
-  
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -118,7 +118,6 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
 
   const questions = getQuestions(platformConfig.name, format.label, concept);
 
-  // Auto-focus input on step change
   useEffect(() => {
     if (flowStep === 'prompt' || flowStep === 'questions') {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -141,7 +140,6 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
     if (currentQ < questions.length - 1) {
       setCurrentQ(prev => prev + 1);
     } else {
-      // All questions answered — start generating
       startGeneration(updatedAnswers);
     }
   };
@@ -150,16 +148,16 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
     setFlowStep('generating');
     setGenerationStep(0);
 
-    // Initial rapid steps
     for (let i = 0; i < 2; i++) {
       await new Promise(res => setTimeout(res, 800));
       setGenerationStep(i + 1);
     }
 
     try {
+      const promptConcept = postLocation ? `${concept} (Target Location / Market: ${postLocation})` : concept;
       const response = await apiClient.post('/ai/generate-post', {
         platform: platformConfig.name,
-        concept,
+        concept: promptConcept,
         tone: finalAnswers.tone || 'Professional',
         goal: finalAnswers.goal || 'Grow followers',
         audience: finalAnswers.audience || 'general audience',
@@ -167,7 +165,7 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
       });
 
       const apiResult = response.data;
-      
+
       setGenerationStep(3);
       await new Promise(res => setTimeout(res, 500));
       setGenerationStep(4);
@@ -175,67 +173,109 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
 
       const { title, caption, hashtags } = apiResult.data;
 
+      // Extract a punchy subtitle from caption (max 100 chars, up to first sentence)
+      let subtitle = caption.split('\n')[0].trim();
+      if (subtitle.length > 110) {
+        const periodIdx = subtitle.indexOf('. ');
+        if (periodIdx > 20 && periodIdx < 110) {
+          subtitle = subtitle.slice(0, periodIdx + 1);
+        } else {
+          subtitle = subtitle.slice(0, 95) + '…';
+        }
+      }
+
+      // Add location hashtag if provided
+      let finalHashtags = Array.isArray(hashtags) ? [...hashtags] : [];
+      if (postLocation) {
+        const cityOnly = postLocation.split(',')[0].trim().replace(/[^a-zA-Z0-9]/g, '');
+        if (cityOnly && !finalHashtags.some(h => h.toLowerCase().includes(cityOnly.toLowerCase()))) {
+          finalHashtags.unshift(`#${cityOnly}`);
+        }
+      }
+
+      const rawCta = finalAnswers.cta;
+      const validCta = rawCta && !rawCta.toLowerCase().includes('not specified')
+        ? rawCta.split(',')[0].trim()
+        : 'Read more 👇';
+
+      const cardW = format.canvasW;
+      const cardH = format.canvasH;
+      const padding = 30;
+      const contentW = cardW - (padding * 2);
+
+      const topBadgeText = postLocation
+        ? `📍 ${postLocation.split(',')[0].toUpperCase()} · ${format.label.toUpperCase()}`
+        : `${platformConfig.name.toUpperCase()} · ${format.label.toUpperCase()}`;
+
       const elements: Omit<CanvasElement, 'id' | 'zIndex'>[] = [
+        // 1. Topic / Category Badge
         {
           type: 'text',
-          x: 40,
-          y: 40,
-          w: format.canvasW - 80,
-          h: 60,
+          x: padding,
+          y: 24,
+          w: contentW,
+          h: 22,
+          content: topBadgeText,
+          fontSize: 11,
+          color: platformConfig.accentColor,
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        // 2. Bold Headline
+        {
+          type: 'text',
+          x: padding,
+          y: 52,
+          w: contentW,
+          h: 75,
           content: title,
-          fontSize: 24,
+          fontSize: title.length > 45 ? 18 : 21,
           color: '#ffffff',
           fontWeight: '800',
           textAlign: 'center',
         },
+        // 3. Punchy Takeaway (cleanly spaced)
         {
           type: 'text',
-          x: 40,
-          y: 110,
-          w: format.canvasW - 80,
-          h: 60,
-          content: caption.split('\n')[0],
-          fontSize: 16,
-          color: 'rgba(255,255,255,0.75)',
+          x: padding + 15,
+          y: 132,
+          w: contentW - 30,
+          h: 55,
+          content: subtitle,
+          fontSize: 13,
+          color: 'rgba(255,255,255,0.7)',
           fontWeight: '500',
           textAlign: 'center',
         },
+        // 4. Clean CTA badge at bottom
         {
           type: 'shape',
-          x: format.canvasW / 2 - 75,
-          y: format.canvasH - 70,
-          w: 150,
-          h: 36,
+          x: cardW / 2 - 65,
+          y: cardH - 50,
+          w: 130,
+          h: 28,
           backgroundColor: platformConfig.accentColor,
-          borderRadius: 18,
+          borderRadius: 14,
         },
         {
           type: 'text',
-          x: format.canvasW / 2 - 75,
-          y: format.canvasH - 62,
-          w: 150,
-          h: 36,
-          content: (finalAnswers.cta || 'Follow for more').split(',')[0],
-          fontSize: 13,
+          x: cardW / 2 - 65,
+          y: cardH - 45,
+          w: 130,
+          h: 20,
+          content: validCta,
+          fontSize: 11,
           color: '#ffffff',
           fontWeight: '700',
           textAlign: 'center',
         },
       ];
 
-      const generated: AIResult = { caption, title, hashtags, elements };
-      setResult(generated);
+      setResult({ caption, title, hashtags: finalHashtags, elements });
       setFlowStep('result');
     } catch (error) {
-      console.error('Failed to generate post:', error);
-      // Fallback to mock generation if the backend is down
       const fallbackCaption = `Here's what nobody tells you about this topic.\n\nFocus on what matters.\n\n${(finalAnswers.cta || 'Follow for more').split(',')[0]}! 👇`;
-      setResult({
-        title: "Are you ready for the truth?",
-        caption: fallbackCaption,
-        hashtags: ['#socialmedia', '#tips'],
-        elements: [] // Simplified fallback
-      });
+      setResult({ title: 'Are you ready for the truth?', caption: fallbackCaption, hashtags: ['#socialmedia', '#tips'], elements: [] });
       setFlowStep('result');
     }
   };
@@ -244,21 +284,14 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
     if (!editPrompt.trim() || !result) return;
     setIsEditing(true);
     await new Promise(res => setTimeout(res, 1500));
-
-    // Simulate AI applying the edit
     const updatedCaption = result.caption + `\n\n✨ ${editPrompt}`;
     setResult({ ...result, caption: updatedCaption });
     setEditPrompt('');
     setIsEditing(false);
   };
 
-  const handleAccept = () => {
-    if (result) onComplete(result);
-  };
-
-  const handleManualEdit = () => {
-    if (result) onComplete(result);
-  };
+  const handleAccept = () => { if (result) onComplete(result); };
+  const handleManualEdit = () => { if (result) onComplete(result); };
 
   const handleReset = () => {
     setConcept('');
@@ -269,217 +302,245 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
     setFlowStep('prompt');
   };
 
+  const accentGradient = platformConfig.gradient;
+
   return (
     <div className={styles.overlay}>
-      {/* Animated bg */}
-      <div className={styles.bgGlow} style={{ 
-        backgroundImage: `radial-gradient(circle at 15% 50%, ${platformConfig.accentColor}25, transparent 55%), radial-gradient(circle at 85% 30%, ${platformConfig.accentColor}15, transparent 50%)`
-      }} />
+      {/* Animated background glow */}
+      <div
+        className={styles.bgGlow}
+        style={{
+          backgroundImage: `radial-gradient(ellipse at 20% 50%, ${platformConfig.accentColor}20, transparent 55%), radial-gradient(ellipse at 80% 20%, ${platformConfig.accentColor}12, transparent 50%)`
+        }}
+      />
 
-      <div className={styles.card}>
-        {/* Header */}
-        <div className={styles.cardHeader}>
-          {onBack && (
-            <button className={styles.backBtn} onClick={onBack}>
-              <ArrowLeft size={16} /> Back
-            </button>
-          )}
-          <div className={styles.platformBadge} style={{ background: platformConfig.gradient }}>
-            <span>{platformConfig.name}</span>
-            <span className={styles.formatDot}>·</span>
-            <span>{format.label}</span>
-          </div>
-          <button className={styles.skipBtn} onClick={onSkip}>
-            Skip, I'll create manually →
+      {/* Top Navigation */}
+      <div className={styles.topNav}>
+        {onBack ? (
+          <button className={styles.backBtn} onClick={onBack}>
+            <ArrowLeft size={15} /> Back
           </button>
+        ) : <div />}
+
+        <div className={styles.platformBadge} style={{ background: accentGradient }}>
+          <span>{platformConfig.name}</span>
+          <span className={styles.formatDot}>·</span>
+          <span>{format.label}</span>
         </div>
+
+        <button className={styles.skipBtn} onClick={onSkip}>
+          Skip, I'll create manually →
+        </button>
+      </div>
+
+      {/* Main area — switches between steps */}
+      <div className={styles.mainArea}>
 
         {/* ─── STEP 1: Initial Prompt ─── */}
         {flowStep === 'prompt' && (
           <div className={styles.promptStep}>
-            <div className={styles.aiIcon}>
-              <Wand2 size={28} className={styles.aiIconSvg} />
-            </div>
-            <h2 className={styles.stepTitle}>What do you want to create?</h2>
-            <p className={styles.stepSub}>
-              Describe your idea in one or two sentences. Be as specific as you can — the more detail you give, the better the AI will understand.
-            </p>
+            <div className={styles.promptInner}>
+              <div className={styles.aiIcon}>
+                <Wand2 size={32} className={styles.aiIconSvg} />
+              </div>
+              <h2 className={styles.stepTitle}>What do you want to create?</h2>
+              <p className={styles.stepSub}>
+                Describe your idea in a sentence or two. The more detail you give, the better the AI will understand your vision.
+              </p>
 
-            <div className={styles.promptExamples}>
-              {[
-                `A ${format.label.toLowerCase()} about how to grow from 0 to 10K followers on ${platformConfig.name}`,
-                `Behind-the-scenes of my morning routine as a content creator`,
-                `5 mistakes people make when starting a business`,
-              ].map((ex, i) => (
-                <button 
-                  key={ex} 
-                  className={styles.examplePill} 
-                  style={{ animationDelay: `${i * 0.05}s` }}
-                  onClick={() => setConcept(ex)}
-                >
-                  {ex}
-                </button>
-              ))}
-            </div>
-
-            <div className={styles.inputWrapper}>
-              <textarea
-                ref={inputRef}
-                className={styles.bigInput}
-                placeholder={`e.g., A ${format.label.toLowerCase()} about how to grow your ${platformConfig.name} account from 0 to 10,000 followers using proven strategies…`}
-                value={concept}
-                onChange={e => setConcept(e.target.value)}
-                rows={4}
-                onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleConceptSubmit(); }}
-              />
-              
-              <div className={styles.essentialsToolbar}>
-                <button className={styles.essentialBtn} onClick={() => fileInputRef.current?.click()}>
-                  <ImagePlus size={14} /> Add Media
-                </button>
-                <input type="file" multiple accept="image/*,video/*" hidden ref={fileInputRef} onChange={handleFileChange} />
-                
-                <button className={`${styles.essentialBtn} ${showLinkInput ? styles.essentialBtnActive : ''}`} onClick={() => setShowLinkInput(!showLinkInput)}>
-                  <Link size={14} /> Add Link
-                </button>
-                
-                <button className={`${styles.essentialBtn} ${showLocationInput ? styles.essentialBtnActive : ''}`} onClick={() => setShowLocationInput(!showLocationInput)}>
-                  <MapPin size={14} /> Add Location
-                </button>
+              <div className={styles.promptExamples}>
+                {[
+                  `A ${format.label.toLowerCase()} about how to grow from 0 to 10K followers on ${platformConfig.name}`,
+                  `Behind-the-scenes of my morning routine as a content creator`,
+                  `5 mistakes people make when starting a business`,
+                ].map((ex, i) => (
+                  <button
+                    key={ex}
+                    className={styles.examplePill}
+                    style={{ animationDelay: `${i * 0.08}s` }}
+                    onClick={() => setConcept(ex)}
+                  >
+                    {ex}
+                  </button>
+                ))}
               </div>
 
-              {mediaFiles.length > 0 && (
-                <div className={styles.mediaPreviewList}>
-                  {mediaFiles.map((file, i) => (
-                    <div key={i} className={styles.mediaPreviewItem}>
-                      <span className={styles.mediaPreviewName}>{file.name}</span>
-                      <button className={styles.mediaPreviewRemove} onClick={() => removeFile(i)}><X size={12} /></button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className={styles.inputWrapper}>
+                <textarea
+                  ref={inputRef}
+                  className={styles.bigInput}
+                  placeholder={`e.g., A ${format.label.toLowerCase()} about how to grow your ${platformConfig.name} account from 0 to 10,000 followers using proven strategies…`}
+                  value={concept}
+                  onChange={e => setConcept(e.target.value)}
+                  rows={4}
+                  onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleConceptSubmit(); }}
+                />
 
-              {showLinkInput && (
-                <div className={styles.essentialInputRow}>
-                  <Link size={14} className={styles.essentialInputIcon} />
-                  <input className={styles.essentialInput} placeholder="https://..." value={postLink} onChange={e => setPostLink(e.target.value)} />
-                </div>
-              )}
+                <div className={styles.essentialsToolbar}>
+                  <button className={styles.essentialBtn} onClick={() => fileInputRef.current?.click()}>
+                    <ImagePlus size={14} /> Add Media
+                  </button>
+                  <input type="file" multiple accept="image/*,video/*" hidden ref={fileInputRef} onChange={handleFileChange} />
 
-              {showLocationInput && (
-                <div className={styles.essentialInputRow}>
-                  <MapPin size={14} className={styles.essentialInputIcon} />
-                  <input className={styles.essentialInput} placeholder="e.g., New York, NY" value={postLocation} onChange={e => setPostLocation(e.target.value)} />
-                </div>
-              )}
+                  <button
+                    className={`${styles.essentialBtn} ${showLinkInput ? styles.essentialBtnActive : ''}`}
+                    onClick={() => { setShowLinkInput(!showLinkInput); setShowLocationInput(false); }}
+                  >
+                    <Link size={14} /> Add Link
+                  </button>
 
-              <div className={styles.inputHint}>Press <kbd>Ctrl+Enter</kbd> to continue</div>
+                  <button
+                    className={`${styles.essentialBtn} ${showLocationInput ? styles.essentialBtnActive : ''}`}
+                    onClick={() => { setShowLocationInput(!showLocationInput); setShowLinkInput(false); }}
+                  >
+                    <MapPin size={14} /> Add Location
+                  </button>
+                </div>
+
+                {mediaFiles.length > 0 && (
+                  <div className={styles.mediaPreviewList}>
+                    {mediaFiles.map((file, i) => (
+                      <div key={i} className={styles.mediaPreviewItem}>
+                        <span className={styles.mediaPreviewName}>{file.name}</span>
+                        <button className={styles.mediaPreviewRemove} onClick={() => removeFile(i)}><X size={12} /></button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {showLinkInput && (
+                  <div className={styles.essentialInputRow}>
+                    <Link size={14} className={styles.essentialInputIcon} />
+                    <input
+                      className={styles.essentialInput}
+                      placeholder="https://..."
+                      value={postLink}
+                      onChange={e => setPostLink(e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {showLocationInput && (
+                  <div style={{ marginTop: '0.4rem', padding: '0 0.375rem' }}>
+                    <LocationAutocomplete
+                      value={postLocation}
+                      onChange={setPostLocation}
+                      onClear={() => setPostLocation('')}
+                      placeholder="Search city or location (e.g. Pune, Mumbai, London)…"
+                    />
+                  </div>
+                )}
+
+                <div className={styles.inputFooter}>
+                  <div className={styles.inputHint}>Press <kbd>Ctrl+Enter</kbd> to continue</div>
+                  <div className={styles.inputHint} style={{ color: concept.length > 400 ? '#f87171' : undefined }}>
+                    {concept.length}/500
+                  </div>
+                </div>
+              </div>
+
+              <button
+                className={styles.primaryBtn}
+                style={{ background: accentGradient }}
+                onClick={handleConceptSubmit}
+                disabled={!concept.trim()}
+              >
+                <Sparkles size={17} />
+                Analyse & Start Creating
+                <ArrowRight size={17} />
+              </button>
             </div>
-
-            <button
-              className={styles.primaryBtn}
-              style={{ '--accent': platformConfig.accentColor, background: platformConfig.gradient } as any}
-              onClick={handleConceptSubmit}
-              disabled={!concept.trim()}
-            >
-              <Sparkles size={16} />
-              Analyse & Start Creating
-              <ArrowRight size={16} />
-            </button>
           </div>
         )}
 
         {/* ─── STEP 2: 5 Questions ─── */}
         {flowStep === 'questions' && (
           <div className={styles.questionsStep}>
-            {/* Progress */}
-            <div className={styles.progressBar}>
-              {questions.map((_, i) => (
-                <div
-                  key={i}
-                  className={`${styles.progressDot} ${i < currentQ ? styles.progressDotDone : ''} ${i === currentQ ? styles.progressDotActive : ''}`}
-                  style={i === currentQ ? { background: platformConfig.accentColor } : {}}
-                />
-              ))}
-            </div>
-            <div className={styles.progressLabel}>Question {currentQ + 1} of {questions.length}</div>
-
-            {/* Concept recap */}
-            <div className={styles.conceptRecap}>
-              <span className={styles.conceptLabel}>Your idea:</span>
-              <span className={styles.conceptText}>"{concept}"</span>
-            </div>
-
-            {/* Question */}
-            <div className={styles.questionCard}>
-              <div className={styles.questionNumber}>Q{currentQ + 1}</div>
-              <h3 className={styles.questionText}>{questions[currentQ].question}</h3>
-              <p className={styles.questionHint}>{questions[currentQ].hint}</p>
-            </div>
-
-            {/* Quick options if available */}
-            {questions[currentQ].options && (
-              <div className={styles.quickOptions}>
-                {questions[currentQ].options!.map(opt => {
-                  const currentOpts = currentAnswer.split(',').map(s => s.trim()).filter(Boolean);
-                  const isActive = currentOpts.includes(opt);
-                  return (
-                    <button
-                      key={opt}
-                      className={`${styles.optionPill} ${isActive ? styles.optionPillActive : ''}`}
-                      style={isActive ? { borderColor: platformConfig.accentColor, color: platformConfig.accentColor } : {}}
-                      onClick={() => {
-                        if (isActive) {
-                          setCurrentAnswer(currentOpts.filter(o => o !== opt).join(', '));
-                        } else {
-                          setCurrentAnswer([...currentOpts, opt].join(', '));
-                        }
-                      }}
-                    >
-                      {isActive && <Check size={12} />}
-                      {opt}
-                    </button>
-                  );
-                })}
+            <div className={styles.questionsInner}>
+              <div className={styles.progressBar}>
+                {questions.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`${styles.progressDot} ${i < currentQ ? styles.progressDotDone : ''} ${i === currentQ ? styles.progressDotActive : ''}`}
+                    style={i === currentQ ? { background: platformConfig.accentColor } : {}}
+                  />
+                ))}
               </div>
-            )}
+              <div className={styles.progressLabel}>Question {currentQ + 1} of {questions.length}</div>
 
-            {/* Free text answer */}
-            <textarea
-              ref={inputRef}
-              className={styles.answerInput}
-              placeholder={questions[currentQ].placeholder}
-              value={currentAnswer}
-              onChange={e => setCurrentAnswer(e.target.value)}
-              rows={3}
-              onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleAnswerSubmit(); }}
-            />
-            <div className={styles.inputHint}>Press <kbd>Ctrl+Enter</kbd> to continue</div>
+              <div className={styles.conceptRecap}>
+                <span className={styles.conceptLabel}>Your idea:</span>
+                <span className={styles.conceptText}>"{concept}"</span>
+              </div>
 
-            <div className={styles.questionActions}>
-              <button className={styles.skipAnswerBtn} onClick={handleAnswerSubmit}>
-                Skip this question
-              </button>
-              <button
-                className={styles.primaryBtn}
-                style={{ background: platformConfig.gradient } as any}
-                onClick={handleAnswerSubmit}
-              >
-                {currentQ < questions.length - 1 ? (
-                  <>Next <ChevronRight size={16} /></>
-                ) : (
-                  <><Sparkles size={16} /> Start Generating!</>
-                )}
-              </button>
+              <div className={styles.questionCard}>
+                <div className={styles.questionNumber}>Q{currentQ + 1}</div>
+                <h3 className={styles.questionText}>{questions[currentQ].question}</h3>
+                <p className={styles.questionHint}>{questions[currentQ].hint}</p>
+              </div>
+
+              {questions[currentQ].options && (
+                <div className={styles.quickOptions}>
+                  {questions[currentQ].options!.map(opt => {
+                    const currentOpts = currentAnswer.split(',').map(s => s.trim()).filter(Boolean);
+                    const isActive = currentOpts.includes(opt);
+                    return (
+                      <button
+                        key={opt}
+                        className={`${styles.optionPill} ${isActive ? styles.optionPillActive : ''}`}
+                        style={isActive ? { borderColor: platformConfig.accentColor, color: platformConfig.accentColor } : {}}
+                        onClick={() => {
+                          if (isActive) {
+                            setCurrentAnswer(currentOpts.filter(o => o !== opt).join(', '));
+                          } else {
+                            setCurrentAnswer([...currentOpts, opt].join(', '));
+                          }
+                        }}
+                      >
+                        {isActive && <Check size={12} />}
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              <textarea
+                ref={inputRef}
+                className={styles.answerInput}
+                placeholder={questions[currentQ].placeholder}
+                value={currentAnswer}
+                onChange={e => setCurrentAnswer(e.target.value)}
+                rows={3}
+                onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleAnswerSubmit(); }}
+              />
+              <div className={styles.inputHint}>Press <kbd>Ctrl+Enter</kbd> to continue</div>
+
+              <div className={styles.questionActions}>
+                <button className={styles.skipAnswerBtn} onClick={handleAnswerSubmit}>
+                  Skip this question
+                </button>
+                <button
+                  className={styles.primaryBtn}
+                  style={{ background: accentGradient }}
+                  onClick={handleAnswerSubmit}
+                >
+                  {currentQ < questions.length - 1 ? (
+                    <>Next <ChevronRight size={16} /></>
+                  ) : (
+                    <><Sparkles size={16} /> Start Generating!</>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {/* ─── STEP 3: Generation ─── */}
+        {/* ─── STEP 3: Generating ─── */}
         {flowStep === 'generating' && (
           <div className={styles.generatingStep}>
-            <div className={styles.generatingRing} style={{ '--accent': platformConfig.accentColor } as any}>
-              <Sparkles size={32} className={styles.generatingIcon} />
+            <div className={styles.generatingRing} style={{ '--accent': platformConfig.accentColor, borderColor: platformConfig.accentColor } as any}>
+              <Sparkles size={36} className={styles.generatingIcon} style={{ color: platformConfig.accentColor }} />
             </div>
             <h2 className={styles.stepTitle}>Creating your {format.label}…</h2>
             <p className={styles.stepSub}>Hang tight — our AI is crafting content tailored specifically for {platformConfig.name}.</p>
@@ -507,82 +568,104 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
           </div>
         )}
 
-        {/* ─── STEP 4: Result ─── */}
+        {/* ─── STEP 4: Result (Split Panel) ─── */}
         {flowStep === 'result' && result && (
           <div className={styles.resultStep}>
-            <div className={styles.resultHeader}>
-              <div className={styles.resultCheck} style={{ background: platformConfig.accentColor + '22', borderColor: platformConfig.accentColor + '44' }}>
-                <Check size={20} style={{ color: platformConfig.accentColor }} />
-              </div>
-              <div>
-                <h2 className={styles.resultTitle}>Your content is ready!</h2>
-                <p className={styles.resultSub}>Review below, then choose how you want to proceed.</p>
-              </div>
-            </div>
-
-            {/* Preview of generated content */}
-            <div className={styles.resultPreview}>
-              <div className={styles.previewSection}>
-                <div className={styles.previewLabel}>Generated Caption</div>
-                <div className={styles.previewContent}>{result.caption}</div>
-              </div>
-              {result.hashtags.length > 0 && (
-                <div className={styles.previewSection}>
-                  <div className={styles.previewLabel}>Hashtags</div>
-                  <div className={styles.hashtagsRow}>
-                    {result.hashtags.map(h => (
-                      <span key={h} className={styles.hashTag} style={{ color: platformConfig.accentColor, borderColor: platformConfig.accentColor + '40' }}>{h}</span>
-                    ))}
-                  </div>
+            {/* Left: Content Preview */}
+            <div className={styles.resultLeft}>
+              <div className={styles.resultHeader}>
+                <div className={styles.resultCheck} style={{ background: platformConfig.accentColor + '22', borderColor: platformConfig.accentColor + '55' }}>
+                  <Check size={22} style={{ color: platformConfig.accentColor }} />
                 </div>
-              )}
+                <div>
+                  <h2 className={styles.resultTitle}>Your content is ready!</h2>
+                  <p className={styles.resultSub}>Review and refine before opening the studio.</p>
+                </div>
+              </div>
+
+              <div className={styles.resultPreview}>
+                <div className={styles.previewSection}>
+                  <div className={styles.previewLabel}>Generated Caption</div>
+                  <div className={styles.previewContent}>{result.caption}</div>
+                </div>
+                {result.hashtags.length > 0 && (
+                  <div className={styles.previewSection}>
+                    <div className={styles.previewLabel}>Hashtags</div>
+                    <div className={styles.hashtagsRow}>
+                      {result.hashtags.map(h => (
+                        <span key={h} className={styles.hashTag} style={{ color: platformConfig.accentColor, borderColor: platformConfig.accentColor + '40' }}>{h}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* AI Refinement */}
+              <div className={styles.editSection}>
+                <div className={styles.editSectionTitle}>
+                  <MessageSquarePlus size={15} />
+                  Ask AI to refine something
+                </div>
+                <div className={styles.editRow}>
+                  <input
+                    className={styles.editInput}
+                    placeholder='e.g., "Make the hook more shocking" or "Add more emojis"'
+                    value={editPrompt}
+                    onChange={e => setEditPrompt(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') handleEditWithPrompt(); }}
+                    disabled={isEditing}
+                  />
+                  <button className={styles.editBtn} onClick={handleEditWithPrompt} disabled={isEditing || !editPrompt.trim()}>
+                    {isEditing ? <Loader2 size={15} className={styles.spin} /> : <Sparkles size={15} />}
+                  </button>
+                </div>
+                <div className={styles.editSuggestions}>
+                  {['Make it shorter', 'Add more energy', 'Make it funnier', 'More professional', 'Add a statistic'].map(s => (
+                    <button key={s} className={styles.editSuggestionPill} onClick={() => setEditPrompt(s)}>{s}</button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* AI Edit option */}
-            <div className={styles.editSection}>
-              <div className={styles.editSectionTitle}>
-                <MessageSquarePlus size={15} />
-                Ask AI to refine something
+            {/* Right: Stats + Actions */}
+            <div className={styles.resultRight}>
+              <div className={styles.resultStatGrid}>
+                <div className={styles.resultStat}>
+                  <div className={styles.resultStatLabel}>Platform</div>
+                  <div className={styles.resultStatValue} style={{ fontSize: '0.9375rem' }}>{platformConfig.name}</div>
+                </div>
+                <div className={styles.resultStat}>
+                  <div className={styles.resultStatLabel}>Format</div>
+                  <div className={styles.resultStatValue} style={{ fontSize: '0.9375rem' }}>{format.label}</div>
+                </div>
+                <div className={styles.resultStat}>
+                  <div className={styles.resultStatLabel}>Hashtags</div>
+                  <div className={styles.resultStatValue}>{result.hashtags.length}</div>
+                </div>
+                <div className={styles.resultStat}>
+                  <div className={styles.resultStatLabel}>Chars</div>
+                  <div className={styles.resultStatValue}>{result.caption.length}</div>
+                </div>
               </div>
-              <div className={styles.editRow}>
-                <input
-                  className={styles.editInput}
-                  placeholder='e.g., "Make the hook more shocking" or "Add more emojis"'
-                  value={editPrompt}
-                  onChange={e => setEditPrompt(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') handleEditWithPrompt(); }}
-                  disabled={isEditing}
-                />
-                <button className={styles.editBtn} onClick={handleEditWithPrompt} disabled={isEditing || !editPrompt.trim()}>
-                  {isEditing ? <Loader2 size={14} className={styles.spin} /> : <Sparkles size={14} />}
+
+              <div className={styles.resultActions}>
+                <button
+                  className={styles.acceptBtn}
+                  style={{ background: accentGradient }}
+                  onClick={handleAccept}
+                >
+                  <Check size={16} />
+                  Accept & open studio
+                </button>
+                <button className={styles.manualBtn} onClick={handleManualEdit}>
+                  <Pencil size={14} />
+                  Edit manually in studio
+                </button>
+                <button className={styles.resetBtn} onClick={handleReset}>
+                  <RotateCcw size={14} />
+                  Start over
                 </button>
               </div>
-              {/* Quick edit suggestions */}
-              <div className={styles.editSuggestions}>
-                {['Make it shorter', 'Add more energy', 'Make it funnier', 'More professional', 'Add a statistic'].map(s => (
-                  <button key={s} className={styles.editSuggestionPill} onClick={() => setEditPrompt(s)}>{s}</button>
-                ))}
-              </div>
-            </div>
-
-            {/* Final Actions */}
-            <div className={styles.resultActions}>
-              <button className={styles.resetBtn} onClick={handleReset}>
-                <RotateCcw size={14} />
-                Start over
-              </button>
-              <button className={styles.manualBtn} onClick={handleManualEdit}>
-                <Pencil size={14} />
-                Edit manually in studio
-              </button>
-              <button
-                className={styles.acceptBtn}
-                style={{ background: platformConfig.gradient } as any}
-                onClick={handleAccept}
-              >
-                <Check size={15} />
-                Accept & open studio
-              </button>
             </div>
           </div>
         )}
@@ -591,7 +674,6 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
   );
 }
 
-// Helper: generate relevant hashtags
 export function generateHashtags(platform: string, concept: string, tone: string): string[] {
   const words = concept.toLowerCase().split(' ').filter(w => w.length > 3).slice(0, 4);
   const base = words.map(w => '#' + w.replace(/[^a-z0-9]/g, ''));

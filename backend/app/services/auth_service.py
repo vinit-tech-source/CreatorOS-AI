@@ -35,7 +35,7 @@ from app.core.security import (
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import AccessTokenResponse, AuthResponse, TokenPair
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 logger = logging.getLogger(__name__)
 
@@ -246,3 +246,37 @@ class AuthService:
             raise InactiveUserError()
 
         return UserResponse.model_validate(user)
+
+    async def update_current_user(
+        self, user_id: uuid.UUID, data: UserUpdate
+    ) -> UserResponse:
+        """
+        Update fields on the currently authenticated user.
+
+        Args:
+            user_id: The UUID of the authenticated user.
+            data: UserUpdate schema with updated fields.
+
+        Returns:
+            UserResponse for the updated user record.
+
+        Raises:
+            UserNotFoundError: If no user exists with the given ID.
+            InactiveUserError: If the account has been deactivated.
+            UsernameAlreadyExistsError: If a new username is already in use by another user.
+        """
+        user = await self._repo.get_by_id(user_id)
+        if user is None:
+            raise UserNotFoundError()
+
+        if not user.is_active:
+            raise InactiveUserError()
+
+        if data.username is not None and data.username != user.username:
+            existing_user = await self._repo.get_by_username(data.username)
+            if existing_user is not None and existing_user.id != user.id:
+                raise UsernameAlreadyExistsError()
+
+        updated_user = await self._repo.update(user, data)
+        return UserResponse.model_validate(updated_user)
+

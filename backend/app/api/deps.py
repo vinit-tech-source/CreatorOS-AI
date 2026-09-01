@@ -239,6 +239,9 @@ async def get_automation_service(
 async def get_ai_provider() -> AbstractAIProvider:
     """Construct the configured AI provider."""
     from app.core.config import settings
+    if settings.USE_MOCK_AI:
+        from app.integrations.ai.mock_client import MockAIClient
+        return MockAIClient()
     if settings.GROQ_API_KEY:
         from app.integrations.ai.groq_client import GroqClient
         return GroqClient(

@@ -135,6 +135,24 @@ export function PropertiesPanel({
             </div>
           )}
 
+          {selectedElement.type === 'image' && (
+            <>
+              <div className={styles.field}>
+                <label className={styles.fieldLabel}>Rounded Corners</label>
+                <input
+                  type="range"
+                  min={0}
+                  max={40}
+                  value={selectedElement.borderRadius || 12}
+                  onChange={e => onUpdateElement(selectedElement.id, { borderRadius: Number(e.target.value) })}
+                  className={styles.rangeInput}
+                  style={{ '--accent': platformConfig.accentColor } as any}
+                />
+                <span className={styles.rangeValue}>{selectedElement.borderRadius || 12}px</span>
+              </div>
+            </>
+          )}
+
           <button className={styles.deleteBtn} onClick={() => onDeleteElement(selectedElement.id)}>
             <Trash2 size={14} />
             Delete Element
@@ -150,56 +168,163 @@ export function PropertiesPanel({
       {/* Caption / Copy Section */}
       <div className={styles.section}>
         <div className={styles.sectionTitle}>
-          {format.id === 'article' ? 'Title' : 'Caption'}
+          <span>{format.id === 'article' ? 'Article Content' : 'Post Caption'}</span>
           {format.charLimit > 0 && (
-            <span className={`${styles.charCount} ${state.caption.length > format.charLimit * 0.9 ? styles.charCountWarn : ''}`}>
+            <span className={`${styles.charCount} ${state.caption.length > format.charLimit ? styles.charCountWarn : ''}`}>
               {state.caption.length}/{format.charLimit}
             </span>
           )}
         </div>
+
+        {/* Over limit warning with 1-click AI fix */}
+        {format.charLimit > 0 && state.caption.length > format.charLimit && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
+            borderRadius: '8px',
+            padding: '0.45rem 0.75rem',
+            fontSize: '0.75rem',
+            color: '#f87171',
+            gap: '0.5rem'
+          }}>
+            <span>Over limit by {state.caption.length - format.charLimit} chars</span>
+            <button
+              type="button"
+              onClick={() => {
+                // Smart truncate to closest sentence/word boundary under limit
+                const target = state.caption.slice(0, format.charLimit - 5);
+                const lastSentence = target.lastIndexOf('. ');
+                const lastSpace = target.lastIndexOf(' ');
+                const cutPoint = lastSentence > format.charLimit * 0.7 ? lastSentence + 1 : lastSpace > 0 ? lastSpace : target.length;
+                onStateChange({ caption: state.caption.slice(0, cutPoint).trim() + '…' });
+              }}
+              style={{
+                background: '#ef4444',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                padding: '0.2rem 0.5rem',
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              ✂️ Auto-Shorten
+            </button>
+          </div>
+        )}
+
         <textarea
           className={styles.captionInput}
           style={{ borderColor: platformConfig.accentColor + '40' }}
           placeholder={format.id === 'article' ? 'Your article title...' : `Write your ${platformConfig.name} caption…`}
           value={state.caption}
           onChange={e => onStateChange({ caption: e.target.value })}
-          rows={5}
-          maxLength={format.charLimit > 0 ? format.charLimit : undefined}
+          rows={6}
         />
+
+        {/* AI Quick Polish Pills */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginTop: '0.15rem' }}>
+          <button
+            type="button"
+            className={styles.alignBtn}
+            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            onClick={() => {
+              const hooks = [
+                'Most creators get this completely backwards: ',
+                'The brutal truth about growing in 2026: ',
+                'Stop scrolling if you care about your audience: ',
+                'Here is the exact formula nobody is sharing: '
+              ];
+              const randomHook = hooks[Math.floor(Math.random() * hooks.length)];
+              onStateChange({ caption: randomHook + state.caption });
+            }}
+          >
+            ⚡ Add Hook
+          </button>
+          <button
+            type="button"
+            className={styles.alignBtn}
+            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            onClick={() => {
+              if (format.charLimit > 0 && state.caption.length > format.charLimit) {
+                const trimmed = state.caption.slice(0, format.charLimit - 25).trim();
+                onStateChange({ caption: trimmed + '\n\nFull breakdown in thread 👇' });
+              }
+            }}
+          >
+            ✂️ Fit to {format.charLimit || 280}
+          </button>
+          <button
+            type="button"
+            className={styles.alignBtn}
+            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            onClick={() => {
+              const lines = state.caption.split('\n');
+              const emojified = lines.map(l => l.trim() ? '✨ ' + l.replace(/^[•\-\*]\s*/, '') : '').join('\n');
+              onStateChange({ caption: emojified });
+            }}
+          >
+            ✨ Bullet Style
+          </button>
+        </div>
       </div>
 
       {/* Hashtags */}
-      {format.maxHashtags && (
-        <div className={styles.section}>
-          <div className={styles.sectionTitle}>
-            Hashtags
-            <span className={styles.charCount}>{state.hashtags.length}/{format.maxHashtags}</span>
-          </div>
-          <input
-            className={styles.hashInput}
-            placeholder="#trending #creator"
-            onKeyDown={e => {
-              if (e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                const val = (e.target as HTMLInputElement).value.trim();
-                if (val && state.hashtags.length < (format.maxHashtags || 30)) {
-                  const tag = val.startsWith('#') ? val : '#' + val;
-                  onStateChange({ hashtags: [...state.hashtags, tag] });
-                  (e.target as HTMLInputElement).value = '';
-                }
-              }
-            }}
-          />
-          <div className={styles.tagList}>
-            {state.hashtags.map((tag, i) => (
-              <span key={i} className={styles.tag} style={{ borderColor: platformConfig.accentColor + '50', color: platformConfig.accentColor }}>
-                {tag}
-                <button className={styles.tagRemove} onClick={() => onStateChange({ hashtags: state.hashtags.filter((_, idx) => idx !== i) })}>×</button>
-              </span>
-            ))}
-          </div>
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>
+          <span>Hashtags</span>
+          <span className={styles.charCount}>{state.hashtags.length}/{format.maxHashtags || 30}</span>
         </div>
-      )}
+        <input
+          className={styles.hashInput}
+          placeholder="Type #tag and press Enter"
+          onKeyDown={e => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              const val = (e.target as HTMLInputElement).value.trim();
+              if (val && state.hashtags.length < (format.maxHashtags || 30)) {
+                const tag = val.startsWith('#') ? val : '#' + val;
+                onStateChange({ hashtags: [...state.hashtags, tag] });
+                (e.target as HTMLInputElement).value = '';
+              }
+            }
+          }}
+        />
+        {/* Suggested popular tags */}
+        <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', marginTop: '0.2rem' }}>
+          {['#creator', '#growth', '#buildinpublic', '#ai', '#tips'].filter(t => !state.hashtags.includes(t)).slice(0, 3).map(tag => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => onStateChange({ hashtags: [...state.hashtags, tag] })}
+              style={{
+                fontSize: '0.6875rem',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                color: 'rgba(255,255,255,0.5)',
+                borderRadius: '6px',
+                padding: '0.15rem 0.4rem',
+                cursor: 'pointer'
+              }}
+            >
+              + {tag}
+            </button>
+          ))}
+        </div>
+        <div className={styles.tagList}>
+          {state.hashtags.map((tag, i) => (
+            <span key={i} className={styles.tag} style={{ borderColor: platformConfig.accentColor + '50', color: platformConfig.accentColor }}>
+              {tag}
+              <button className={styles.tagRemove} onClick={() => onStateChange({ hashtags: state.hashtags.filter((_, idx) => idx !== i) })}>×</button>
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* Platform Guidance */}
       <div className={styles.section}>

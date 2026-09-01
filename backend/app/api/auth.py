@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, status
 from app.api.deps import get_auth_service, get_current_user_id
 from app.schemas.auth import AccessTokenResponse, AuthResponse, LoginRequest
 from app.schemas.response import ApiResponse
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -112,6 +112,30 @@ async def get_me(
 ) -> ApiResponse[UserResponse]:
     user = await auth_service.get_current_user(user_id)
     return ApiResponse.ok(data=user)
+
+
+# ─────────────────────────────────────────────
+# PATCH /auth/me
+# ─────────────────────────────────────────────
+
+@router.patch(
+    "/me",
+    status_code=status.HTTP_200_OK,
+    response_model=ApiResponse[UserResponse],
+    summary="Update current user",
+    description=(
+        "Update profile information and preferences for the currently authenticated user. "
+        "Allows updating region, country, full_name, and username."
+    ),
+)
+async def update_me(
+    data: UserUpdate,
+    user_id: uuid.UUID = Depends(get_current_user_id),
+    auth_service: AuthService = Depends(get_auth_service),
+) -> ApiResponse[UserResponse]:
+    user = await auth_service.update_current_user(user_id, data)
+    return ApiResponse.ok(data=user, message="Profile updated successfully.")
+
 
 
 

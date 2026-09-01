@@ -1,9 +1,9 @@
 .workspace {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
-  background: var(--page-bg);
+  background: #07070c;
   position: relative;
 }
 
@@ -14,8 +14,8 @@
   justify-content: space-between;
   padding: 0 1.25rem;
   height: 52px;
-  background: var(--page-bg);
-  border-bottom: 1px solid var(--border);
+  background: rgba(7, 7, 12, 0.92);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
   flex-shrink: 0;
   z-index: 50;
   backdrop-filter: blur(20px);
@@ -74,28 +74,35 @@
 /* View Toggle */
 .viewToggle {
   display: flex;
-  background: var(--panel-2);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   padding: 3px;
+  gap: 3px;
 }
 
 .viewBtn {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.375rem 0.875rem;
-  border-radius: 6px;
+  padding: 0.35rem 0.875rem;
+  border-radius: 7px;
   transition: all 0.15s;
 }
+.viewBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.85);
+}
 .viewBtnActive {
-  background: var(--border);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Action Buttons */
@@ -354,9 +361,9 @@
 }
 
 .rightColumn {
-  width: 280px;
+  width: 320px;
   flex-shrink: 0;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
   overflow-y: auto;
-  background: var(--page-bg);
+  background: rgba(10, 10, 18, 0.95);
 }

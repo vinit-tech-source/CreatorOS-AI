@@ -6,6 +6,7 @@ import { ToolSidebar } from './ToolSidebar';
 import { PropertiesPanel } from './PropertiesPanel';
 import { PlatformPreview } from './PlatformPreview';
 import { AICreationFlow, AIResult } from './AICreationFlow';
+import { MediaPickerModal } from './MediaPickerModal';
 import { apiClient } from '../../../services/api/client';
 import {
   ArrowLeft, Save, Share2, Eye, Zap, ChevronDown, Sparkles, Wand2, Loader2, Check
@@ -28,6 +29,7 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
   const [showAiPanel, setShowAiPanel] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [aiFlowComplete, setAiFlowComplete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -123,20 +125,29 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
   };
 
   const handleAddMedia = () => {
+    setShowMediaPicker(true);
+  };
+
+  const handleSelectImage = useCallback((imageUrl: string) => {
+    const cardW = format.canvasW;
+    const cardH = format.canvasH;
+    const w = Math.min(260, Math.round(cardW * 0.55));
+    const h = Math.round(w * 0.65);
+    const x = Math.round((cardW - w) / 2);
+    const y = Math.round((cardH - h) / 2);
+
     addElement({
-      type: 'shape', // Using shape as a placeholder since CanvasArea might not render images natively yet
-      x: 40,
-      y: 40,
-      w: 200,
-      h: 150,
-      backgroundColor: '#2a2a2a',
-      content: '🖼 Media Placeholder',
-      color: '#888',
-      fontSize: 14,
-      textAlign: 'center',
+      type: 'image',
+      src: imageUrl,
+      content: imageUrl,
+      x,
+      y,
+      w,
+      h,
+      borderRadius: 12,
     });
     setActiveTool('select');
-  };
+  }, [format, addElement]);
 
   const handleAddShape = (shape: 'rect' | 'circle') => {
     addElement({
@@ -150,6 +161,236 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
     });
     setActiveTool('select');
   };
+
+  const handleApplyTemplate = useCallback((templateId: string) => {
+    const cardW = format.canvasW;
+    const cardH = format.canvasH;
+    const padding = 32;
+    const contentW = cardW - (padding * 2);
+
+    let newElements: CanvasElement[] = [];
+
+    if (templateId === 'quote') {
+      newElements = [
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 1,
+          type: 'text',
+          x: padding,
+          y: 24,
+          w: contentW,
+          h: 40,
+          content: '“',
+          fontSize: 48,
+          color: platformConfig.accentColor,
+          fontWeight: '900',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 2,
+          type: 'text',
+          x: padding,
+          y: 72,
+          w: contentW,
+          h: 95,
+          content: state.title || 'Consistency beats intensity every single time.',
+          fontSize: 20,
+          color: '#ffffff',
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 3,
+          type: 'text',
+          x: padding,
+          y: cardH - 48,
+          w: contentW,
+          h: 24,
+          content: '— @creator · CreatorOS',
+          fontSize: 12,
+          color: 'rgba(255,255,255,0.6)',
+          fontWeight: '600',
+          textAlign: 'center',
+        },
+      ];
+    } else if (templateId === 'tips') {
+      newElements = [
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 1,
+          type: 'text',
+          x: padding,
+          y: 22,
+          w: contentW,
+          h: 22,
+          content: '💡 3 GOLDEN RULES',
+          fontSize: 11,
+          color: platformConfig.accentColor,
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 2,
+          type: 'text',
+          x: padding,
+          y: 50,
+          w: contentW,
+          h: 40,
+          content: state.title || 'How to win on ' + platformConfig.name,
+          fontSize: 17,
+          color: '#ffffff',
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 3,
+          type: 'text',
+          x: padding + 10,
+          y: 98,
+          w: contentW - 20,
+          h: 75,
+          content: '1. Hook with a bold claim\n2. Deliver 80% practical value\n3. End with a clear action',
+          fontSize: 13,
+          color: 'rgba(255,255,255,0.85)',
+          fontWeight: '600',
+          textAlign: 'left',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 4,
+          type: 'shape',
+          x: cardW / 2 - 65,
+          y: cardH - 46,
+          w: 130,
+          h: 26,
+          backgroundColor: platformConfig.accentColor,
+          borderRadius: 13,
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 5,
+          type: 'text',
+          x: cardW / 2 - 65,
+          y: cardH - 42,
+          w: 130,
+          h: 20,
+          content: 'Save This Post 🔖',
+          fontSize: 10,
+          color: '#ffffff',
+          fontWeight: '700',
+          textAlign: 'center',
+        },
+      ];
+    } else if (templateId === 'stat') {
+      newElements = [
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 1,
+          type: 'text',
+          x: padding,
+          y: 24,
+          w: contentW,
+          h: 22,
+          content: '📊 KEY METRIC',
+          fontSize: 11,
+          color: platformConfig.accentColor,
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 2,
+          type: 'text',
+          x: padding,
+          y: 52,
+          w: contentW,
+          h: 58,
+          content: '0 → 10,000',
+          fontSize: 34,
+          color: '#ffffff',
+          fontWeight: '900',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 3,
+          type: 'text',
+          x: padding + 15,
+          y: 120,
+          w: contentW - 30,
+          h: 50,
+          content: state.title || 'The exact playbook to scale your audience from scratch.',
+          fontSize: 13,
+          color: 'rgba(255,255,255,0.7)',
+          fontWeight: '500',
+          textAlign: 'center',
+        },
+      ];
+    } else {
+      // minimal
+      newElements = [
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 1,
+          type: 'text',
+          x: padding,
+          y: 32,
+          w: contentW,
+          h: 22,
+          content: `${platformConfig.name.toUpperCase()} GUIDE`,
+          fontSize: 11,
+          color: platformConfig.accentColor,
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 2,
+          type: 'text',
+          x: padding,
+          y: 64,
+          w: contentW,
+          h: 75,
+          content: state.title || 'Start creating with intention',
+          fontSize: 21,
+          color: '#ffffff',
+          fontWeight: '800',
+          textAlign: 'center',
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 3,
+          type: 'shape',
+          x: cardW / 2 - 60,
+          y: cardH - 50,
+          w: 120,
+          h: 28,
+          backgroundColor: platformConfig.accentColor,
+          borderRadius: 14,
+        },
+        {
+          id: `el-${nextId.current++}`,
+          zIndex: 4,
+          type: 'text',
+          x: cardW / 2 - 60,
+          y: cardH - 46,
+          w: 120,
+          h: 20,
+          content: 'Read Guide 👇',
+          fontSize: 11,
+          color: '#ffffff',
+          fontWeight: '700',
+          textAlign: 'center',
+        },
+      ];
+    }
+
+    onStateChange({ elements: newElements });
+  }, [format, platformConfig, state.title, onStateChange]);
 
   const handleAiGenerate = async () => {
     if (!aiPrompt.trim()) return;
@@ -251,10 +492,12 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
 
         <div className={styles.topBarCenter}>
           <div className={styles.viewToggle}>
-            <button className={`${styles.viewBtn} ${viewMode === 'edit' ? styles.viewBtnActive : ''}`} onClick={() => setViewMode('edit')}>Edit</button>
+            <button className={`${styles.viewBtn} ${viewMode === 'edit' ? styles.viewBtnActive : ''}`} onClick={() => setViewMode('edit')}>
+              <span>🎨 Visual Graphic</span>
+            </button>
             <button className={`${styles.viewBtn} ${viewMode === 'preview' ? styles.viewBtnActive : ''}`} onClick={() => setViewMode('preview')}>
-              <Eye size={14} />
-              Preview
+              <Eye size={13} />
+              <span>📱 Live Feed Mockup</span>
             </button>
           </div>
         </div>
@@ -353,6 +596,7 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
           onAddText={handleAddText}
           onAddShape={handleAddShape}
           onAddMedia={handleAddMedia}
+          onApplyTemplate={handleApplyTemplate}
           platformConfig={platformConfig}
           format={format}
         />
@@ -392,6 +636,13 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
           />
         </div>
       </div>
+
+      {/* Media Picker Modal */}
+      <MediaPickerModal
+        isOpen={showMediaPicker}
+        onClose={() => setShowMediaPicker(false)}
+        onSelectImage={handleSelectImage}
+      />
     </div>
   );
 }
