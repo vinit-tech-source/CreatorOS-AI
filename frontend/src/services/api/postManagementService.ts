@@ -58,5 +58,9 @@ export const postManagementService = {
   cancelSchedule: async (projectId: string, postId: string): Promise<Post> => {
     const response = await apiClient.delete(`/projects/${projectId}/posts/${postId}/schedule`);
     return response.data.data;
+  },
+
+  deletePost: async (projectId: string, postId: string): Promise<void> => {
+    await apiClient.delete(`/projects/${projectId}/posts/${postId}`);
   }
 };

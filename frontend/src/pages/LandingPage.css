@@ -119,12 +119,10 @@ button {
    NAVIGATION
    ============================================================ */
 .nav {
-  height: 80px;
-  min-height: 80px;
+  height: 76px;
+  min-height: 76px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
   position: fixed;
   top: 0;
   left: 0;
@@ -135,7 +133,21 @@ button {
   -webkit-backdrop-filter: blur(16px);
   background: rgba(6, 9, 20, 0.88);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 0 32px;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1280px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
 }
 
 .brand {
@@ -199,19 +211,18 @@ button {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
-  margin-left: auto;
-  margin-right: 28px;
+  gap: 4px;
 }
 
 .nav-links a {
   position: relative;
-  font-size: var(--fs-sm);
+  font-size: 13.5px;
   color: #9ea8c2;
   font-weight: 500;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 8px;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .nav-links a:hover {
@@ -239,10 +250,17 @@ button {
   box-shadow: 0 0 8px #7957ff;
 }
 
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 4px;
+}
+
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
 }
 
 .signin {
@@ -1969,7 +1987,8 @@ button {
 }
 
 @media (max-width: 768px) {
-  .nav-links {
+  .nav-links,
+  .nav-divider {
     display: none;
   }
 

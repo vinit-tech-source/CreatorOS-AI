@@ -25,12 +25,20 @@ export interface Workspace {
 export interface BrandKit {
   id: string;
   workspace_id: string;
-  name: string;
+  brand_name?: string;
+  name?: string;
+  description?: string;
+  website_url?: string;
+  logo_url?: string;
   primary_color?: string;
   secondary_color?: string;
+  accent_color?: string;
   font_family?: string;
-  logo_url?: string;
+  default_tone?: string;
   voice_tone?: string;
+  target_audience?: string;
+  brand_values?: string;
+  preferred_language?: string;
   created_at: string;
   updated_at: string;
 }
@@ -77,6 +85,7 @@ export interface Post {
   title?: string;
   content: string;
   platform: string;
+  content_type?: string;
   status: 'DRAFT' | 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'SCHEDULED' | 'PUBLISHED';
   rejection_reason?: string;
   scheduled_for?: string;

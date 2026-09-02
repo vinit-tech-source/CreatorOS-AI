@@ -419,67 +419,51 @@ export function LandingPage() {
 
       {/* Navigation */}
       <header className="nav">
-        <AppLogo />
-        <nav className="nav-links">
-          <a
-            href="#features"
-            className={`nav-link-item ${activeSection === "features" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "features")}
-          >
-            Features
-          </a>
-          <a
-            href="#simulator"
-            className={`nav-link-item ${activeSection === "simulator" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "simulator")}
-          >
-            Creation Flow
-          </a>
-          <a
-            href="#studio"
-            className={`nav-link-item ${activeSection === "studio" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "studio")}
-          >
-            Studio
-          </a>
-          <a
-            href="#intelligence"
-            className={`nav-link-item ${activeSection === "intelligence" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "intelligence")}
-          >
-            Global Intelligence
-          </a>
-          <a
-            href="#workflow"
-            className={`nav-link-item ${activeSection === "workflow" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "workflow")}
-          >
-            Workflow
-          </a>
-          <a
-            href="#testimonials"
-            className={`nav-link-item ${activeSection === "testimonials" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "testimonials")}
-          >
-            Testimonials
-          </a>
-          <a
-            href="#pricing"
-            className={`nav-link-item ${activeSection === "pricing" ? "active-nav" : ""}`}
-            onClick={(e) => scrollToSection(e, "pricing")}
-          >
-            Pricing
-          </a>
-        </nav>
-        <div className="nav-actions">
-          {isAuthenticated ? (
-            <Link to="/dashboard" className="signin">Dashboard</Link>
-          ) : (
-            <Link to="/login" className="signin">Sign In</Link>
-          )}
-          <Link to={ctaLink} className="primary-btn small">
-            Start Creating Free →
-          </Link>
+        <div className="nav-container section-shell">
+          <AppLogo />
+          <div className="nav-right">
+            <nav className="nav-links">
+              <a
+                href="#features"
+                className={`nav-link-item ${activeSection === "features" || activeSection === "simulator" ? "active-nav" : ""}`}
+                onClick={(e) => scrollToSection(e, "features")}
+              >
+                Features
+              </a>
+              <a
+                href="#studio"
+                className={`nav-link-item ${activeSection === "studio" || activeSection === "intelligence" ? "active-nav" : ""}`}
+                onClick={(e) => scrollToSection(e, "studio")}
+              >
+                Studio
+              </a>
+              <a
+                href="#workflow"
+                className={`nav-link-item ${activeSection === "workflow" ? "active-nav" : ""}`}
+                onClick={(e) => scrollToSection(e, "workflow")}
+              >
+                Workflow
+              </a>
+              <a
+                href="#pricing"
+                className={`nav-link-item ${activeSection === "pricing" ? "active-nav" : ""}`}
+                onClick={(e) => scrollToSection(e, "pricing")}
+              >
+                Pricing
+              </a>
+            </nav>
+            <div className="nav-divider" />
+            <div className="nav-actions">
+              {isAuthenticated ? (
+                <Link to="/dashboard" className="signin">Dashboard</Link>
+              ) : (
+                <Link to="/login" className="signin">Sign In</Link>
+              )}
+              <Link to={ctaLink} className="primary-btn small">
+                Start Creating Free →
+              </Link>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -660,7 +644,7 @@ export function LandingPage() {
         </section>
 
         {/* FEATURE STATS BAR */}
-        <section id="features" className="stats-ticker section-shell">
+        <section className="stats-ticker section-shell">
           <div className="stat-card">
             <span className="stat-number">10x</span>
             <span className="stat-label">Faster Content Creation</span>

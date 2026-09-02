@@ -1,137 +1,1694 @@
+/* ============================================================
+   CREATOROS AI - PROFESSIONAL CONTENT CALENDAR SUITE
+   ============================================================ */
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
   width: 100%;
-  height: 100%;
+  max-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  padding-bottom: 2.5rem;
 }
 
-.calendarControls {
+/* ------------------------------------------------------------
+   Unified Top Header & Cadence Ribbon
+   ------------------------------------------------------------ */
+.calendarHeaderCard {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(20, 28, 54, 0.75) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 1.15rem 1.4rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
-.monthDisplay {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-.navButtons {
+.headerTitleGroup {
   display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mainTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mainTitle {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.liveCountPill {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.mainSubtitle {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Compact Cadence Stat Pills (Replaces giant blocky cards) */
+.statPillsStrip {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.statPill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.statPill:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.statIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.statPillValue {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.statPillLabel {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Header Action Buttons */
+.headerActionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sampleCampaignBtn {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #c7d2fe;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sampleCampaignBtn:hover:not(:disabled) {
+  background: rgba(99, 102, 241, 0.22);
+  border-color: #6366f1;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.35);
+}
+
+.primaryScheduleBtn {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border: none;
+  color: #ffffff;
+  font-size: 0.825rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.primaryScheduleBtn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.5);
+}
+
+/* ------------------------------------------------------------
+   Interactive Calendar Dashboard Shell
+   ------------------------------------------------------------ */
+.calendarCard {
+  background: rgba(11, 15, 29, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------
+   Calendar Command Bar (Navigation, Filters, Switcher)
+   ------------------------------------------------------------ */
+.controlCommandBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Date Navigator */
+.dateNavCluster {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dateNavTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.01em;
+  margin: 0;
+  min-width: 170px;
+}
+
+.navArrowGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navArrowBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.navArrowBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.todayBtn {
+  background: rgba(99, 102, 241, 0.14);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.todayBtn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  color: #ffffff;
+}
+
+.refreshIconBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.refreshIconBtn:hover {
+  color: #cbd5e1;
+}
+
+/* Segmented View Switcher (Month, Week, Agenda) */
+.viewSwitcher {
+  display: flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 3px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 3px;
+}
+
+.viewTabBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.785rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.viewTabBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.viewTabActive {
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.45);
+}
+
+/* ------------------------------------------------------------
+   Platform & Filter Strip
+   ------------------------------------------------------------ */
+.filterSecondaryBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.platformPillsFilter {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.filterPill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.filterPillActive {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.filterRightControls {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.calendarGrid {
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 9px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.searchInput {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 5px 10px 5px 28px;
+  font-size: 0.785rem;
+  color: #f8fafc;
+  outline: none;
+  width: 140px;
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus {
+  border-color: #6366f1;
+  width: 180px;
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.statusSelect {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 5px 9px;
+  font-size: 0.785rem;
+  color: #cbd5e1;
+  outline: none;
+  cursor: pointer;
+}
+
+.statusSelect:focus {
+  border-color: #6366f1;
+}
+
+/* ------------------------------------------------------------
+   Empty Calendar Quick-Start Banner
+   ------------------------------------------------------------ */
+.emptyStateBanner {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%);
+  border: 1px dashed rgba(99, 102, 241, 0.35);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.emptyBannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyBannerIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.25);
+  color: #a5b4fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.emptyBannerTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 2px 0;
+}
+
+.emptyBannerText {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.emptyBannerActionBtn {
+  background: #4f46e5;
+  border: none;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.emptyBannerActionBtn:hover:not(:disabled) {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+/* ------------------------------------------------------------
+   MONTH VIEW STYLES
+   ------------------------------------------------------------ */
+.monthContainer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(9, 13, 26, 0.7);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.weekdayHeaderRow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: rgba(15, 23, 42, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.weekdayHeaderCol {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.monthGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
-  background-color: var(--color-border);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.dayOfWeek {
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-secondary);
-  background-color: var(--color-surface);
-}
-
-.dayCell {
-  min-height: 120px;
-  background-color: var(--color-background);
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  transition: background-color 0.2s;
-}
-
-.dayCell:hover {
-  background-color: var(--color-surface);
-}
-
-.dayCell.isToday {
-  background-color: var(--color-brand-alpha);
-}
-
-.dayCell.isTrailing {
-  opacity: 0.5;
-  background-color: var(--color-surface);
-}
-
-.dateNumber {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-secondary);
-  align-self: flex-end;
-  margin-bottom: 0.25rem;
-}
-
-.isToday .dateNumber {
-  color: var(--color-brand);
-  font-weight: 700;
-}
-
-.postBadge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-primary);
+.monthCell {
+  min-height: 110px;
+  background: rgba(8, 12, 23, 0.95);
+  padding: 0.45rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   cursor: pointer;
-  transition: all 0.2s;
+  position: relative;
+  transition: background 0.15s ease;
+  box-sizing: border-box;
+}
+
+.monthCell:hover {
+  background: rgba(17, 24, 45, 0.98);
+}
+
+.cellTrailing {
+  opacity: 0.32;
+  background: rgba(4, 7, 14, 0.95);
+}
+
+.cellToday {
+  background: rgba(99, 102, 241, 0.07);
+  box-shadow: inset 0 0 0 1.5px rgba(99, 102, 241, 0.45);
+}
+
+.cellHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.cellDayNumber {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.dayNumberToday {
+  background: #6366f1;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.7);
+}
+
+.cellAddBtn {
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #cbd5e1;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.monthCell:hover .cellAddBtn {
+  opacity: 1;
+}
+
+.cellAddBtn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.cellPostsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.postBadgeItem {
+  font-size: 0.7rem;
+  padding: 3px 5px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
   overflow: hidden;
+  white-space: nowrap;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.postBadge:hover {
-  border-color: var(--color-brand);
+.postBadgeItem:hover {
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  filter: brightness(1.2);
 }
 
-.postBadge.scheduled {
-  border-left: 3px solid var(--color-warning);
+.badgeIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.postBadge.published {
-  border-left: 3px solid var(--color-success);
-}
-
-.postTime {
+.badgeTime {
   font-size: 0.65rem;
-  color: var(--color-secondary);
+  opacity: 0.85;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.badgeThumbMini {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.badgeTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.morePostsPill {
+  font-size: 0.65rem;
+  color: #818cf8;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.12);
+  cursor: pointer;
+  text-align: center;
+  margin-top: 1px;
+}
+
+.morePostsPill:hover {
+  background: rgba(99, 102, 241, 0.25);
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------
+   WEEK VIEW STYLES
+   ------------------------------------------------------------ */
+.weekContainer {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(9, 13, 26, 0.7);
+  width: 100%;
+}
+
+.weekGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(150px, 1fr));
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.weekColumn {
+  background: rgba(8, 12, 23, 0.95);
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.weekColumnToday {
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.weekColumnHeader {
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.weekHeaderDayName {
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+}
+
+.weekHeaderDate {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.weekDateToday {
+  background: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+}
+
+.weekHeaderCount {
+  font-size: 0.675rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.weekAddBtn {
+  margin-top: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 0.675rem;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.weekAddBtn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.weekPostsContainer {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.emptyDayNotice {
+  padding: 2rem 0.25rem;
+  text-align: center;
+  color: #475569;
+  font-size: 0.725rem;
+  font-style: italic;
+}
+
+.weekPostCard {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.weekPostCard:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.weekCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.weekCardTime {
+  font-size: 0.675rem;
+  color: #94a3b8;
   font-weight: 600;
 }
 
-.postTitle {
-  white-space: nowrap;
+.weekPostImageWrapper {
+  width: 100%;
+  height: 70px;
+  border-radius: 6px;
   overflow: hidden;
-  text-overflow: ellipsis;
+  background: #000000;
 }
 
-.loadingState {
+.weekPostImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.weekCardTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  line-height: 1.3;
+}
+
+.weekCardSnippet {
+  font-size: 0.725rem;
+  color: #94a3b8;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.weekCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.projectTag {
+  font-size: 0.625rem;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.1);
+  padding: 2px 5px;
+  border-radius: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
+}
+
+/* ------------------------------------------------------------
+   AGENDA / LIST VIEW STYLES
+   ------------------------------------------------------------ */
+.agendaContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.agendaEmpty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem;
-  color: var(--color-secondary);
+  padding: 4rem 1rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.agendaEmpty h3 {
+  font-size: 1.15rem;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.agendaEmpty p {
+  font-size: 0.825rem;
+  margin-bottom: 1.25rem;
+}
+
+.primaryActionButton {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  transition: all 0.2s ease;
+}
+
+.primaryActionButton:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+.agendaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.agendaDateHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.agendaDateTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.agendaGroupCount {
+  font-size: 0.725rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.agendaItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.agendaItemRow {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+  padding: 0.85rem 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.agendaItemRow:hover {
+  background: rgba(20, 29, 53, 0.9);
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateX(3px);
+}
+
+.agendaTimeCol {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.agendaTimeText {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.agendaRowThumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.agendaContentCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.agendaContentHeader {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.agendaPostTitle {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.agendaSnippet {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.agendaActionCol {
+  flex-shrink: 0;
+}
+
+.agendaManageBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.775rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.agendaItemRow:hover .agendaManageBtn {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   Common Badges & Status Chips
+   ------------------------------------------------------------ */
+.platformBadgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.725rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.statusChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.statusScheduled {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.statusPublished {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.statusApproved {
+  background: rgba(6, 182, 212, 0.12);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.statusDraft {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* ------------------------------------------------------------
+   MODAL DIALOG STYLES
+   ------------------------------------------------------------ */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalDialog {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modalHeader {
+  padding: 1.15rem 1.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalHeaderTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quickCreateIconWrapper {
+  width: 36px;
+  height: 36px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quickModalTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.quickModalSubtitle {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  margin: 2px 0 0 0;
+}
+
+.modalCloseBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.modalCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.modalBody {
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.modalPostTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.modalProjectInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.modalFieldLabel {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bestTimeChip {
+  font-size: 0.675rem;
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.charCounter {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.modalCaptionCard {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.modalCaptionText {
+  font-size: 0.85rem;
+  color: #f1f5f9;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.captionMetaFooter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.7rem;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.4rem;
+}
+
+/* Attached Image in Post Detail */
+.modalAttachedImageCard {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #000000;
+}
+
+.modalAttachedImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modalAttachedImgOverlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.675rem;
+  color: #cbd5e1;
+}
+
+/* Reschedule Controls */
+.rescheduleSection {
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rescheduleInputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.presetButtonsRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.presetTimeBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 0.675rem;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.presetTimeBtn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  color: #ffffff;
+  border-color: #6366f1;
+}
+
+.datetimeInput {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 0.825rem;
+  color: #ffffff;
+  outline: none;
+  flex: 1;
+}
+
+.datetimeInput:focus {
+  border-color: #6366f1;
+}
+
+.rescheduleSubmitBtn {
+  background: #4f46e5;
+  border: none;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.rescheduleSubmitBtn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+/* Quick Modal Inputs */
+.quickModalRow {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.quickModalField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.modalSelect,
+.modalTextInput,
+.modalTextarea {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  color: #f8fafc;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.modalSelect:focus,
+.modalTextInput:focus,
+.modalTextarea:focus {
+  border-color: #6366f1;
+}
+
+.modalTextarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.platformPillsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.platformSelectPill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  font-size: 0.785rem;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.platformSelectPill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.platformPillActive {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #6366f1;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Real Media / Photo Attachment Section */
+.mediaAttachmentSection {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.mediaAttachmentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.photoAttachedBadge {
+  font-size: 0.65rem;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.togglePickerBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.selectedPhotoPreviewRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.45rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.selectedPhotoThumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.selectedPhotoDetails {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.selectedPhotoTitle {
+  font-size: 0.785rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.selectedPhotoCategory {
+  font-size: 0.675rem;
+  color: #94a3b8;
+}
+
+.removePhotoBtn {
+  background: rgba(239, 68, 68, 0.1);
+  border: none;
+  color: #f87171;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.removePhotoBtn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #ffffff;
+}
+
+.realPhotoGridContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.photoGridSubtitle {
+  margin: 0;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.realPhotoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+}
+
+.photoGridCard {
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  height: 60px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.15s ease;
+}
+
+.photoGridCard:hover {
+  border-color: #6366f1;
+  transform: scale(1.02);
+}
+
+.photoGridImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photoGridLabel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2px 4px;
+  background: rgba(0, 0, 0, 0.75);
+  font-size: 0.625rem;
+  color: #f8fafc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modalAlertError {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 0.775rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalAlertSuccess {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  font-size: 0.775rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalFooter {
+  padding: 1.1rem 1.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalFooterLeft,
+.modalFooterRight {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.primaryBtn {
+  background: #4f46e5;
+  border: none;
+  color: #ffffff;
+  font-size: 0.825rem;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.secondaryBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.825rem;
+  font-weight: 500;
+  padding: 7px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.secondaryBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.dangerBtn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  font-size: 0.785rem;
+  font-weight: 500;
+  padding: 6px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.dangerBtn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+/* ------------------------------------------------------------
+   Loading & Error States
+   ------------------------------------------------------------ */
+.loadingState,
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1rem;
+  color: #94a3b8;
+  text-align: center;
 }
 
 .spinner {
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -139,12 +1696,62 @@
   to { transform: rotate(360deg); }
 }
 
-.errorState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  text-align: center;
-  color: var(--color-danger);
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ------------------------------------------------------------
+   Responsive Breakpoints
+   ------------------------------------------------------------ */
+@media (max-width: 1024px) {
+  .calendarHeaderCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .headerActionsGroup {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .controlCommandBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .statPillsStrip {
+    width: 100%;
+  }
+  .statPill {
+    flex: 1;
+    min-width: 130px;
+  }
+  .filterSecondaryBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filterRightControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .searchInput {
+    width: 100%;
+  }
+  .weekdayHeaderCol {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.25rem;
+  }
+  .monthCell {
+    min-height: 85px;
+    padding: 0.3rem;
+  }
+  .badgeTitle {
+    display: none;
+  }
 }

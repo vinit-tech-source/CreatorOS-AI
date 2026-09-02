@@ -1,96 +1,348 @@
+/* ============================================================
+   COMMAND CENTER (HOME) - EXECUTIVE DASHBOARD STYLES
+   ============================================================ */
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: 1.5rem;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: var(--spacing-6);
+  padding-bottom: 3rem;
+  box-sizing: border-box;
 }
 
-.header {
+/* ------------------------------------------------------------
+   Executive Hero & Live Engine Status
+   ------------------------------------------------------------ */
+.executiveHeroCard {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(22, 28, 55, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.4rem 1.75rem;
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  margin-bottom: var(--spacing-2);
-}
-
-.title {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  text-shadow: 0 0 15px rgba(79, 70, 229, 0.5);
-}
-
-.subtitle {
-  color: var(--text-secondary);
-  font-size: 1.125rem;
-}
-
-.loadingContainer, .errorContainer, .emptyContainer {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 16rem;
-  color: var(--text-secondary);
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.errorContainer {
-  color: var(--color-danger);
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: var(--radius-xl);
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
+.greetingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.greetingTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.workspacePill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.heroSubtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.heroRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.engineStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.enginePulseDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: pulse 2s infinite;
+}
+
+.quickToolbarRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quickToolBtn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.quickToolBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.quickToolBtnPrimary {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border: none;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(79, 70, 229, 0.35);
+}
+
+.quickToolBtnPrimary:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+/* ------------------------------------------------------------
+   KPI Metrics Grid
+   ------------------------------------------------------------ */
 .metricsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--spacing-6);
-  margin-bottom: var(--spacing-6);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
 }
 
 .metricCard {
+  background: rgba(13, 18, 36, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 1.15rem;
   display: flex;
-  align-items: center;
-  gap: var(--spacing-4);
+  gap: 0.85rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.35);
 }
 
 .metricIconWrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.metricInfo {
+.metricContent {
   display: flex;
   flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.metricTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
 }
 
 .metricLabel {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 500;
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metricTrendBadge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
 .metricValue {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
   line-height: 1.2;
 }
 
+.metricFootnote {
+  font-size: 0.675rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* ------------------------------------------------------------
+   Operational Content Grid (2 Columns)
+   ------------------------------------------------------------ */
 .contentGrid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--spacing-6);
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ------------------------------------------------------------
+   Autonomous Agent Mini Radar Card
+   ------------------------------------------------------------ */
+.agentRadarCard {
+  background: rgba(13, 18, 36, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.agentRadarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.agentRadarTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agentRadarTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.agentChipsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.agentMiniPill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.725rem;
+}
+
+.agentMiniName {
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.agentMiniStatus {
+  color: #34d399;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ------------------------------------------------------------
+   Loading & Error States
+   ------------------------------------------------------------ */
+.loadingContainer,
+.errorContainer,
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.errorContainer {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
+
+/* ------------------------------------------------------------
+   Responsive Breakpoints
+   ------------------------------------------------------------ */
+@media (max-width: 1200px) {
+  .metricsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 1024px) {
   .contentGrid {
     grid-template-columns: 1fr;
+  }
+  .executiveHeroCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+  .quickToolbarRow {
+    flex-wrap: wrap;
   }
 }

@@ -1,110 +1,682 @@
+/* ============================================================
+   BRAND KIT STUDIO - PROFESSIONAL DESIGN SYSTEM STYLES
+   ============================================================ */
+
 .container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding-bottom: 3rem;
+  box-sizing: border-box;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* 2-Column Responsive Workspace Grid */
+.brandKitGrid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: 1.75rem;
+  align-items: start;
 }
 
-.formSection {
+.configColumn {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
+.showcaseColumn {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ------------------------------------------------------------
+   Section Card Styles
+   ------------------------------------------------------------ */
+.sectionCard {
+  background: rgba(13, 18, 36, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.2s ease;
+}
+
+.sectionCard:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
 .sectionHeader {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.85rem;
 }
 
-.sectionTitle {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-.sectionSubtitle {
-  font-size: 0.875rem;
-  color: var(--color-secondary);
-}
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-primary);
-}
-
-.input {
-  width: 100%;
-  padding: 0.625rem 0.875rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  color: var(--color-primary);
-  font-family: inherit;
-  font-size: 0.875rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--color-brand);
-  box-shadow: 0 0 0 2px var(--color-brand-alpha);
-}
-
-.textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.colorPickers {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-}
-
-.colorRow {
+.sectionTitleGroup {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
-.colorPreview {
+.sectionIconWrapper {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
-  border: 2px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+  border-radius: 8px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-.loadingState {
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.sectionSubtitle {
+  font-size: 0.775rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Form Controls & Inputs
+   ------------------------------------------------------------ */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.fieldLabel {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fieldHint {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.textInput,
+.textareaInput,
+.selectInput {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: #f8fafc;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.textInput:focus,
+.textareaInput:focus,
+.selectInput:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+}
+
+.textareaInput {
+  resize: vertical;
+  min-height: 85px;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------
+   Logo Manager & Preview
+   ------------------------------------------------------------ */
+.logoManagerRow {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.logoPreviewBox {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #070a12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.logoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.logoMonogram {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.logoInputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* ------------------------------------------------------------
+   Palette Studio & Presets
+   ------------------------------------------------------------ */
+.presetPalettesStrip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.presetPaletteBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.presetPaletteBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.presetColorDots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.presetDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.presetName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+/* Color Pickers Grid */
+.colorPickersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.colorPickerCard {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.colorPickerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.colorRoleLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.colorInputRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nativeColorInput {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.nativeColorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.nativeColorInput::-webkit-color-swatch {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+.hexCodeInput {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: #f8fafc;
+  outline: none;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.hexCodeInput:focus {
+  border-color: #6366f1;
+}
+
+.colorDescText {
+  font-size: 0.675rem;
+  color: #64748b;
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Tone & Persona Chips
+   ------------------------------------------------------------ */
+.chipsWrapRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.presetChip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.presetChip:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #ffffff;
+}
+
+.presetChipActive {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: #6366f1;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
+}
+
+/* ------------------------------------------------------------
+   LIVE BRAND SHOWCASE CARD (Right Column)
+   ------------------------------------------------------------ */
+.showcaseCard {
+  background: rgba(13, 18, 36, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.showcaseBadgeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.liveBadgePulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+/* Brand Banner Preview */
+.brandHeroBanner {
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.brandHeroLogo {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.brandHeroLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brandHeroLogo span {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #000000;
+}
+
+.brandHeroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brandHeroName {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.brandHeroTagline {
+  font-size: 0.775rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* Mock Social Card */
+.mockSocialCard {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mockPostAuthorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mockAuthorAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mockAuthorAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mockAuthorMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.mockAuthorName {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.mockAuthorTime {
+  font-size: 0.675rem;
+  color: #64748b;
+}
+
+.mockCaption {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.mockPostActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 0.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mockActionItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.725rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* Component UI Sampler */
+.uiSamplerSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.samplerTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.samplerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.samplePrimaryBtn {
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.samplePrimaryBtn:hover {
+  opacity: 0.9;
+}
+
+.sampleSecondaryBtn {
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sampleAccentBadge {
+  font-size: 0.725rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+/* CSS Tokens & Utility Box */
+.tokensBox {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tokensSnippet {
+  font-family: monospace;
+  font-size: 0.725rem;
+  color: #a5b4fc;
+}
+
+.copyTokensBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.copyTokensBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   Loading & Feedback Alerts
+   ------------------------------------------------------------ */
+.alertSuccess {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  font-size: 0.8rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alertError {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 0.8rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loadingState,
+.errorState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem;
-  color: var(--color-secondary);
+  padding: 4rem 1rem;
+  color: #94a3b8;
+  text-align: center;
 }
 
 .spinner {
   animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -112,17 +684,23 @@
   to { transform: rotate(360deg); }
 }
 
-.errorState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  text-align: center;
-  color: var(--color-danger);
+/* ------------------------------------------------------------
+   Responsive Breakpoints
+   ------------------------------------------------------------ */
+@media (max-width: 1024px) {
+  .brandKitGrid {
+    grid-template-columns: 1fr;
+  }
+  .showcaseColumn {
+    position: static;
+  }
 }
 
-.errorMessage {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
+@media (max-width: 640px) {
+  .colorPickersGrid {
+    grid-template-columns: 1fr;
+  }
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
 }
