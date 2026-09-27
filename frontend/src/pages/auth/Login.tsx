@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader } from '../../components/ui/Card';
-import { Input } from '../../components/ui/Input';
-import { Button } from '../../components/ui/Button';
 import { apiClient } from '../../services/api';
 import { useAuthStore } from '../../stores/authStore';
-import { Canvas } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, Stars } from '@react-three/drei';
-import { Suspense } from 'react';
+import { Sparkles, ArrowRight, Lock, Mail } from 'lucide-react';
 import styles from './Login.module.css';
 
 export function Login() {
@@ -27,11 +22,7 @@ export function Login() {
       const response = await apiClient.post('/auth/login', { email, password });
       
       if (response.data.success) {
-        // We'll need another call to get the user details if not returned in login
-        // Assuming login returns access_token
         const token = response.data.data.tokens.access_token;
-        
-        // Fetch real user details
         const meResponse = await apiClient.get('/auth/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -46,98 +37,96 @@ export function Login() {
         setError(response.data.message || 'Login failed');
       }
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || err.message || 'An error occurred during login');
+      const detail = err.response?.data?.detail;
+      const validationMsg = Array.isArray(detail)
+        ? detail.map((d: any) => d.msg).join(', ')
+        : undefined;
+      setError(
+        validationMsg || 
+        err.response?.data?.message || 
+        err.response?.data?.error?.message || 
+        err.message || 
+        'An error occurred during login'
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   return (
     <div className={styles.container}>
-      <div className={styles.visualPane}>
-        <div className={styles.canvasContainer}>
-          <Canvas camera={{ position: [0, 0, 5], fov: 45 }} aria-hidden="true">
-            <color attach="background" args={['#09090b']} />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} color="#4F46E5" />
-            <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#0ea5e9" />
-            
-            <Suspense fallback={null}>
-              <Stars radius={100} depth={50} count={1500} factor={4} saturation={0} fade speed={prefersReducedMotion ? 0 : 1} />
-              <Float speed={prefersReducedMotion ? 0 : 2} rotationIntensity={prefersReducedMotion ? 0 : 1} floatIntensity={prefersReducedMotion ? 0 : 2}>
-                <mesh position={[2, 0, -2]}>
-                  <sphereGeometry args={[1.5, 64, 64]} />
-                  <MeshDistortMaterial color="#4F46E5" distort={prefersReducedMotion ? 0 : 0.4} speed={prefersReducedMotion ? 0 : 2} roughness={0.2} metalness={0.8} opacity={0.7} transparent />
-                </mesh>
-              </Float>
-              <Float speed={prefersReducedMotion ? 0 : 1.5} rotationIntensity={prefersReducedMotion ? 0 : 0.5} floatIntensity={prefersReducedMotion ? 0 : 1.5}>
-                <mesh position={[-2, -1, -3]}>
-                  <sphereGeometry args={[2, 64, 64]} />
-                  <MeshDistortMaterial color="#0ea5e9" distort={prefersReducedMotion ? 0 : 0.2} speed={prefersReducedMotion ? 0 : 1} roughness={0.4} metalness={0.9} opacity={0.4} transparent />
-                </mesh>
-              </Float>
-            </Suspense>
-          </Canvas>
-        </div>
+      {/* Animated Mesh Background */}
+      <div className={styles.meshBackground}>
+        <div className={styles.blob} id={styles.blob1}></div>
+        <div className={styles.blob} id={styles.blob2}></div>
+        <div className={styles.blob} id={styles.blob3}></div>
       </div>
 
-      <div className={styles.formPane}>
-        <div className={styles.contentWrapper}>
-        <div className={styles.header}>
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <h1 className={styles.title} style={{ cursor: 'pointer' }}>CreatorOS AI</h1>
-          </Link>
-          <p className={styles.subtitle}>Welcome back! Please login to your account.</p>
-          <div style={{ marginTop: '0.5rem' }}>
-            <Link to="/" style={{ color: '#818cf8', fontSize: '0.875rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.glassCard}>
+          <div className={styles.header}>
+            <div className={styles.brandBadge}>
+              <Sparkles size={16} className={styles.sparkleIcon} />
+              <span>CreatorOS AI</span>
+            </div>
+            <h1 className={styles.title}>Welcome back</h1>
+            <p className={styles.subtitle}>Sign in to access your intelligent workspace</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            {error && (
+              <div className={styles.errorBox}>
+                {error}
+              </div>
+            )}
+            
+            <div className={styles.inputGroup}>
+              <label>Email Address</label>
+              <div className={styles.inputWrapper}>
+                <Mail size={18} className={styles.inputIcon} />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                  className={styles.glassInput}
+                />
+              </div>
+            </div>
+            
+            <div className={styles.inputGroup}>
+              <label>Password</label>
+              <div className={styles.inputWrapper}>
+                <Lock size={18} className={styles.inputIcon} />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className={styles.glassInput}
+                />
+              </div>
+            </div>
+            
+            <button type="submit" disabled={isLoading} className={styles.submitBtn}>
+              {isLoading ? 'Signing in...' : 'Sign In'}
+              {!isLoading && <ArrowRight size={18} className={styles.btnArrow} />}
+            </button>
+          </form>
+          
+          <div className={styles.footer}>
+            <Link to="/" className={styles.backLink}>
               ← Back to Home
             </Link>
-          </div>
-        </div>
-        
-        <Card glass>
-          <CardHeader title="Login" />
-          <CardContent>
-            <form onSubmit={handleSubmit} className={styles.form}>
-              {error && (
-                <div className={styles.errorBox}>
-                  {error}
-                </div>
-              )}
-              
-              <Input
-                label="Email Address"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-              />
-              
-              <Input
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
-              
-              <Button type="submit" fullWidth isLoading={isLoading} className={styles.submitBtn}>
-                Sign In
-              </Button>
-            </form>
-            
-            <div className={styles.footer}>
+            <span className={styles.footerText}>
               Don't have an account?{' '}
-              <Link to="/register" className={styles.link}>
+              <Link to="/register" className={styles.signupLink}>
                 Sign up
               </Link>
-            </div>
-          </CardContent>
-        </Card>
+            </span>
+          </div>
         </div>
       </div>
     </div>

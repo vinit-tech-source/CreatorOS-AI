@@ -58,12 +58,16 @@ async def create_post(
 )
 async def list_posts(
     project_id: uuid.UUID,
+    limit: int = 50,
+    offset: int = 0,
     user_id: uuid.UUID = Depends(get_current_user_id),
     service: PostService = Depends(get_post_service),
 ) -> ApiResponse[list[PostResponse]]:
     posts = await service.list_posts(
         project_id=project_id,
         requesting_user_id=user_id,
+        limit=limit,
+        offset=offset,
     )
     return ApiResponse.ok(data=posts)
 

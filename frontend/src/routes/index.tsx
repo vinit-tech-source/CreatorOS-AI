@@ -21,11 +21,15 @@ import { AutomationDashboard } from '../pages/automation/AutomationDashboard';
 import { PipelineProgress } from '../pages/automation/PipelineProgress';
 import { KnowledgeBase } from '../pages/knowledge/KnowledgeBase';
 import { LandingPage } from '../pages/LandingPage';
+import Privacy from '../pages/Privacy';
+import Terms from '../pages/Terms';
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
       
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<Login />} />

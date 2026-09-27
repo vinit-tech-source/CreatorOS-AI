@@ -7,7 +7,7 @@ from fastapi import HTTPException, status
 
 from app.models.post import Post
 from app.models.post_analytics import PostAnalytics
-from app.schemas.analytics import AnalyticsSummary, AnalyticsSnapshot
+from app.schemas.analytics import AnalyticsSummary, AnalyticsSnapshot, PostAnalyticsResponse
 from app.repositories.analytics_repository import AnalyticsRepository
 from app.repositories.post_repository import PostRepository
 from app.mcp.client.client import MCPClient
@@ -145,14 +145,16 @@ class AnalyticsService:
         
         return await self.analytics_repo.create_snapshot(analytics)
 
-    async def get_post_analytics(self, post_id: uuid.UUID, workspace_id: uuid.UUID) -> List[PostAnalytics]:
+    async def get_post_analytics(self, post_id: uuid.UUID, workspace_id: uuid.UUID) -> List[PostAnalyticsResponse]:
+        """Return analytics snapshots for a post, serialized as Pydantic response schemas."""
         post = await self.post_repo.get_by_id(post_id)
         if not post or post.project.workspace_id != workspace_id:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Post not found or unauthorized"
             )
-        return await self.analytics_repo.list_snapshots_by_post(post_id, workspace_id)
+        snapshots = await self.analytics_repo.list_snapshots_by_post(post_id, workspace_id)
+        return [PostAnalyticsResponse.model_validate(s) for s in snapshots]
 
     async def get_workspace_summary(self, workspace_id: uuid.UUID) -> AnalyticsSummary:
         return await self.analytics_repo.aggregate_workspace_metrics(workspace_id)

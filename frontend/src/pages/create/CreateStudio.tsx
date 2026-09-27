@@ -93,7 +93,7 @@ export function CreateStudio() {
   }
 
   return (
-    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', background: 'var(--background, #07070c)' }}>
+    <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', background: 'var(--background, var(--panel-2))' }}>
       <CreationWorkspace
         state={state}
         platformConfig={platformConfig!}

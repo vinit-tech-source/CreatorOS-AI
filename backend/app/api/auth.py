@@ -11,7 +11,9 @@ Endpoints:
 """
 import uuid
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Request
+
+from app.core.rate_limit import limiter
 
 from app.api.deps import get_auth_service, get_current_user_id
 from app.schemas.auth import AccessTokenResponse, AuthResponse, LoginRequest
@@ -60,7 +62,9 @@ async def register(
         "Returns **401** on invalid credentials and **403** if the account is inactive."
     ),
 )
+@limiter.limit("5/minute")
 async def login(
+    request: Request,
     data: LoginRequest,
     auth_service: AuthService = Depends(get_auth_service),
 ) -> ApiResponse[AuthResponse]:

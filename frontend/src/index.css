@@ -15,8 +15,8 @@
   --muted-2: #838ba3;
 
   /* Accents */
-  --primary: #5e52f6;
-  --primary-2: #7957ff;
+  --primary: #0055ff;
+  --primary-2: #0044cc;
   --primary-glow: rgba(94, 82, 246, 0.24);
   --cyan: #28b8ff;
   --pink: #d57cff;
@@ -37,8 +37,8 @@
   --bg-base: var(--page-bg);
   --bg-surface: var(--panel);
   --bg-surface-solid: var(--panel-2);
-  --bg-surface-hover: rgba(255, 255, 255, 0.04);
-  --border-light: var(--border);
+  --bg-surface-hover: var(--border);
+  --border-light: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.15);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-2);
@@ -46,8 +46,8 @@
   --text-muted: var(--muted-2);
 
   /* Shadows */
-  --shadow-base: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.4);
+  --shadow-base: 0 10px 30px var(--panel-3);
+  --shadow-hover: 0 16px 40px var(--panel-3);
   --shadow-glow: 0 0 20px rgba(94, 82, 246, 0.15);
 
   /* Spacing */
@@ -72,6 +72,37 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
 }
+
+[data-theme='light'] {
+  /* Surface / Backgrounds */
+  --page-bg: #f8fafc;
+  --panel: #ffffff;
+  --panel-2: #f1f5f9;
+  --panel-3: #e2e8f0;
+  --panel-glass: rgba(255, 255, 255, 0.85);
+  --border: rgba(0, 0, 0, 0.08);
+
+  /* Text */
+  --text: #0f172a;
+  --text-primary: #0f172a;
+  --muted: #475569;
+  --muted-2: #64748b;
+
+  /* Accents - High Contrast for Light Mode */
+  --primary: #0055ff;
+  --primary-2: #0044cc;
+  --cyan: #0284c7;
+  --pink: #d946ef;
+  --green: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  /* Legacy mapped variables */
+  --bg-surface-hover: rgba(0, 0, 0, 0.04);
+  --border-strong: #e2e8f0;
+}
+
+
 
 * {
   box-sizing: border-box;
@@ -106,7 +137,7 @@ button {
 a {
   color: inherit;
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: all 0.15s ease;
 }
 
 a:hover {
@@ -127,11 +158,11 @@ input, textarea, select {
 
 /* 3D Design System Utilities - Refactored to Landing Page Aesthetic */
 .extruded-panel, .sunken-panel {
-  background: linear-gradient(180deg, var(--panel), var(--page-bg));
+  background: var(--primary);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-base);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  transition: all 0.15s ease;
 }
 
 .extruded-panel:hover {

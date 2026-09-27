@@ -27,11 +27,11 @@ interface DragState {
 const DISPLAY_MAX = 640;
 
 const CARD_THEMES = [
-  { id: 'obsidian', name: 'Obsidian', bg: 'radial-gradient(ellipse at top left, #1e1b4b 0%, #080811 75%)', border: 'rgba(99, 102, 241, 0.3)' },
-  { id: 'cyber', name: 'Cyber Glow', bg: 'radial-gradient(ellipse at bottom right, rgba(139,92,246,0.3) 0%, #06060f 80%)', border: 'rgba(168, 85, 247, 0.4)' },
-  { id: 'sunset', name: 'Sunset Bold', bg: 'radial-gradient(ellipse at top right, rgba(244,63,94,0.25) 0%, rgba(245,158,11,0.15) 50%, #070710 80%)', border: 'rgba(244, 63, 94, 0.35)' },
-  { id: 'emerald', name: 'Emerald Tech', bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.2) 0%, #040907 80%)', border: 'rgba(16, 185, 129, 0.35)' },
-  { id: 'slate', name: 'Minimal Slate', bg: 'linear-gradient(145deg, #181824, #0a0a12)', border: 'rgba(255,255,255,0.12)' },
+  { id: 'obsidian', name: 'Obsidian', bg: 'radial-gradient(ellipse at top left, var(--panel-2) 0%, var(--panel-2) 75%)', border: 'rgba(99, 102, 241, 0.3)' },
+  { id: 'cyber', name: 'Cyber Glow', bg: 'radial-gradient(ellipse at bottom right, rgba(139,92,246,0.3) 0%, var(--panel-2) 80%)', border: 'rgba(168, 85, 247, 0.4)' },
+  { id: 'sunset', name: 'Sunset Bold', bg: 'radial-gradient(ellipse at top right, rgba(244,63,94,0.25) 0%, rgba(245,158,11,0.15) 50%, var(--panel-2) 80%)', border: 'rgba(244, 63, 94, 0.35)' },
+  { id: 'emerald', name: 'Emerald Tech', bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.2) 0%, var(--panel-2) 80%)', border: 'rgba(16, 185, 129, 0.35)' },
+  { id: 'slate', name: 'Minimal Slate', bg: 'var(--panel-2)', border: 'var(--border-strong)' },
 ];
 
 export function CanvasArea({
@@ -177,7 +177,7 @@ export function CanvasArea({
             cursor: activeTool === 'text' ? 'text' : activeTool === 'select' ? 'default' : 'crosshair',
             background: currentTheme.bg,
             borderColor: currentTheme.border,
-            boxShadow: `0 32px 80px rgba(0,0,0,0.7), 0 0 40px ${currentTheme.border}30, 0 0 0 1px rgba(255,255,255,0.06)`,
+            boxShadow: `0 32px 80px var(--border-strong), 0 0 40px ${currentTheme.border}30, 0 0 0 1px var(--border)`,
           }}
           onClick={handleCanvasClick}
           onMouseMove={handleMouseMove}
@@ -233,7 +233,7 @@ export function CanvasArea({
                         color: el.color || '#fff',
                         fontWeight: el.fontWeight || '700',
                         textAlign: el.textAlign || 'center',
-                        textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                        textShadow: '0 2px 8px var(--border-strong)',
                       }}
                     >
                       {el.content}
@@ -257,7 +257,7 @@ export function CanvasArea({
                     className={styles.imageEl}
                     style={{
                       borderRadius: (el.borderRadius || 12) * scale,
-                      boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+                      boxShadow: '0 8px 30px var(--border-strong)',
                     }}
                   />
                 ) : null}

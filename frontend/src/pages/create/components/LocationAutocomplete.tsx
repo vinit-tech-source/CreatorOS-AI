@@ -260,7 +260,7 @@ export function LocationAutocomplete({
                         <span className={styles.suggestionSubtitle}>{item.subtitle}</span>
                       )}
                     </div>
-                    {value === item.fullName && <Check size={14} color="#10b981" />}
+                    {value === item.fullName && <Check size={14} color="var(--panel-2)" />}
                   </button>
                 );
               })}

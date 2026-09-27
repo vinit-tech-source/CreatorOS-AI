@@ -53,7 +53,7 @@
 
 .igAuthorInfo { flex: 1; }
 .igUsername { font-size: 13px; font-weight: 600; color: #fff; }
-.igFollowed { font-size: 13px; color: #0095f6; }
+.igFollowed { font-size: 13px; color: var(--panel-2); }
 .igMore { font-size: 18px; color: #fff; cursor: pointer; }
 
 .igCanvas {
@@ -76,7 +76,7 @@
   font-size: 2.5rem;
 }
 
-.igPlaceholderText { font-size: 0.8125rem; color: rgba(255,255,255,0.3); }
+.igPlaceholderText { font-size: 0.8125rem; color: var(--text-secondary); }
 
 .igActions {
   display: flex;
@@ -89,7 +89,7 @@
 .igLikes { font-size: 13px; font-weight: 600; color: #fff; padding: 0 12px 4px; }
 .igCaption { font-size: 13px; color: #fff; padding: 2px 12px 12px; line-height: 1.4; }
 .igCaptionUser { font-weight: 600; }
-.igHashtags { color: #0095f6; margin-top: 4px; font-size: 13px; }
+.igHashtags { color: var(--panel-2); margin-top: 4px; font-size: 13px; }
 
 /* TikTok Preview */
 .ttContainer {

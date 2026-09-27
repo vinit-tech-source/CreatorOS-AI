@@ -112,13 +112,13 @@ export function KPICards({ data }: KPICardsProps) {
 
       {/* 5. Brand Voice Compliance */}
       <div className={styles.metricCard}>
-        <div className={styles.metricIconWrapper} style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#22d3ee' }}>
+        <div className={styles.metricIconWrapper} style={{ background: 'rgba(6, 182, 212, 0.15)', color: 'var(--panel-2)' }}>
           <Sparkles size={22} />
         </div>
         <div className={styles.metricContent}>
           <div className={styles.metricTopRow}>
             <span className={styles.metricLabel}>Brand Voice Score</span>
-            <span className={styles.metricTrendBadge} style={{ color: '#22d3ee', background: 'rgba(6, 182, 212, 0.12)' }}>
+            <span className={styles.metricTrendBadge} style={{ color: 'var(--panel-2)', background: 'rgba(6, 182, 212, 0.12)' }}>
               Audited
             </span>
           </div>

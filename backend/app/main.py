@@ -1,7 +1,17 @@
 from contextlib import asynccontextmanager
+import asyncio
+import os
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi import _rate_limit_exceeded_handler
+
+from app.core.rate_limit import limiter
 
 from app.core.config import settings
 from app.core.exception_handlers import (
@@ -90,8 +100,24 @@ async def lifespan(app: FastAPI):
 
     # Application startup
     await redis_manager.connect()
+    
+    # Initialize response caching
+    from app.core.cache import init_cache
+    init_cache()
+
+    # Ensure upload directory exists
+    upload_dir = Path(settings.UPLOAD_DIR)
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    # Start background token refresh worker
+    from app.workers.token_refresh_worker import token_refresh_worker_loop
+    token_refresh_task = asyncio.create_task(
+        token_refresh_worker_loop(), name="token_refresh_worker"
+    )
+
     yield
     # Application shutdown
+    token_refresh_task.cancel()
     await redis_manager.close()
 
 
@@ -112,6 +138,19 @@ app = FastAPI(
 # ─────────────────────────────────────────────
 # CORS
 # ─────────────────────────────────────────────
+
+app.add_middleware(SlowAPIMiddleware)
+app.state.limiter = limiter
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+    return response
 
 app.add_middleware(
     CORSMiddleware,
@@ -145,6 +184,17 @@ app.add_exception_handler(InvalidStatusTransitionError, invalid_status_transitio
 app.add_exception_handler(MediaAssetNotFoundError, media_asset_not_found_handler)
 app.add_exception_handler(AIProviderError, ai_provider_error_handler)
 app.add_exception_handler(AIValidationError, ai_validation_error_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    import logging
+    logger = logging.getLogger("app.main.global_exception_handler")
+    logger.error(f"Unhandled exception on {request.url}: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "message": "An unexpected internal server error occurred.", "data": None},
+    )
 
 # ─────────────────────────────────────────────
 # Routers
@@ -170,3 +220,10 @@ app.include_router(automation_router, prefix=settings.API_V1_STR)
 if settings.DEV_AUTH_BYPASS:
     from app.api.dev_auth import router as dev_auth_router  # noqa: E402
     app.include_router(dev_auth_router, prefix=settings.API_V1_STR)
+
+# ── Static file serving for uploaded media ────────────────────────────────
+# Serves files from UPLOAD_DIR at /uploads/<storage_key>
+# Must be mounted AFTER all API routers to avoid path conflicts.
+_upload_path = Path(settings.UPLOAD_DIR)
+_upload_path.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(_upload_path)), name="uploads")

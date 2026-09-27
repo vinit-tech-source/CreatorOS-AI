@@ -39,14 +39,14 @@
 
 .secondary {
   color: white;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--border);
   border: 1px solid var(--border);
 }
 
 .secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--border);
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: var(--border);
 }
 
 .outline {
@@ -56,7 +56,7 @@
 }
 
 .outline:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--border);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -66,7 +66,7 @@
 }
 
 .ghost:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--border);
   color: var(--text);
 }
 

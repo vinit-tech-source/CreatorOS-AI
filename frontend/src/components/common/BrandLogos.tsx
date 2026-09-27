@@ -41,7 +41,7 @@ export function LinkedInLogo({ size = 18, className }: LogoProps) {
       className={className}
       style={{ flexShrink: 0 }}
     >
-      <rect width="24" height="24" rx="4.5" fill="#0A66C2" />
+      <rect width="24" height="24" rx="4.5" fill="var(--panel-2)" />
       <path 
         d="M6.94 5.5a1.69 1.69 0 1 0 0 3.38 1.69 1.69 0 0 0 0-3.38zM3.94 9.94h3V20h-3V9.94zm5.12 0h2.88v1.38h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.6V20h-3v-4.96c0-1.18-.02-2.7-1.64-2.7-1.65 0-1.9 1.28-1.9 2.6V20h-3V9.94z" 
         fill="#ffffff" 
@@ -79,7 +79,7 @@ export function TikTokLogo({ size = 18, className }: LogoProps) {
       className={className}
       style={{ flexShrink: 0 }}
     >
-      <rect width="24" height="24" rx="5" fill="#010101" />
+      <rect width="24" height="24" rx="5" fill="var(--panel-2)" />
       <g transform="translate(1.5, 1.5)">
         <path d="M13.2 2.8v10.1a2.8 2.8 0 1 1-2.8-2.8c.35 0 .68.06.98.18V7.5a5.6 5.6 0 1 0 4.6 5.5V6.8a6.5 6.5 0 0 0 3.8 1.2V5.2a4.3 4.3 0 0 1-3.8-2.4H13.2z" fill="#25F4EE" />
         <path d="M14.2 3.8v10.1a2.8 2.8 0 1 1-2.8-2.8c.35 0 .68.06.98.18V8.5a5.6 5.6 0 1 0 4.6 5.5V7.8a6.5 6.5 0 0 0 3.8 1.2V6.2a4.3 4.3 0 0 1-3.8-2.4H14.2z" fill="#FE2C55" />
@@ -99,7 +99,7 @@ export function XLogo({ size = 18, className }: LogoProps) {
       className={className}
       style={{ flexShrink: 0 }}
     >
-      <rect width="24" height="24" rx="5" fill="#000000" />
+      <rect width="24" height="24" rx="5" fill="var(--panel-2)" />
       <path 
         d="M17.5 4.8h2.64l-5.77 6.6 6.79 8.98h-5.32l-4.16-5.45-4.77 5.45H4.23l6.17-7.05L3.89 4.8h5.45l3.76 4.97zm-.93 14h1.46L8.85 6.3H7.29z" 
         fill="#ffffff" 
@@ -118,7 +118,7 @@ export function FacebookLogo({ size = 18, className }: LogoProps) {
       className={className}
       style={{ flexShrink: 0 }}
     >
-      <circle cx="12" cy="12" r="12" fill="#1877F2" />
+      <circle cx="12" cy="12" r="12" fill="var(--panel-2)" />
       <path 
         d="M15.5 12h-2.5v7h-3v-7H8v-2.5h2V7.8C10 5.8 11.2 4.5 13.5 4.5c1.1 0 2 .1 2.3.1v2.5h-1.4c-1 0-1.2.5-1.2 1.2v1.2h2.7l-.4 2.5z" 
         fill="#ffffff" 
@@ -175,8 +175,8 @@ export const PLATFORM_METAS: Record<string, PlatformMetadata> = {
     name: 'LinkedIn',
     charLimit: 3000,
     bestTime: '9:00 AM (Tue-Thu)',
-    primaryColor: '#0A66C2',
-    gradient: 'linear-gradient(135deg, #0A66C2, #0077B5)',
+    primaryColor: 'var(--panel-2)',
+    gradient: 'linear-gradient(135deg, var(--panel-2), var(--panel-2))',
     borderColor: 'rgba(10, 102, 194, 0.4)',
     accentBg: 'rgba(10, 102, 194, 0.12)',
   },
@@ -196,7 +196,7 @@ export const PLATFORM_METAS: Record<string, PlatformMetadata> = {
     charLimit: 2200,
     bestTime: '7:00 PM - 9:00 PM',
     primaryColor: '#25F4EE',
-    gradient: 'linear-gradient(135deg, #010101, #25F4EE 50%, #FE2C55)',
+    gradient: 'linear-gradient(135deg, var(--panel-2), #25F4EE 50%, #FE2C55)',
     borderColor: 'rgba(37, 244, 238, 0.4)',
     accentBg: 'rgba(37, 244, 238, 0.12)',
   },
@@ -206,8 +206,8 @@ export const PLATFORM_METAS: Record<string, PlatformMetadata> = {
     charLimit: 280,
     bestTime: '12:00 PM & 5:00 PM',
     primaryColor: '#F8FAFC',
-    gradient: 'linear-gradient(135deg, #1E293B, #0F172A)',
+    gradient: 'linear-gradient(135deg, var(--panel-2), var(--panel-2))',
     borderColor: 'rgba(248, 250, 252, 0.3)',
-    accentBg: 'rgba(255, 255, 255, 0.08)',
+    accentBg: 'var(--border)',
   },
 };

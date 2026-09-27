@@ -187,7 +187,7 @@ export function MediaPickerModal({ isOpen, onClose, onSelectImage }: MediaPicker
             <>
               {activeTab === 'search' && (
                 <div className={styles.searchRow}>
-                  <Search size={16} className={styles.searchIcon} color="rgba(255,255,255,0.4)" />
+                  <Search size={16} className={styles.searchIcon} color="var(--muted-2)" />
                   <input
                     className={styles.searchInput}
                     placeholder="Search high-res stock photos (e.g. tech, podcast, coding, growth)…"
@@ -198,7 +198,7 @@ export function MediaPickerModal({ isOpen, onClose, onSelectImage }: MediaPicker
                   {searchQuery && (
                     <button
                       type="button"
-                      style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}
+                      style={{ background: 'none', border: 'none', color: 'var(--muted-2)', cursor: 'pointer' }}
                       onClick={() => setSearchQuery('')}
                     >
                       <X size={14} />

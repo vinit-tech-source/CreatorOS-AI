@@ -166,13 +166,15 @@ class PostService:
         self,
         project_id: uuid.UUID,
         requesting_user_id: uuid.UUID,
+        limit: int = 50,
+        offset: int = 0,
     ) -> list[PostResponse]:
         """
-        List all posts for the project.
+        List posts for the project with pagination.
         """
         await self._assert_project_ownership(project_id, requesting_user_id)
 
-        posts = await self._post_repo.list_by_project(project_id)
+        posts = await self._post_repo.list_by_project(project_id, limit=limit, offset=offset)
         return [PostResponse.model_validate(p) for p in posts]
 
     async def list_pending_review_posts(

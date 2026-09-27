@@ -89,8 +89,8 @@
 }
 
 .navItem.active {
-  background-color: rgba(94, 82, 246, 0.15);
-  color: #a599ff;
+  background-color: var(--primary-glow);
+  color: var(--primary);
   font-weight: 600;
 }
 

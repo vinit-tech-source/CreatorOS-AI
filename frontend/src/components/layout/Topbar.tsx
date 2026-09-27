@@ -1,6 +1,7 @@
 import { Bell, Search, Menu } from 'lucide-react';
 import styles from './Topbar.module.css';
 import { useAuthStore } from '../../stores/authStore';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface TopbarProps {
   onMenuToggle?: () => void;
@@ -28,6 +29,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
       </div>
       
       <div className={styles.right}>
+        <ThemeToggle />
         <button className={styles.iconButton}>
           <Bell size={20} />
         </button>

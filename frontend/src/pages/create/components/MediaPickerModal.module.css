@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: 300;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--border-strong);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   display: flex;
@@ -23,10 +23,10 @@
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  background: #0d0d1a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   border-radius: 24px;
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 32px 90px var(--border-strong), 0 0 0 1px var(--border);
   overflow: hidden;
   animation: scaleUp 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -42,8 +42,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+  background: var(--border);
 }
 
 .headerInfo {
@@ -61,14 +61,14 @@
 
 .subtitle {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .closeBtn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  background: var(--border);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
   width: 32px;
   height: 32px;
   border-radius: 10px;
@@ -79,15 +79,15 @@
   transition: all 0.15s;
 }
 .closeBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--border);
   color: #fff;
 }
 
 /* ── Tabs Bar ── */
 .tabsBar {
   display: flex;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
   padding: 0.5rem 1.5rem;
   gap: 0.5rem;
 }
@@ -102,13 +102,13 @@
   border-radius: 10px;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.18s;
 }
 .tabBtn:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--border);
 }
 .tabBtnActive {
   background: rgba(99, 102, 241, 0.2) !important;
@@ -125,14 +125,14 @@
   flex-direction: column;
   gap: 1.25rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: var(--border) transparent;
 }
 .content::-webkit-scrollbar { width: 4px; }
-.content::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 /* ── Upload Area ── */
 .uploadDropzone {
-  border: 2px dashed rgba(255, 255, 255, 0.14);
+  border: 2px dashed var(--border);
   border-radius: 18px;
   padding: 3rem 2rem;
   display: flex;
@@ -141,7 +141,7 @@
   justify-content: center;
   gap: 1rem;
   text-align: center;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--border);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -171,7 +171,7 @@
 
 .uploadHint {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -200,8 +200,8 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--border);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.6rem 1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -221,7 +221,7 @@
   font-family: inherit;
 }
 .searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-secondary);
 }
 
 .categoryPills {
@@ -233,9 +233,9 @@
 .categoryPill {
   font-size: 0.75rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  background: var(--border);
+  border: 1px solid var(--border);
   padding: 0.3rem 0.75rem;
   border-radius: 9999px;
   cursor: pointer;
@@ -260,14 +260,14 @@
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  border: 1.5px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px solid var(--border);
+  background: var(--border);
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .imageCard:hover {
   transform: translateY(-2px);
   border-color: #6366f1;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 24px var(--border-strong);
 }
 
 .imageThumb {
@@ -280,7 +280,7 @@
 .imageCardOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+  background: linear-gradient(to top, var(--border-strong) 0%, transparent 60%);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -327,8 +327,8 @@
 
 .urlInput {
   flex: 1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--border);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.65rem 1rem;
   font-size: 0.875rem;
@@ -345,11 +345,11 @@
   max-height: 240px;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--panel-3);
 }
 .urlPreview img {
   max-width: 100%;

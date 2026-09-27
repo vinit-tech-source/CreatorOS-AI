@@ -26,7 +26,7 @@
   z-index: 10;
   padding: 1rem;
   margin-bottom: 3rem;
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 30px 60px -15px var(--border-strong);
 }
 
 .heroContent {
@@ -48,7 +48,7 @@
   color: var(--text-primary);
   font-weight: 500;
   font-size: 0.875rem;
-  box-shadow: inset 0 1px 1px var(--border), 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 1px var(--border), 0 2px 4px var(--panel-3);
 }
 
 .title {
@@ -58,7 +58,7 @@
   background: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 10px 10px var(--border-strong));
   margin: 0;
   line-height: 1.1;
 }
@@ -72,7 +72,7 @@
   font-size: 1.25rem;
   color: var(--text-secondary);
   max-width: 600px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 2px 4px var(--panel-3);
 }
 
 .buttonGroup {
@@ -130,7 +130,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 20px var(--panel-3), inset 0 2px 4px var(--text-secondary);
 }
 
 .iconAutomation {
@@ -138,7 +138,7 @@
 }
 
 .iconBrand {
-  background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+  background: linear-gradient(135deg, var(--panel-2) 0%, var(--panel-2) 100%);
 }
 
 .iconKnowledge {
@@ -147,7 +147,7 @@
 
 .icon {
   color: white;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 2px 4px var(--panel-3));
 }
 
 .featureTitle {

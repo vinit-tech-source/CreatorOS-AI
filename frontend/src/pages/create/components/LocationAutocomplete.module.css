@@ -7,20 +7,20 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--border);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.45rem 0.75rem;
   transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 .inputRow:focus-within {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--border);
   border-color: rgba(99, 102, 241, 0.5);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .icon {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
@@ -40,7 +40,7 @@
 .clearBtn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -72,20 +72,20 @@
   left: 0;
   right: 0;
   z-index: 200;
-  background: rgba(14, 14, 26, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   border-radius: 14px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 50px var(--border-strong), 0 0 0 1px var(--border);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   max-height: 270px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: var(--border) transparent;
   animation: slideIn 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .dropdown::-webkit-scrollbar { width: 4px; }
-.dropdown::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+.dropdown::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-6px); }
@@ -101,8 +101,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
 }
 
 .suggestionList {
@@ -159,7 +159,7 @@
 
 .suggestionSubtitle {
   font-size: 0.6875rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -169,7 +169,7 @@
   padding: 1.25rem 1rem;
   text-align: center;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-secondary);
 }
 
 /* ─── Selected Badge Preview ─── */

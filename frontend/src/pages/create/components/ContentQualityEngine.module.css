@@ -89,7 +89,7 @@
   border: 1px solid var(--border);
 }
 
-.success .feedbackIcon { color: #10b981; }
+.success .feedbackIcon { color: var(--panel-2); }
 .warning .feedbackIcon { color: #f59e0b; }
 .error .feedbackIcon { color: #ef4444; }
 

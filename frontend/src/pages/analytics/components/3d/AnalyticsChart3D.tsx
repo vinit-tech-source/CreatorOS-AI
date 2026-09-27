@@ -32,7 +32,7 @@ export function AnalyticsChart3D({ data }: AnalyticsChart3DProps) {
       <Canvas camera={{ position: [0, 2, 8], fov: 40 }} aria-hidden="true">
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} intensity={1.5} color="#4f46e5" />
-        <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#0ea5e9" />
+        <directionalLight position={[-10, -10, -5]} intensity={0.5} color="var(--panel-2)" />
 
         <Suspense fallback={null}>
           <Float speed={prefersReducedMotion ? 0 : 1} rotationIntensity={prefersReducedMotion ? 0 : 0.1} floatIntensity={prefersReducedMotion ? 0 : 0.2}>
@@ -58,7 +58,7 @@ export function AnalyticsChart3D({ data }: AnalyticsChart3DProps) {
                     <Text
                       position={[0, height + 0.3, 0]}
                       fontSize={0.25}
-                      color="#0ea5e9"
+                      color="var(--panel-2)"
                       anchorX="center"
                       anchorY="middle"
                       fontWeight="bold"

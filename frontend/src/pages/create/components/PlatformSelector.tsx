@@ -157,7 +157,7 @@ export function PlatformSelector({ initialCountry, initialPlatform, onEnterStudi
         {/* Step: Country (First-time selection) */}
         {step === 'country' && (
           <div className={styles.stepPanel}>
-            <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'rgba(255,255,255,0.4)', fontSize: '0.875rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--muted-2)', fontSize: '0.875rem' }}>
               Select your primary target market once. You can change this anytime in Settings.
             </div>
             <div className={styles.regionGrid}>

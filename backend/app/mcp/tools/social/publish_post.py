@@ -133,7 +133,12 @@ class PublishPostTool(AbstractMCPTool):
                 raise MCPProviderError(f"Post {post_id} is not APPROVED or SCHEDULED. Current status: {post.status.value}")
                 
             content = post.content
-            media_urls = [] # In a real app, map post.media_assets to URLs
+            # Resolve media asset URLs from linked media assets
+            media_urls = []
+            if post.media_assets:
+                for asset in post.media_assets:
+                    if asset.is_active and asset.storage_url:
+                        media_urls.append(asset.storage_url)
             
             # 3. Create Pending Log
             pub_log = PublishingLog(

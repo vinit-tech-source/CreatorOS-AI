@@ -243,7 +243,7 @@ export function AICreationFlow({ platformConfig, format, onComplete, onSkip, onB
           h: 55,
           content: subtitle,
           fontSize: 13,
-          color: 'rgba(255,255,255,0.7)',
+          color: 'var(--muted)',
           fontWeight: '500',
           textAlign: 'center',
         },

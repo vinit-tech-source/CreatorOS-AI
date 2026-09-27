@@ -10,12 +10,12 @@ export function AppShell3D() {
   return (
     <div className={styles.canvasContainer} aria-hidden="true">
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-        <color attach="background" args={['#0f172a']} />
+        <color attach="background" args={['var(--panel-2)']} />
         
         {/* Ambient lighting */}
         <ambientLight intensity={0.2} />
         <directionalLight position={[10, 10, 5]} intensity={1.5} color="#6366f1" />
-        <directionalLight position={[-10, -10, -5]} intensity={0.8} color="#0ea5e9" />
+        <directionalLight position={[-10, -10, -5]} intensity={0.8} color="var(--panel-2)" />
 
         <Suspense fallback={null}>
           {!prefersReducedMotion && (

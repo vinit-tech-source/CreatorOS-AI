@@ -29,11 +29,11 @@ interface PresetPalette {
 }
 
 const PALETTE_PRESETS: PresetPalette[] = [
-  { name: 'Obsidian Indigo', primary: '#6366F1', secondary: '#1E293B', accent: '#EC4899' },
-  { name: 'Emerald Growth', primary: '#10B981', secondary: '#064E3B', accent: '#34D399' },
-  { name: 'Cyber Neon', primary: '#06B6D4', secondary: '#1E1B4B', accent: '#8B5CF6' },
+  { name: 'Obsidian Indigo', primary: '#6366F1', secondary: 'var(--panel-2)', accent: '#EC4899' },
+  { name: 'Emerald Growth', primary: 'var(--panel-2)', secondary: 'var(--panel-2)', accent: '#34D399' },
+  { name: 'Cyber Neon', primary: 'var(--panel-2)', secondary: 'var(--panel-2)', accent: '#8B5CF6' },
   { name: 'Sunset Creator', primary: '#F97316', secondary: '#451A03', accent: '#F59E0B' },
-  { name: 'Monochrome Luxe', primary: '#F8FAFC', secondary: '#18181B', accent: '#64748B' },
+  { name: 'Monochrome Luxe', primary: '#F8FAFC', secondary: 'var(--panel-2)', accent: '#64748B' },
 ];
 
 const TONE_PRESETS = [
@@ -82,7 +82,7 @@ export function BrandKit() {
     website_url: 'https://creatoros.ai',
     logo_url: '',
     primary_color: '#6366F1',
-    secondary_color: '#1E293B',
+    secondary_color: 'var(--panel-2)',
     accent_color: '#EC4899',
     font_family: 'Inter',
     default_tone: 'Visionary & Bold',
@@ -108,7 +108,7 @@ export function BrandKit() {
         website_url: brandKit.website_url || '',
         logo_url: brandKit.logo_url || '',
         primary_color: brandKit.primary_color || '#6366F1',
-        secondary_color: brandKit.secondary_color || '#1E293B',
+        secondary_color: brandKit.secondary_color || 'var(--panel-2)',
         accent_color: brandKit.accent_color || '#EC4899',
         font_family: brandKit.font_family || 'Inter',
         default_tone: brandKit.default_tone || brandKit.voice_tone || 'Visionary & Bold',
@@ -308,7 +308,7 @@ export function BrandKit() {
                 <div className={styles.logoManagerRow}>
                   <div 
                     className={styles.logoPreviewBox}
-                    style={{ background: formData.secondary_color || '#070a12' }}
+                    style={{ background: formData.secondary_color || 'var(--panel-2)' }}
                   >
                     {formData.logo_url ? (
                       <img src={formData.logo_url} alt="Logo" className={styles.logoImg} />

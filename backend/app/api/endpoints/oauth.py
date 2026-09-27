@@ -18,15 +18,30 @@ router = APIRouter(prefix="/oauth", tags=["oauth"])
 async def get_oauth_service(
     sa_service: SocialAccountService = Depends(get_social_account_service)
 ) -> OAuthService:
-    """Dependency injection for OAuthService."""
-    # In a real app, providers would be configured and registered here or at app startup.
+    """Dependency injection for OAuthService. Registers all configured platform providers."""
     service = OAuthService(social_account_service=sa_service)
-    
-    # Register providers
+
     from app.core.config import settings
+
+    # Bluesky
     if settings.BLUESKY_ENABLED:
         service.register_provider(BlueskyOAuthProvider())
-        
+
+    # Twitter / X
+    if settings.TWITTER_ENABLED:
+        from app.integrations.oauth.twitter_provider import TwitterOAuthProvider
+        service.register_provider(TwitterOAuthProvider())
+
+    # LinkedIn
+    if settings.LINKEDIN_ENABLED:
+        from app.integrations.oauth.linkedin_provider import LinkedInOAuthProvider
+        service.register_provider(LinkedInOAuthProvider())
+
+    # Instagram (via Meta Graph API)
+    if settings.INSTAGRAM_ENABLED:
+        from app.integrations.oauth.instagram_provider import InstagramOAuthProvider
+        service.register_provider(InstagramOAuthProvider())
+
     return service
 
 

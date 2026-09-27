@@ -33,6 +33,29 @@
   --fs-xl: 22px;
 }
 
+[data-theme='light'] {
+  --page-bg: #f8fafc;
+  --panel: #ffffff;
+  --panel-2: #f1f5f9;
+  --panel-3: #e2e8f0;
+  --panel-glass: rgba(255, 255, 255, 0.75);
+  --border: rgba(0, 0, 0, 0.12);
+  --border-hover: rgba(79, 70, 229, 0.25);
+  --border-active: rgba(79, 70, 229, 0.5);
+  --text: #0f172a;
+  --text-primary: #0f172a;
+  --muted: #475569;
+  --muted-2: #64748b;
+  --primary: #4f46e5;
+  --primary-2: #4338ca;
+  --cyan: #0284c7;
+  --pink: #d946ef;
+  --green: #16a34a;
+  --warning: #d97706;
+}
+
+
+
 * {
   box-sizing: border-box;
 }
@@ -131,8 +154,8 @@ button {
   z-index: 1000;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  background: rgba(6, 9, 20, 0.88);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--page-bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .nav-container {
@@ -172,7 +195,7 @@ button {
   border: 5px solid var(--primary-2);
   border-right-color: transparent;
   transform: rotate(30deg);
-  transition: transform 0.6s ease;
+  transition: all 0.15s ease;
 }
 
 .brand:hover .brand-mark span:nth-child(1) {
@@ -217,21 +240,21 @@ button {
 .nav-links a {
   position: relative;
   font-size: 13.5px;
-  color: #9ea8c2;
+  color: var(--text);
   font-weight: 500;
   padding: 6px 12px;
   border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .nav-links a:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  background: var(--border);
 }
 
 .nav-links a.active-nav {
-  color: #ffffff;
+  color: var(--primary);
   font-weight: 600;
   background: rgba(94, 82, 246, 0.16);
   box-shadow: inset 0 0 0 1px rgba(121, 87, 255, 0.4), 0 0 16px rgba(94, 82, 246, 0.15);
@@ -245,7 +268,7 @@ button {
   transform: translateX(-50%);
   width: 16px;
   height: 2px;
-  background: linear-gradient(90deg, #5e52f6, #c084fc);
+  background: var(--primary);
   border-radius: 4px;
   box-shadow: 0 0 8px #7957ff;
 }
@@ -253,7 +276,7 @@ button {
 .nav-divider {
   width: 1px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--border);
   margin: 0 4px;
 }
 
@@ -265,9 +288,9 @@ button {
 
 .signin {
   font-size: var(--fs-sm);
-  color: #cfd4e6;
+  color: var(--text);
   font-weight: 500;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .signin:hover {
@@ -280,14 +303,14 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 13px 22px;
   color: white;
-  background: linear-gradient(135deg, #564af1, #7550ff);
+  background: var(--primary);
   box-shadow: 0 10px 24px rgba(94, 82, 246, 0.28);
   font-size: var(--fs-sm);
   font-weight: 600;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  transition: all 0.15s ease;
 }
 
 .primary-btn:hover {
@@ -309,21 +332,21 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 10px;
+  border-radius: 4px;
   padding: 13px 20px;
-  color: #dbe0f2;
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  background: var(--border);
   border: 1px solid var(--border);
   font-size: var(--fs-sm);
   font-weight: 600;
-  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  transition: all 0.15s ease;
 }
 
 .secondary-btn:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: white;
+  background: var(--border-hover);
+  border-color: var(--border-active);
+  color: var(--text-primary);
 }
 
 /* ============================================================
@@ -343,10 +366,10 @@ button {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  border-radius: 9999px;
+  border-radius: 4px;
   background: rgba(94, 82, 246, 0.12);
   border: 1px solid rgba(94, 82, 246, 0.28);
-  color: #c7bcff;
+  color: var(--primary);
   font-size: var(--fs-xs);
   font-weight: 600;
   margin-bottom: 22px;
@@ -358,9 +381,9 @@ button {
 
 .pill-tag {
   background: rgba(239, 95, 209, 0.18);
-  color: #ffa3e9;
+  color: var(--pink);
   padding: 2px 8px;
-  border-radius: 9999px;
+  border-radius: 4px;
   font-size: var(--fs-3xs);
   font-weight: 700;
 }
@@ -374,7 +397,7 @@ button {
 }
 
 .gradient-text {
-  background: linear-gradient(110deg, #999eff, #d687ff 50%, #4facfe 100%);
+  background: var(--primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -382,7 +405,7 @@ button {
 
 .hero-description {
   max-width: 580px;
-  color: #b5bcd2;
+  color: var(--muted);
   line-height: 1.7;
   font-size: var(--fs-md);
   margin: 24px 0 32px;
@@ -400,7 +423,7 @@ button {
 }
 
 .btn-arrow {
-  transition: transform 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .hero-cta:hover .btn-arrow {
@@ -409,7 +432,7 @@ button {
 
 .play-icon {
   font-size: 11px;
-  color: #a599ff;
+  color: var(--primary);
 }
 
 .trusted-row {
@@ -431,10 +454,10 @@ button {
   display: grid;
   place-items: center;
   margin-left: -8px;
-  color: white;
+  color: var(--text-primary);
   font-size: var(--fs-2xs);
   font-weight: 700;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 10px var(--panel-3);
 }
 
 .avatar-stack div:first-child {
@@ -464,7 +487,7 @@ button {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #6d758f;
+  color: var(--muted-2);
   margin-bottom: 12px;
 }
 
@@ -473,7 +496,7 @@ button {
   gap: 28px;
   align-items: center;
   flex-wrap: wrap;
-  color: #7b839b;
+  color: var(--muted);
   font-weight: 800;
   font-size: var(--fs-sm);
   letter-spacing: -0.01em;
@@ -487,10 +510,10 @@ button {
 }
 
 .showcase-glow-card {
-  border-radius: 20px;
-  background: linear-gradient(180deg, #0e1529, #090e1c);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5), 0 0 60px rgba(94, 82, 246, 0.12);
+  border-radius: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 90px var(--border-strong), 0 0 60px rgba(94, 82, 246, 0.12);
   padding: 16px;
   position: relative;
 }
@@ -509,26 +532,26 @@ button {
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #9ca3bb;
+  border-radius: 4px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  color: var(--muted);
   font-size: var(--fs-xs);
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   position: relative;
   white-space: nowrap;
 }
 
 .platform-tab-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--border);
   color: var(--text);
 }
 
 .platform-tab-btn.active {
   background: rgba(94, 82, 246, 0.18);
   border-color: rgba(94, 82, 246, 0.45);
-  color: white;
+  color: var(--text-primary);
 }
 
 .tab-icon {
@@ -540,8 +563,8 @@ button {
 .hero-preview-container {
   margin-top: 14px;
   border-radius: 14px;
-  background: #080c18;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   overflow: hidden;
 }
 
@@ -550,7 +573,7 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  background: #0b1122;
+  background: var(--panel-2);
   border-bottom: 1px solid var(--border);
 }
 
@@ -571,7 +594,7 @@ button {
   align-items: center;
   gap: 8px;
   font-size: var(--fs-2xs);
-  color: #cbd1e6;
+  color: var(--muted);
   font-weight: 600;
 }
 
@@ -579,9 +602,9 @@ button {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-  animation: pulse-green 2s infinite;
+  background: var(--panel-2);
+  box-shadow: 0 0 8px var(--panel-2);
+  animation: none;
 }
 
 @keyframes pulse-green {
@@ -598,7 +621,7 @@ button {
 .format-ratio-tag {
   font-size: 10px;
   font-weight: 700;
-  color: #a599ff;
+  color: var(--primary);
   background: rgba(94, 82, 246, 0.15);
   padding: 3px 8px;
   border-radius: 6px;
@@ -608,10 +631,10 @@ button {
   font-size: var(--fs-3xs);
   font-weight: 700;
   color: white;
-  background: linear-gradient(135deg, #7957ff, #5e52f6);
+  background: var(--primary);
   padding: 4px 10px;
   border-radius: 6px;
-  transition: transform 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .preview-export-btn:hover {
@@ -632,33 +655,38 @@ button {
   align-items: center;
   justify-content: center;
   padding: 8px;
-  background: #050811;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--panel-2);
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
 .canvas-artwork {
   width: 100%;
   max-width: 240px;
-  border-radius: 10px;
+  border-radius: 4px;
   overflow: hidden;
   position: relative;
-  background: radial-gradient(circle at 75% 25%, rgba(239, 95, 209, 0.3), transparent 45%),
-              radial-gradient(circle at 25% 75%, rgba(94, 82, 246, 0.4), transparent 50%),
-              linear-gradient(145deg, #1b2440, #0c101d);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0f172a;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 16px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-  transition: all 0.3s ease;
+  box-shadow: 0 16px 40px var(--border-strong);
+  transition: all 0.15s ease;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 16px;
+  box-shadow: 0 16px 40px var(--border-strong);
+  transition: all 0.15s ease;
 }
 
 .artwork-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 30%, rgba(5, 8, 17, 0.85) 90%);
+  background: var(--primary);
 }
 
 .artwork-content {
@@ -671,8 +699,8 @@ button {
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.1em;
-  color: #ff9ee6;
-  background: rgba(239, 95, 209, 0.2);
+  color: #ffffff;
+  background: var(--primary);
   padding: 2px 6px;
   border-radius: 4px;
   margin-bottom: 8px;
@@ -684,13 +712,13 @@ button {
   line-height: 1.1;
   font-weight: 900;
   letter-spacing: -0.02em;
-  color: white;
+  color: #ffffff;
 }
 
 .artwork-subhead {
   margin: 0 0 12px;
-  font-size: 10px;
-  color: #ccd3e8;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.4;
 }
 
@@ -698,8 +726,8 @@ button {
   display: inline-block;
   font-size: 9px;
   font-weight: 800;
-  color: #060914;
-  background: var(--green);
+  color: #000000;
+  background: #ffffff;
   padding: 4px 10px;
   border-radius: 4px;
   letter-spacing: 0.04em;
@@ -707,12 +735,11 @@ button {
 
 .artwork-watermark {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 8px;
+  top: 12px;
+  right: 12px;
+  font-size: 9px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.05em;
 }
 
 /* Right Meta & AI Assistant */
@@ -724,16 +751,16 @@ button {
 
 .meta-block {
   padding: 10px 12px;
-  background: #0d1424;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--panel-2);
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
 .meta-label {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #78829f;
+  color: var(--muted);
   margin-bottom: 6px;
 }
 
@@ -751,7 +778,7 @@ button {
 
 .meta-pill {
   font-size: 10px;
-  color: #a599ff;
+  color: var(--primary);
   background: rgba(94, 82, 246, 0.15);
   padding: 2px 7px;
   border-radius: 6px;
@@ -771,7 +798,7 @@ button {
 
 .hashtag-chip {
   font-size: 10px;
-  color: #8bb2ff;
+  color: var(--cyan);
   background: rgba(40, 184, 255, 0.1);
   padding: 3px 6px;
   border-radius: 5px;
@@ -780,9 +807,9 @@ button {
 /* AI Command Box */
 .ai-command-box {
   padding: 12px;
-  background: linear-gradient(145deg, #13122c, #0d1424);
+  background: var(--panel-2);
   border: 1px solid rgba(140, 120, 255, 0.3);
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .ai-command-header {
@@ -790,7 +817,7 @@ button {
   align-items: center;
   gap: 6px;
   font-size: var(--fs-2xs);
-  color: #cfb9ff;
+  color: var(--primary);
   margin-bottom: 8px;
 }
 
@@ -807,8 +834,8 @@ button {
   flex: 1;
   padding: 7px 10px;
   border-radius: 7px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--panel-3);
+  border: 1px solid var(--border);
   color: var(--text);
   font-size: var(--fs-3xs);
   outline: none;
@@ -826,7 +853,7 @@ button {
   color: white;
   font-size: var(--fs-xs);
   font-weight: 700;
-  transition: transform 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .ai-send-btn:hover {
@@ -842,8 +869,8 @@ button {
 
 .ai-chips span {
   font-size: 9px;
-  color: #a8b0c8;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  background: var(--border);
   padding: 3px 7px;
   border-radius: 5px;
   cursor: pointer;
@@ -852,7 +879,7 @@ button {
 
 .ai-chips span:hover {
   background: rgba(94, 82, 246, 0.25);
-  color: white;
+  color: var(--text-primary);
 }
 
 /* Floating Repurpose Pill */
@@ -862,14 +889,14 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  border-radius: 10px;
-  background: rgba(13, 20, 36, 0.9);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid rgba(140, 120, 255, 0.2);
 }
 
 .repurpose-icon {
   font-size: 16px;
-  color: #ffaa00;
+  color: var(--warning);
 }
 
 .repurpose-text {
@@ -891,7 +918,7 @@ button {
 .repurpose-count {
   font-size: 10px;
   font-weight: 700;
-  color: #55ee99;
+  color: var(--green);
   background: rgba(85, 238, 153, 0.12);
   padding: 4px 8px;
   border-radius: 6px;
@@ -914,9 +941,9 @@ button {
   flex-direction: column;
   padding: 20px;
   border-radius: 14px;
-  background: linear-gradient(180deg, #0e1425, #0a0f1d);
+  background: var(--panel-2);
   border: 1px solid var(--border);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .stat-card:hover {
@@ -928,7 +955,7 @@ button {
   font-size: 36px;
   font-weight: 900;
   letter-spacing: -0.03em;
-  background: linear-gradient(110deg, #ffffff, #a599ff);
+  background: var(--primary);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -967,7 +994,7 @@ button {
 }
 
 .eyebrow {
-  color: #d485ff;
+  color: var(--pink);
   font-size: var(--fs-2xs);
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -984,7 +1011,7 @@ button {
 }
 
 .section-heading p {
-  color: #a6acc2;
+  color: var(--muted);
   line-height: 1.7;
   font-size: var(--fs-md);
   margin-top: 14px;
@@ -1001,21 +1028,21 @@ button {
 
 .bento-step {
   padding: 24px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #0e1526, #0a0f1d);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   position: relative;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .bento-step:hover {
   transform: translateY(-4px);
   border-color: var(--border-hover);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 16px 40px var(--panel-3);
 }
 
 .highlight-step {
-  background: linear-gradient(180deg, #151833, #0c1224);
+  background: var(--panel-2);
   border-color: rgba(140, 120, 255, 0.35);
   box-shadow: 0 10px 30px rgba(94, 82, 246, 0.1);
 }
@@ -1024,12 +1051,12 @@ button {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #7b85a3;
+  color: var(--muted);
   margin-bottom: 16px;
 }
 
 .highlight-badge {
-  color: #e599ff;
+  color: var(--pink);
 }
 
 .step-icon {
@@ -1045,7 +1072,7 @@ button {
 
 .bento-step p {
   font-size: var(--fs-sm);
-  color: #9ba3bc;
+  color: var(--muted);
   line-height: 1.6;
   margin: 0;
 }
@@ -1065,27 +1092,27 @@ button {
   flex-direction: column;
   align-items: flex-start;
   padding: 16px;
-  border-radius: 12px;
-  background: #0d1323;
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   text-align: left;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .studio-tab-btn:hover {
-  background: #121a30;
-  border-color: rgba(255, 255, 255, 0.15);
+  background: var(--panel-2);
+  border-color: var(--border-strong);
 }
 
 .studio-tab-btn.active {
-  background: linear-gradient(145deg, #151d38, #0f162c);
+  background: var(--panel-2);
   border-color: rgba(94, 82, 246, 0.5);
   box-shadow: 0 8px 24px rgba(94, 82, 246, 0.15);
 }
 
 .studio-tab-icon {
   font-size: 16px;
-  color: #a599ff;
+  color: var(--primary);
   margin-bottom: 8px;
 }
 
@@ -1098,7 +1125,7 @@ button {
 
 .studio-tab-pill {
   font-size: 10px;
-  color: #838ba3;
+  color: var(--muted);
 }
 
 .interactive-studio-board {
@@ -1106,8 +1133,8 @@ button {
   grid-template-columns: 0.85fr 1.15fr;
   gap: 28px;
   padding: 28px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #0e1529, #090e1c);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
 }
 
@@ -1121,7 +1148,7 @@ button {
   display: inline-block;
   font-size: 11px;
   font-weight: 700;
-  color: #ff9ee6;
+  color: var(--pink);
   background: rgba(239, 95, 209, 0.15);
   padding: 4px 10px;
   border-radius: 6px;
@@ -1137,16 +1164,16 @@ button {
 
 .studio-board-info p {
   font-size: var(--fs-base);
-  color: #a6acc2;
+  color: var(--muted);
   line-height: 1.6;
   margin: 0 0 24px;
 }
 
 .interactive-console-card {
   padding: 16px;
-  border-radius: 12px;
-  background: #060914;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   margin-bottom: 24px;
 }
 
@@ -1155,7 +1182,7 @@ button {
   align-items: center;
   gap: 6px;
   font-size: var(--fs-3xs);
-  color: #8892ad;
+  color: var(--muted);
   font-weight: 600;
   margin-bottom: 8px;
 }
@@ -1170,7 +1197,7 @@ button {
 .console-code {
   font-family: monospace;
   font-size: var(--fs-xs);
-  color: #c9d2f0;
+  color: var(--muted);
   margin-bottom: 10px;
   line-height: 1.5;
 }
@@ -1180,7 +1207,7 @@ button {
   align-items: center;
   gap: 8px;
   font-size: var(--fs-xs);
-  color: #82e55d;
+  color: var(--green);
   font-weight: 600;
 }
 
@@ -1193,8 +1220,8 @@ button {
 
 .mock-studio-frame {
   border-radius: 14px;
-  background: #060914;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   overflow: hidden;
 }
 
@@ -1203,7 +1230,7 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  background: #0b1122;
+  background: var(--panel-2);
   border-bottom: 1px solid var(--border);
   font-size: var(--fs-3xs);
 }
@@ -1221,11 +1248,11 @@ button {
 }
 
 .mock-file-name {
-  color: #9ea6be;
+  color: var(--muted);
 }
 
 .mock-badge-ready {
-  color: #82e55d;
+  color: var(--green);
 }
 
 .mock-studio-body {
@@ -1241,38 +1268,38 @@ button {
   gap: 12px;
   padding: 14px 0;
   border-right: 1px solid var(--border);
-  background: #080c18;
+  background: var(--panel-2);
 }
 
 .tool-icon {
   font-size: 13px;
-  color: #7b85a3;
+  color: var(--muted);
   cursor: pointer;
 }
 
 .tool-icon.active {
-  color: #a599ff;
+  color: var(--primary);
 }
 
 .mock-canvas-center {
   display: grid;
   place-items: center;
   padding: 16px;
-  background: #040711;
+  background: var(--panel-2);
 }
 
 .mock-canvas-art {
   width: 100%;
   max-width: 220px;
   aspect-ratio: 1;
-  border-radius: 10px;
-  background: radial-gradient(circle at 70% 30%, rgba(94, 82, 246, 0.4), transparent 50%), linear-gradient(135deg, #1e2947, #0d1222);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: radial-gradient(circle at 70% 30%, rgba(94, 82, 246, 0.4), transparent 50%), var(--panel-2);
+  border: 1px solid var(--border);
   padding: 14px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 30px var(--border-strong);
 }
 
 .art-layer-badge {
@@ -1293,13 +1320,13 @@ button {
 .mock-canvas-art p {
   margin: 0 0 8px;
   font-size: 8px;
-  color: #bec5db;
+  color: var(--muted);
 }
 
 .art-btn {
   font-size: 7px;
   font-weight: 800;
-  color: #060914;
+  color: var(--panel-2);
   background: var(--green);
   padding: 3px 7px;
   border-radius: 3px;
@@ -1309,7 +1336,7 @@ button {
 .mock-right-inspector {
   padding: 12px;
   border-left: 1px solid var(--border);
-  background: #080c18;
+  background: var(--panel-2);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -1318,7 +1345,7 @@ button {
 .inspector-title {
   font-size: 9px;
   font-weight: 700;
-  color: #7b85a3;
+  color: var(--muted);
   text-transform: uppercase;
   margin-bottom: 4px;
 }
@@ -1328,24 +1355,24 @@ button {
   text-align: left;
   padding: 6px 8px;
   border-radius: 6px;
-  background: #101729;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #c2c9df;
-  transition: background 0.15s ease;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: all 0.15s ease;
 }
 
 .inspector-btn:hover {
-  background: #19243f;
-  color: white;
+  background: var(--panel-2);
+  color: var(--text-primary);
 }
 
 .layer-item {
   display: flex;
   justify-content: space-between;
   font-size: 9px;
-  color: #949db7;
+  color: var(--text);
   padding: 4px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border);
 }
 
 /* ============================================================
@@ -1360,8 +1387,8 @@ button {
 
 .country-selector-panel {
   padding: 20px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #0e1528, #0a0f1d);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
 }
 
@@ -1393,10 +1420,10 @@ button {
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #b8c0d6;
+  border-radius: 4px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: var(--fs-xs);
   font-weight: 500;
   transition: all 0.15s ease;
@@ -1404,14 +1431,14 @@ button {
 }
 
 .country-select-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: white;
+  background: var(--border);
+  color: var(--text-primary);
 }
 
 .country-select-btn.active {
   background: rgba(94, 82, 246, 0.18);
   border-color: rgba(94, 82, 246, 0.5);
-  color: white;
+  color: var(--text-primary);
 }
 
 .c-flag {
@@ -1423,7 +1450,7 @@ button {
 }
 
 .c-arrow {
-  color: #7b85a3;
+  color: var(--muted);
 }
 
 /* Radar Globe */
@@ -1448,7 +1475,7 @@ button {
   inset: 0;
   border-radius: 50%;
   background: conic-gradient(from 0deg, transparent 70%, rgba(94, 82, 246, 0.4) 100%);
-  animation: rotate-radar 6s linear infinite;
+  animation: none;
 }
 
 @keyframes rotate-radar {
@@ -1472,7 +1499,7 @@ button {
 .core-country {
   font-size: var(--fs-xs);
   font-weight: 800;
-  color: white;
+  color: var(--text-primary);
 }
 
 .radar-ping {
@@ -1491,8 +1518,8 @@ button {
 /* Regional Insights Card */
 .regional-insights-card {
   padding: 24px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #0f1528, #0a0f1e);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -1519,7 +1546,7 @@ button {
 
 .insights-sub {
   font-size: var(--fs-3xs);
-  color: #82e55d;
+  color: var(--green);
   font-weight: 600;
 }
 
@@ -1538,7 +1565,7 @@ button {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #7b85a3;
+  color: var(--muted);
 }
 
 .platform-badges-row {
@@ -1551,21 +1578,21 @@ button {
 .p-badge {
   font-size: 10px;
   font-weight: 600;
-  color: #cbd3ea;
-  background: #131c33;
+  color: var(--text);
+  background: var(--panel-2);
   padding: 4px 8px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
 }
 
 .item-value {
   font-size: var(--fs-xs);
-  color: #dfe4f5;
+  color: var(--text);
   font-weight: 600;
 }
 
 .highlight-val {
-  color: #a599ff;
+  color: var(--primary);
 }
 
 /* ============================================================
@@ -1579,12 +1606,12 @@ button {
 
 .audience-box {
   padding: 24px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #0e1424, #0a0f1c);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .audience-box:hover {
@@ -1595,7 +1622,7 @@ button {
 .audience-icon-badge {
   width: 38px;
   height: 38px;
-  border-radius: 10px;
+  border-radius: 4px;
   display: grid;
   place-items: center;
   font-size: 18px;
@@ -1610,7 +1637,7 @@ button {
 
 .audience-box p {
   font-size: var(--fs-xs);
-  color: #9ca4bc;
+  color: var(--text);
   line-height: 1.6;
   margin: 0 0 20px;
   flex: 1;
@@ -1619,7 +1646,7 @@ button {
 .audience-perk-tag {
   font-size: 10px;
   font-weight: 700;
-  color: #a599ff;
+  color: var(--primary);
   background: rgba(94, 82, 246, 0.12);
   padding: 4px 8px;
   border-radius: 6px;
@@ -1637,12 +1664,12 @@ button {
 
 .testimonial-card {
   padding: 28px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, #0e1528, #090e1c);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .testimonial-card:hover {
@@ -1651,7 +1678,7 @@ button {
 }
 
 .t-rating {
-  color: #ffb800;
+  color: var(--warning);
   letter-spacing: 2px;
   font-size: 14px;
   margin-bottom: 14px;
@@ -1659,7 +1686,7 @@ button {
 
 .t-text {
   font-size: var(--fs-sm);
-  color: #cdd3e6;
+  color: var(--text);
   line-height: 1.7;
   margin: 0 0 20px;
   flex: 1;
@@ -1667,7 +1694,7 @@ button {
 
 .t-metric-badge {
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: 4px;
   background: rgba(94, 82, 246, 0.12);
   border: 1px solid rgba(94, 82, 246, 0.25);
   display: flex;
@@ -1677,12 +1704,12 @@ button {
 
 .t-metric-badge strong {
   font-size: var(--fs-md);
-  color: #cbbfff;
+  color: var(--primary);
 }
 
 .t-metric-badge span {
   font-size: 10px;
-  color: #a1a9c2;
+  color: var(--text);
 }
 
 .t-user {
@@ -1695,11 +1722,11 @@ button {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--pink));
+  background: var(--primary);
   display: grid;
   place-items: center;
   font-weight: 800;
-  color: white;
+  color: var(--text-primary);
   font-size: var(--fs-sm);
 }
 
@@ -1728,20 +1755,20 @@ button {
 
 .faq-item {
   padding: 18px 22px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #0e1424, #0a0f1c);
+  border-radius: 4px;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .faq-item:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--border-strong);
 }
 
 .faq-item.open {
   border-color: rgba(94, 82, 246, 0.4);
-  background: #11182c;
+  background: var(--panel-2);
 }
 
 .faq-question {
@@ -1755,18 +1782,18 @@ button {
 
 .faq-toggle {
   font-size: 20px;
-  color: #a599ff;
+  color: var(--primary);
 }
 
 .faq-answer {
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border);
 }
 
 .faq-answer p {
   margin: 0;
-  color: #a6acc2;
+  color: var(--muted);
   font-size: var(--fs-sm);
   line-height: 1.7;
 }
@@ -1780,13 +1807,13 @@ button {
 
 .cta-banner-card {
   position: relative;
-  border-radius: 24px;
+  border-radius: 4px;
   padding: 60px 32px;
   text-align: center;
   background: radial-gradient(circle at 50% 0%, rgba(94, 82, 246, 0.35), transparent 70%),
-              linear-gradient(180deg, #121832, #070a16);
+              var(--panel-2);
   border: 1px solid rgba(140, 120, 255, 0.4);
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6), 0 0 60px rgba(94, 82, 246, 0.2);
+  box-shadow: 0 30px 100px var(--border-strong), 0 0 60px rgba(94, 82, 246, 0.2);
   overflow: hidden;
 }
 
@@ -1807,7 +1834,7 @@ button {
 
 .cta-banner-card p {
   font-size: var(--fs-md);
-  color: #b5bcd2;
+  color: var(--muted);
   line-height: 1.7;
   margin: 0 0 32px;
 }
@@ -1830,7 +1857,7 @@ button {
   gap: 20px;
   margin-top: 28px;
   font-size: var(--fs-3xs);
-  color: #8f98b2;
+  color: var(--text);
   flex-wrap: wrap;
 }
 
@@ -1847,7 +1874,7 @@ button {
 
 .footer-tagline {
   font-size: var(--fs-xs);
-  color: #8d95ac;
+  color: var(--text);
   margin: 12px 0 20px;
   max-width: 280px;
   line-height: 1.6;
@@ -1856,7 +1883,7 @@ button {
 .footer-newsletter span {
   display: block;
   font-size: var(--fs-3xs);
-  color: #a599ff;
+  color: var(--primary);
   font-weight: 600;
   margin-bottom: 8px;
 }
@@ -1871,7 +1898,7 @@ button {
   flex: 1;
   padding: 8px 10px;
   border-radius: 7px;
-  background: #101628;
+  background: var(--panel-2);
   border: 1px solid var(--border);
   color: var(--text);
   font-size: var(--fs-3xs);
@@ -1902,8 +1929,8 @@ button {
 
 .footer-column a {
   font-size: var(--fs-2xs);
-  color: #8d95ac;
-  transition: color 0.15s ease;
+  color: var(--text);
+  transition: all 0.15s ease;
 }
 
 .footer-column a:hover {
@@ -1917,7 +1944,7 @@ button {
   border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
-  color: #727b94;
+  color: var(--text);
   font-size: var(--fs-3xs);
 }
 
@@ -1928,7 +1955,7 @@ button {
 
 .social-links span {
   cursor: pointer;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .social-links span:hover {
@@ -2043,10 +2070,10 @@ button {
 }
 
 .big-simulation-card {
-  border-radius: 20px;
-  background: rgba(10, 14, 28, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px var(--border-strong);
   overflow: hidden;
 }
 
@@ -2055,8 +2082,8 @@ button {
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  background: #080c1a;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -2073,30 +2100,30 @@ button {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  color: #9ba6c5;
+  border-radius: 4px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .stepper-pill-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--border);
+  color: var(--text-primary);
 }
 
 .stepper-pill-btn.active {
   background: rgba(94, 82, 246, 0.25);
   border-color: rgba(94, 82, 246, 0.7);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .stepper-pill-btn.done {
-  color: #82e55d;
+  color: var(--green);
 }
 
 .stepper-active-glow {
@@ -2113,7 +2140,7 @@ button {
 .live-demo-tag {
   font-size: 11px;
   font-weight: 800;
-  color: #82e55d;
+  color: var(--green);
   background: rgba(130, 229, 93, 0.12);
   border: 1px solid rgba(130, 229, 93, 0.3);
   padding: 4px 10px;
@@ -2135,13 +2162,13 @@ button {
   justify-content: space-between;
   align-items: center;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border);
 }
 
 .flow-step-badge {
   font-size: 10px;
   font-weight: 800;
-  color: #a599ff;
+  color: var(--primary);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -2150,12 +2177,12 @@ button {
   margin: 4px 0 0;
   font-size: 19px;
   font-weight: 800;
-  color: white;
+  color: var(--text-primary);
 }
 
 .flow-step-counter {
   font-size: 12px;
-  color: #a599ff;
+  color: var(--primary);
   font-weight: 700;
   background: rgba(165, 153, 255, 0.1);
   padding: 5px 12px;
@@ -2175,20 +2202,20 @@ button {
   gap: 16px;
   padding: 22px;
   border-radius: 14px;
-  background: #0a0f21;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .region-flow-card:hover {
-  background: #111833;
+  background: var(--panel-2);
   border-color: rgba(140, 120, 255, 0.4);
   transform: translateY(-2px);
 }
 
 .region-flow-card.selected-flow {
-  background: linear-gradient(135deg, rgba(94, 82, 246, 0.25), #0e1530);
+  background: var(--primary);
   border-color: rgba(94, 82, 246, 0.8);
   box-shadow: 0 0 25px rgba(94, 82, 246, 0.25);
 }
@@ -2200,13 +2227,13 @@ button {
 .rf-info strong {
   display: block;
   font-size: 16px;
-  color: white;
+  color: var(--text-primary);
 }
 
 .rf-info span {
   display: block;
   font-size: 12px;
-  color: #8f9bb8;
+  color: var(--text);
   margin-top: 3px;
 }
 
@@ -2214,7 +2241,7 @@ button {
   margin-left: auto;
   font-size: 11px;
   font-weight: 800;
-  color: #82e55d;
+  color: var(--green);
   background: rgba(130, 229, 93, 0.15);
   padding: 4px 10px;
   border-radius: 6px;
@@ -2233,20 +2260,20 @@ button {
   gap: 16px;
   padding: 20px 22px;
   border-radius: 14px;
-  background: #0a0f21;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .country-flow-card:hover {
-  background: #111833;
+  background: var(--panel-2);
   border-color: rgba(140, 120, 255, 0.4);
   transform: translateY(-2px);
 }
 
 .country-flow-card.selected-flow {
-  background: linear-gradient(135deg, rgba(94, 82, 246, 0.25), #0e1530);
+  background: var(--primary);
   border-color: rgba(94, 82, 246, 0.8);
   box-shadow: 0 0 25px rgba(94, 82, 246, 0.25);
 }
@@ -2258,13 +2285,13 @@ button {
 .cf-info strong {
   display: block;
   font-size: 16px;
-  color: white;
+  color: var(--text-primary);
 }
 
 .cf-info span {
   display: block;
   font-size: 12px;
-  color: #8f9bb8;
+  color: var(--text);
   margin: 2px 0 6px;
 }
 
@@ -2278,15 +2305,15 @@ button {
   font-size: 10px;
   padding: 3px 7px;
   border-radius: 5px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #b1bad6;
+  background: var(--border);
+  color: var(--text);
 }
 
 .cf-check {
   margin-left: auto;
   font-size: 11px;
   font-weight: 800;
-  color: #82e55d;
+  color: var(--green);
   background: rgba(130, 229, 93, 0.15);
   padding: 4px 10px;
   border-radius: 6px;
@@ -2305,21 +2332,21 @@ button {
   gap: 6px;
   padding: 20px;
   border-radius: 14px;
-  background: #0a0f21;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   position: relative;
 }
 
 .platform-flow-card:hover {
-  background: #111833;
+  background: var(--panel-2);
   border-color: rgba(140, 120, 255, 0.4);
   transform: translateY(-2px);
 }
 
 .platform-flow-card.selected-flow {
-  background: linear-gradient(135deg, rgba(94, 82, 246, 0.25), #0e1530);
+  background: var(--primary);
   border-color: rgba(94, 82, 246, 0.8);
   box-shadow: 0 0 25px rgba(94, 82, 246, 0.25);
 }
@@ -2332,7 +2359,7 @@ button {
 }
 
 .pf-icon {
-  color: #a599ff;
+  color: var(--primary);
   display: flex;
 }
 
@@ -2340,25 +2367,25 @@ button {
   font-size: 10px;
   padding: 3px 8px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #cbd4ec;
+  background: var(--border);
+  color: var(--text);
 }
 
 .platform-flow-card strong {
   font-size: 16px;
-  color: white;
+  color: var(--text-primary);
 }
 
 .pf-format {
   font-size: 12px;
-  color: #929dbb;
+  color: var(--text);
 }
 
 .pf-check {
   margin-top: 8px;
   font-size: 10px;
   font-weight: 800;
-  color: #82e55d;
+  color: var(--green);
   background: rgba(130, 229, 93, 0.15);
   padding: 3px 8px;
   border-radius: 5px;
@@ -2373,14 +2400,14 @@ button {
 }
 
 .big-tweet-card {
-  background: #070a14;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
   padding: 22px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 12px 35px var(--border-strong);
 }
 
 .tweet-author-row {
@@ -2393,10 +2420,10 @@ button {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+  background: var(--primary);
   display: grid;
   place-items: center;
-  color: white;
+  color: var(--text-primary);
   font-weight: 800;
   font-size: 16px;
 }
@@ -2409,14 +2436,14 @@ button {
 }
 
 .tweet-name-row strong {
-  color: white;
+  color: var(--text-primary);
   font-weight: 700;
 }
 
 .verified-badge {
   font-size: 10px;
-  background: #1d9bf0;
-  color: white;
+  background: var(--panel-2);
+  color: var(--text-primary);
   border-radius: 50%;
   width: 15px;
   height: 15px;
@@ -2425,28 +2452,28 @@ button {
 }
 
 .tweet-handle, .tweet-time {
-  color: #71767b;
+  color: var(--muted);
   font-size: 12px;
 }
 
 .tweet-bio {
   font-size: 11px;
-  color: #8a94af;
+  color: var(--text);
 }
 
 .tweet-text {
   margin: 0;
   font-size: 15px;
-  color: #e7e9ea;
+  color: var(--text);
   line-height: 1.6;
 }
 
 .tweet-media-frame {
   margin-top: 6px;
   padding: 20px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #1b213b, #0b0f20);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -2455,28 +2482,28 @@ button {
 .tweet-media-badge {
   font-size: 10px;
   font-weight: 800;
-  color: #82e55d;
+  color: var(--green);
   letter-spacing: 0.06em;
 }
 
 .tweet-media-frame h4 {
   margin: 4px 0 0;
   font-size: 16px;
-  color: white;
+  color: var(--text-primary);
   font-weight: 800;
 }
 
 .tweet-media-frame p {
   margin: 0;
   font-size: 12px;
-  color: #b5bed6;
+  color: var(--text);
 }
 
 .tweet-media-cta {
   margin-top: 8px;
   font-size: 11px;
   font-weight: 800;
-  color: #a599ff;
+  color: var(--primary);
 }
 
 .tweet-hashtags {
@@ -2488,7 +2515,7 @@ button {
 
 .tweet-hashtags span {
   font-size: 12px;
-  color: #1d9bf0;
+  color: var(--panel-2);
   font-weight: 600;
 }
 
@@ -2497,13 +2524,13 @@ button {
   align-items: center;
   justify-content: space-between;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border);
   font-size: 12px;
-  color: #889098;
+  color: var(--muted);
 }
 
 .tweet-share-btn {
-  color: #82e55d;
+  color: var(--green);
   font-weight: 700;
   background: rgba(130, 229, 93, 0.12);
   padding: 4px 8px;
@@ -2518,11 +2545,11 @@ button {
 
 .ai-hook-box {
   font-size: 13px;
-  color: #cbd4ea;
+  color: var(--text);
   background: rgba(94, 82, 246, 0.12);
   border: 1px solid rgba(94, 82, 246, 0.3);
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 4px;
   line-height: 1.5;
 }
 
@@ -2536,14 +2563,14 @@ button {
   font-size: 11px;
   padding: 5px 10px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #9aa5c3;
+  background: var(--border);
+  color: var(--text);
 }
 
 .mini-fmt.active {
   background: rgba(94, 82, 246, 0.25);
   border: 1px solid rgba(94, 82, 246, 0.6);
-  color: #d6ccff;
+  color: var(--primary);
   font-weight: 700;
 }
 

@@ -222,15 +222,15 @@ export function PostAnalytics() {
               <div className={styles.chartContainer}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                    <XAxis dataKey="date" stroke="rgba(255,255,255,0.5)" fontSize={12} tickMargin={10} />
-                    <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-strong)" />
+                    <XAxis dataKey="date" stroke="var(--muted)" fontSize={12} tickMargin={10} />
+                    <YAxis stroke="var(--muted)" fontSize={12} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: 'var(--bg-surface-solid)', borderColor: 'var(--border-color)', borderRadius: 8 }}
                       itemStyle={{ color: 'var(--text-primary)' }}
                     />
                     <Line type="monotone" dataKey="likes" stroke="var(--color-primary)" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Likes" />
-                    <Line type="monotone" dataKey="comments" stroke="#10b981" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Comments" />
+                    <Line type="monotone" dataKey="comments" stroke="var(--panel-2)" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Comments" />
                     <Line type="monotone" dataKey="shares" stroke="#f59e0b" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} name="Shares" />
                   </LineChart>
                 </ResponsiveContainer>

@@ -214,12 +214,19 @@ async def get_knowledge_service(
 ) -> KnowledgeService:
     from app.rag.ingestion.pipeline import IngestionPipeline
     from app.rag.vectorstore.base import InMemoryVectorStore
-    from app.rag.embeddings.base import FakeEmbeddingProvider
-    
+    from app.core.config import settings as _cfg
+
     global_vector_store = InMemoryVectorStore()
-    embedding_provider = FakeEmbeddingProvider()
+
+    if _cfg.USE_MOCK_AI or not _cfg.GEMINI_API_KEY:
+        from app.rag.embeddings.base import FakeEmbeddingProvider
+        embedding_provider = FakeEmbeddingProvider()
+    else:
+        from app.rag.embeddings.gemini_embedding import GeminiEmbeddingProvider
+        embedding_provider = GeminiEmbeddingProvider()
+
     ingestion_pipeline = IngestionPipeline(embedding_provider, global_vector_store)
-    
+
     return KnowledgeService(
         knowledge_repo=KnowledgeRepository(session),
         workspace_repo=WorkspaceRepository(session),
@@ -288,11 +295,17 @@ async def get_content_generation_service(
 ) -> ContentGenerationService:
     """Dependency to get ContentGenerationService instance."""
     from app.rag.vectorstore.base import InMemoryVectorStore
-    from app.rag.embeddings.base import FakeEmbeddingProvider
-    
+    from app.core.config import settings as _cfg
+
     global_vector_store = InMemoryVectorStore()
-    embedding_provider = FakeEmbeddingProvider()
-    
+
+    if _cfg.USE_MOCK_AI or not _cfg.GEMINI_API_KEY:
+        from app.rag.embeddings.base import FakeEmbeddingProvider
+        embedding_provider = FakeEmbeddingProvider()
+    else:
+        from app.rag.embeddings.gemini_embedding import GeminiEmbeddingProvider
+        embedding_provider = GeminiEmbeddingProvider()
+
     return ContentGenerationService(
         workspace_repo=WorkspaceRepository(session),
         project_repo=ProjectRepository(session),

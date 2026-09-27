@@ -49,12 +49,14 @@ class PostRepository(AbstractPostRepository):
         )
         return result.scalar_one_or_none()
 
-    async def list_by_project(self, project_id: uuid.UUID) -> list[Post]:
-        """Return all Posts for a specific project, ordered newest first."""
+    async def list_by_project(self, project_id: uuid.UUID, limit: int = 50, offset: int = 0) -> list[Post]:
+        """Return Posts for a specific project with pagination, ordered newest first."""
         result = await self.session.execute(
             select(Post)
             .where(Post.project_id == project_id)
             .order_by(Post.created_at.desc())
+            .limit(limit)
+            .offset(offset)
         )
         return list(result.scalars().all())
 

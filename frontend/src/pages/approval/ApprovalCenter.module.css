@@ -18,7 +18,7 @@
    ------------------------------------------------------------ */
 .headerCard {
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(22, 28, 55, 0.8) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 1.25rem 1.75rem;
@@ -27,7 +27,7 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.25rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px var(--panel-3);
 }
 
 .headerLeft {
@@ -57,7 +57,7 @@
 
 .headerSubtitle {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text);
   margin: 0;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .approveAllBtn {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  background: linear-gradient(135deg, var(--panel-2) 0%, var(--panel-2) 100%);
   border: none;
   color: #ffffff;
   font-size: 0.825rem;
@@ -99,8 +99,8 @@
    Governance Queue Tabs
    ------------------------------------------------------------ */
 .queueTabsCard {
-  background: rgba(13, 18, 36, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   backdrop-filter: blur(16px);
   border-radius: 12px;
   padding: 6px 10px;
@@ -113,7 +113,7 @@
 .tabBtn {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text);
   font-size: 0.8rem;
   font-weight: 600;
   padding: 6px 14px;
@@ -130,7 +130,7 @@
 }
 
 .tabBtnActive {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--border);
   color: #ffffff;
 }
 
@@ -167,7 +167,7 @@
 
 .approvalCard {
   background: rgba(13, 18, 36, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   backdrop-filter: blur(16px);
   border-radius: 16px;
   padding: 1.5rem;
@@ -179,7 +179,7 @@
 
 .approvalCard:hover {
   border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px var(--border-strong);
 }
 
 /* Preview Side (Left) */
@@ -211,11 +211,11 @@
 
 .simulatedPostBox {
   background: rgba(9, 13, 26, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1rem 1.15rem;
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: var(--text);
   line-height: 1.55;
   white-space: pre-wrap;
   max-height: 220px;
@@ -237,7 +237,7 @@
 /* Audit & Governance Side (Right) */
 .auditSide {
   background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1.15rem;
   display: flex;
@@ -280,13 +280,13 @@
   justify-content: space-between;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text);
 }
 
 .auditProgressBar {
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--border);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -304,11 +304,11 @@
   gap: 0.5rem;
   flex-wrap: wrap;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--border);
 }
 
 .approveBtn {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  background: linear-gradient(135deg, var(--panel-2) 0%, var(--panel-2) 100%);
   border: none;
   color: #ffffff;
   font-size: 0.8rem;
@@ -377,7 +377,7 @@
    ------------------------------------------------------------ */
 .emptyQueueCard {
   background: rgba(13, 18, 36, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 4.5rem 2rem;
   text-align: center;
@@ -408,7 +408,7 @@
 
 .emptyQueueSubtitle {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text);
   max-width: 440px;
   margin: 0;
   line-height: 1.5;

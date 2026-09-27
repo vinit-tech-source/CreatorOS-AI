@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { isDevBypassEnabled, initDevAuth } from './lib/devAuth';
+import { ThemeProvider } from './components/ThemeProvider';
 
 async function bootstrap() {
   // Initialise dev auth BEFORE mounting React so the auth store is populated
@@ -23,7 +24,9 @@ async function bootstrap() {
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <App />
+      <ThemeProvider defaultTheme="dark">
+        <App />
+      </ThemeProvider>
     </React.StrictMode>,
   );
 }

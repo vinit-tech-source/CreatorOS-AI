@@ -14,6 +14,7 @@ import uuid
 from typing import List
 
 from fastapi import APIRouter, Depends, status
+from fastapi_cache.decorator import cache
 
 from app.api.deps import get_current_user_id, get_workspace_service, get_analytics_service
 from app.schemas.response import ApiResponse
@@ -145,6 +146,7 @@ async def delete_workspace(
     summary="Get Workspace Analytics Summary",
     description="Retrieve aggregated analytics for a workspace.",
 )
+@cache(expire=60)
 async def get_workspace_analytics_summary(
     workspace_id: uuid.UUID,
     user_id: uuid.UUID = Depends(get_current_user_id),

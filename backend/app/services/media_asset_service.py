@@ -133,13 +133,15 @@ class MediaAssetService:
         self,
         workspace_id: uuid.UUID,
         requesting_user_id: uuid.UUID,
+        limit: int = 50,
+        offset: int = 0,
     ) -> list[MediaAssetResponse]:
         """
-        List all media assets for the workspace.
+        List media assets for the workspace with pagination.
         """
         await self._assert_workspace_owner(workspace_id, requesting_user_id)
 
-        medias = await self._media_repo.list_by_workspace(workspace_id)
+        medias = await self._media_repo.list_by_workspace(workspace_id, limit=limit, offset=offset)
         return [MediaAssetResponse.model_validate(m) for m in medias]
 
     # ─────────────────────────────────────────────

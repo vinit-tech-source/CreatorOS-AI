@@ -85,6 +85,28 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str = ""
     GROQ_MODEL: str = "llama-3.3-70b-versatile"
 
+    # Storage
+    UPLOAD_DIR: str = "uploads"
+    UPLOAD_BASE_URL: str = "http://localhost:8000"
+
+    # Twitter / X OAuth
+    TWITTER_ENABLED: bool = False
+    TWITTER_CLIENT_ID: str = ""
+    TWITTER_CLIENT_SECRET: str = ""
+
+    # LinkedIn OAuth
+    LINKEDIN_ENABLED: bool = False
+    LINKEDIN_CLIENT_ID: str = ""
+    LINKEDIN_CLIENT_SECRET: str = ""
+
+    # Instagram / Meta OAuth
+    INSTAGRAM_ENABLED: bool = False
+    INSTAGRAM_CLIENT_ID: str = ""
+    INSTAGRAM_CLIENT_SECRET: str = ""
+
+    # Token refresh
+    TOKEN_REFRESH_BEFORE_EXPIRY_MINUTES: int = 30
+
     model_config = ConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     @model_validator(mode="after")

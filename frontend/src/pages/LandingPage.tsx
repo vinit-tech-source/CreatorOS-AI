@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../stores/authStore";
 import "./LandingPage.css";
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 
 interface PlatformData {
   id: string;
@@ -88,7 +89,7 @@ const platformsData: PlatformData[] = [
     badge: "Viral Short",
     aspectRatio: "9/16",
     formatName: "Vertical 1080 × 1920",
-    headline: "DON'T POST WITHOUT THIS ⚡",
+    headline: "DON'T POST WITHOUT THIS ",
     subhead: "AI audio sync + auto captions boosted our watch time by 48%.",
     tag: "CREATOR HACK",
     ctaText: "TRY TEMPLATE",
@@ -196,7 +197,7 @@ const studioFeatures = [
     title: "AI Prompt & Copy Engine",
     desc: "Generate viral hooks, captions, scripts, and multi-lingual translations in 1 click.",
     pill: "Instant Copy",
-    icon: "✦",
+    icon: "",
     codeSnippet: "Prompt: 'Make this headline punchier and optimize for high click-through on LinkedIn'",
     result: "Generated: 'Stop Posting Blindly: The 3 Metrics Top 1% Creators Track'",
   },
@@ -205,8 +206,8 @@ const studioFeatures = [
     title: "Dynamic Smart Canvas",
     desc: "Layer management, typography styles, brand palettes, and instant asset library.",
     pill: "Smart Studio",
-    icon: "◈",
-    codeSnippet: "Applied: Brand Kit #060914 + Vivid Violet Gradients + Inter Font System",
+    icon: "",
+    codeSnippet: "Applied: Brand Kit var(--panel-2) + Vivid Violet Gradients + Inter Font System",
     result: "Status: 100% On-Brand typography and color hierarchy auto-applied",
   },
   {
@@ -454,6 +455,7 @@ export function LandingPage() {
             </nav>
             <div className="nav-divider" />
             <div className="nav-actions">
+              <ThemeToggle />
               {isAuthenticated ? (
                 <Link to="/dashboard" className="signin">Dashboard</Link>
               ) : (
@@ -472,20 +474,17 @@ export function LandingPage() {
         <section id="hero" className="hero section-shell">
           <div className="hero-copy">
             <div className="announcement-pill">
-              <span className="pill-dot">✦</span>
-              <span>CreatorOS 2.0 is Live</span>
-              <span className="pill-tag">AI Multi-Platform Engine</span>
+              <span className="pill-dot"></span>
+              <span>New Release: CreatorOS 2.0</span>
+              
             </div>
             
             <h1>
-              One Idea. Every Platform. <br />
-              <span className="gradient-text">One Intelligent Workspace.</span>
+              Manage multi-platform content from a single dashboard.
             </h1>
             
             <p className="hero-description">
-              Stop re-creating the same post 5 times. CreatorOS turns your ideas into 
-              pixel-perfect, audience-tailored content across Instagram, YouTube, 
-              LinkedIn, TikTok, and X — in seconds.
+              CreatorOS formats and schedules your content to Instagram, YouTube, LinkedIn, TikTok, and X automatically.
             </p>
 
             <div className="hero-buttons">
@@ -494,20 +493,6 @@ export function LandingPage() {
                 <span className="btn-arrow">→</span>
               </Link>
             </div>
-
-            <div className="trusted-row">
-              <div className="avatar-stack">
-                <div style={{ background: "#4f46e5" }}>V</div>
-                <div style={{ background: "#ec4899" }}>A</div>
-                <div style={{ background: "#10b981" }}>R</div>
-                <div style={{ background: "#f59e0b" }}>S</div>
-              </div>
-              <div className="trusted-text">
-                <strong>10,000+ top creators & brands</strong>
-                <span>Generated 4.2M+ high-performing posts</span>
-              </div>
-            </div>
-
             <div className="brand-strip-container">
               <div className="brand-strip-label">TRUSTED BY CONTENT TEAMS AT</div>
               <div className="brand-strip">
@@ -553,7 +538,7 @@ export function LandingPage() {
                   <div className="preview-actions">
                     <span className="format-ratio-tag">{selectedPlatform.aspectRatio}</span>
                     <button className="preview-export-btn" onClick={handleSimulateAI}>
-                      {isGenerating ? "Adapting..." : "✦ Auto-Adapt"}
+                      {isGenerating ? "Adapting..." : " Auto-Adapt"}
                     </button>
                   </div>
                 </div>
@@ -602,7 +587,7 @@ export function LandingPage() {
                     <div className="ai-command-box">
                       <div className="ai-command-header">
                         <span className="spark-icon">✨</span>
-                        <strong>AI Studio Copilot</strong>
+                        <strong>Studio Editor</strong>
                       </div>
                       <div className="ai-input-wrapper">
                         <input
@@ -621,7 +606,7 @@ export function LandingPage() {
                         </button>
                       </div>
                       <div className="ai-chips">
-                        <span onClick={() => setPromptText("Make it punchier for high engagement")}>⚡ Punchier</span>
+                        <span onClick={() => setPromptText("Make it punchier for high engagement")}> Punchier</span>
                         <span onClick={() => setPromptText("Translate into localized Hindi")}>🌐 Localize</span>
                         <span onClick={() => setPromptText("Add 3 viral curiosity hooks")}>🎯 Viral Hooks</span>
                       </div>
@@ -632,7 +617,7 @@ export function LandingPage() {
 
               {/* Floating Multi-Platform Indicator Badge */}
               <div className="floating-repurpose-pill">
-                <span className="repurpose-icon">⚡</span>
+                <span className="repurpose-icon"></span>
                 <div className="repurpose-text">
                   <strong>One Master Input</strong>
                   <span>Instant sync to 5 platform safe zones</span>
@@ -816,12 +801,12 @@ export function LandingPage() {
                       </div>
                       <div className="preview-title-badge">
                         <span className="live-dot" />
-                        <span>Step 4: AI Post Studio — <strong>X / Twitter (United States 🇺🇸)</strong></span>
+                        <span>Step 4: AI Post Studio - <strong>X / Twitter (United States 🇺🇸)</strong></span>
                       </div>
                       <div className="preview-actions">
                         <span className="format-ratio-tag">16:9 Safe Zone</span>
                         <button className="preview-export-btn" onClick={handleSimulateAI}>
-                          {isGenerating ? "Adapting..." : "✦ AI Re-Hook"}
+                          {isGenerating ? "Adapting..." : " Re-Hook"}
                         </button>
                       </div>
                     </div>
@@ -870,7 +855,7 @@ export function LandingPage() {
                           <span>🔁 219</span>
                           <span>❤️ 1,840</span>
                           <span>📊 54.2K views</span>
-                          <span className="tweet-share-btn">⚡ 5+ Formats Ready</span>
+                          <span className="tweet-share-btn"> 5+ Formats Ready</span>
                         </div>
                       </div>
 
@@ -905,7 +890,7 @@ export function LandingPage() {
                         <div className="ai-command-box">
                           <div className="ai-command-header">
                             <span className="spark-icon">✨</span>
-                            <strong>AI Studio Copilot</strong>
+                            <strong>Studio Editor</strong>
                           </div>
                           <div className="ai-input-wrapper">
                             <input
@@ -950,14 +935,14 @@ export function LandingPage() {
 
             <div className="bento-step">
               <div className="step-badge">STEP 02</div>
-              <div className="step-icon">✦</div>
+              <div className="step-icon"></div>
               <h3>AI-Powered Creation</h3>
               <p>Generate high-converting headlines, design templates, and tailored scripts with 1 click.</p>
             </div>
 
             <div className="bento-step highlight-step">
               <div className="step-badge highlight-badge">STEP 03 • CORE POWER</div>
-              <div className="step-icon">⚡</div>
+              <div className="step-icon"></div>
               <h3>Adapt & Repurpose</h3>
               <p>One master file automatically resizes and formats for IG, YouTube, LinkedIn, X, and TikTok.</p>
             </div>
@@ -971,7 +956,7 @@ export function LandingPage() {
 
             <div className="bento-step">
               <div className="step-badge">STEP 05</div>
-              <div className="step-icon">▣</div>
+              <div className="step-icon"></div>
               <h3>Team Approvals</h3>
               <p>Collaborate with clients and marketing managers with real-time feedback and approval gates.</p>
             </div>
@@ -1043,7 +1028,7 @@ export function LandingPage() {
 
                 <div className="mock-studio-body">
                   <div className="mock-sidebar-tools">
-                    <span className="tool-icon active">✦</span>
+                    <span className="tool-icon active"></span>
                     <span className="tool-icon">Aa</span>
                     <span className="tool-icon">🖼</span>
                     <span className="tool-icon">🎨</span>
@@ -1062,7 +1047,7 @@ export function LandingPage() {
 
                   <div className="mock-right-inspector">
                     <div className="inspector-title">AI Toolset</div>
-                    <button className="inspector-btn" onClick={handleSimulateAI}>⚡ Rewrite Tone</button>
+                    <button className="inspector-btn" onClick={handleSimulateAI}> Rewrite Tone</button>
                     <button className="inspector-btn" onClick={handleSimulateAI}>🎯 Enhance Hook</button>
                     <button className="inspector-btn" onClick={handleSimulateAI}>🌐 Localize Text</button>
                     <div className="inspector-title" style={{ marginTop: "12px" }}>Active Layers</div>
@@ -1180,28 +1165,28 @@ export function LandingPage() {
 
           <div className="audience-cards-grid">
             <div className="audience-box">
-              <div className="audience-icon-badge" style={{ background: "rgba(94, 82, 246, 0.15)", color: "#a599ff" }}>✦</div>
+              <div className="audience-icon-badge" style={{ background: "rgba(94, 82, 246, 0.15)", color: "var(--primary)" }}></div>
               <h3>Solo Creators & Influencers</h3>
               <p>Build a multi-channel presence without burning out. Scale your output from 2 posts a week to 15+ without hiring an assistant.</p>
               <div className="audience-perk-tag">✓ 1-Click Multi-Channel Sync</div>
             </div>
 
             <div className="audience-box">
-              <div className="audience-icon-badge" style={{ background: "rgba(239, 95, 209, 0.15)", color: "#ef5fd1" }}>◈</div>
+              <div className="audience-icon-badge" style={{ background: "rgba(239, 95, 209, 0.15)", color: "var(--pink)" }}></div>
               <h3>High-Growth Brands & Startups</h3>
               <p>Turn product updates and customer stories into consistent lead magnets across LinkedIn, X, and Instagram automatically.</p>
               <div className="audience-perk-tag">✓ High-Converting Templates</div>
             </div>
 
             <div className="audience-box">
-              <div className="audience-icon-badge" style={{ background: "rgba(40, 184, 255, 0.15)", color: "#28b8ff" }}>⚡</div>
+              <div className="audience-icon-badge" style={{ background: "rgba(40, 184, 255, 0.15)", color: "var(--cyan)" }}></div>
               <h3>Marketing Teams</h3>
               <p>Collaborate, assign approval roles, enforce brand guidelines, and schedule campaigns across global regions effortlessly.</p>
               <div className="audience-perk-tag">✓ Approval Gates & Brand Voice</div>
             </div>
 
             <div className="audience-box">
-              <div className="audience-icon-badge" style={{ background: "rgba(130, 229, 93, 0.15)", color: "#82e55d" }}>▣</div>
+              <div className="audience-icon-badge" style={{ background: "rgba(130, 229, 93, 0.15)", color: "var(--green)" }}></div>
               <h3>Creative Agencies</h3>
               <p>Manage multiple client workspaces with dedicated brand kits, distinct AI memory, and white-label client approval portals.</p>
               <div className="audience-perk-tag">✓ Multi-Workspace Management</div>
@@ -1272,10 +1257,10 @@ export function LandingPage() {
             <div className="cta-glow-decor" />
             <div className="cta-inner">
               <div className="announcement-pill" style={{ margin: "0 auto 20px" }}>
-                <span>✦ Start Creating In Under 60 Seconds</span>
+                <span> Start Creating In Under 60 Seconds</span>
               </div>
               <h2>Ready to Turn One Idea into Multi-Platform Reach?</h2>
-              <p>Join 10,000+ creators and brands saving 15+ hours every week with CreatorOS.</p>
+              <p>Create your free account today.</p>
 
               <div className="cta-action-row">
                 <Link to={ctaLink} className="primary-btn large-cta">
@@ -1352,8 +1337,8 @@ export function LandingPage() {
           <h4>Company</h4>
           <a href="#audiences" onClick={(e) => scrollToSection(e, "audiences")}>About Us</a>
           <a href="#pricing" onClick={(e) => scrollToSection(e, "pricing")}>Contact</a>
-          <a href="#faq" onClick={(e) => scrollToSection(e, "faq")}>Privacy Policy</a>
-          <a href="#faq" onClick={(e) => scrollToSection(e, "faq")}>Terms of Service</a>
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
           <a href="#features" onClick={(e) => scrollToSection(e, "features")}>Security</a>
         </div>
 

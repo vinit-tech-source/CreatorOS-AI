@@ -60,7 +60,7 @@
 .platformIcon.bluesky {
   background: linear-gradient(135deg, rgba(0, 133, 255, 0.25), rgba(0, 100, 220, 0.15));
   border-color: rgba(0, 133, 255, 0.4);
-  color: #0085ff;
+  color: var(--panel-2);
 }
 
 .platformMeta {
@@ -219,7 +219,7 @@
 .providerCardIcon.bluesky {
   background: linear-gradient(135deg, rgba(0, 133, 255, 0.3), rgba(0, 90, 200, 0.2));
   border: 1px solid rgba(0, 133, 255, 0.4);
-  color: #0085ff;
+  color: var(--panel-2);
 }
 
 .providerCardMeta {
@@ -355,7 +355,7 @@
 .dialogOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--border-strong);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   display: flex;

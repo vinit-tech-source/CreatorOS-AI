@@ -320,7 +320,7 @@ export function ApprovalCenter() {
                           <span className="text-emerald-400 font-bold">98%</span>
                         </div>
                         <div className={styles.auditProgressBar}>
-                          <div className={styles.auditProgressFill} style={{ width: '98%', background: '#10b981' }} />
+                          <div className={styles.auditProgressFill} style={{ width: '98%', background: 'var(--panel-2)' }} />
                         </div>
                       </div>
 

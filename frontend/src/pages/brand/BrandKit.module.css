@@ -40,7 +40,7 @@
    ------------------------------------------------------------ */
 .sectionCard {
   background: rgba(13, 18, 36, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   backdrop-filter: blur(16px);
   border-radius: 14px;
   padding: 1.4rem 1.6rem;
@@ -59,7 +59,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--border);
   padding-bottom: 0.85rem;
 }
 
@@ -90,7 +90,7 @@
 
 .sectionSubtitle {
   font-size: 0.775rem;
-  color: #94a3b8;
+  color: var(--text);
   margin: 0;
 }
 
@@ -112,7 +112,7 @@
 .fieldLabel {
   font-size: 0.775rem;
   font-weight: 600;
-  color: #cbd5e1;
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -120,19 +120,19 @@
 
 .fieldHint {
   font-size: 0.7rem;
-  color: #64748b;
+  color: var(--text);
   font-weight: 400;
 }
 
 .textInput,
 .textareaInput,
 .selectInput {
-  background: #090d16;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 0.85rem;
-  color: #f8fafc;
+  color: var(--text);
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -166,15 +166,15 @@
   width: 72px;
   height: 72px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #070a12;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px var(--panel-3);
 }
 
 .logoImg {
@@ -188,7 +188,7 @@
   font-size: 1.6rem;
   font-weight: 800;
   color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 8px var(--border-strong);
 }
 
 .logoInputWrapper {
@@ -210,8 +210,8 @@
 }
 
 .presetPaletteBtn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--border);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 5px 10px;
   cursor: pointer;
@@ -223,7 +223,7 @@
 }
 
 .presetPaletteBtn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--border);
   border-color: rgba(99, 102, 241, 0.4);
 }
 
@@ -237,13 +237,13 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--panel-3);
 }
 
 .presetName {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #cbd5e1;
+  color: var(--text);
 }
 
 /* Color Pickers Grid */
@@ -255,7 +255,7 @@
 
 .colorPickerCard {
   background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.85rem;
   display: flex;
@@ -306,13 +306,13 @@
 }
 
 .hexCodeInput {
-  background: #090d16;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: 6px 8px;
   font-size: 0.8rem;
   font-family: monospace;
-  color: #f8fafc;
+  color: var(--text);
   outline: none;
   width: 100%;
   text-transform: uppercase;
@@ -324,7 +324,7 @@
 
 .colorDescText {
   font-size: 0.675rem;
-  color: #64748b;
+  color: var(--text);
   line-height: 1.35;
   margin: 0;
 }
@@ -340,9 +340,9 @@
 }
 
 .presetChip {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #cbd5e1;
+  background: var(--border);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: 0.75rem;
   font-weight: 500;
   padding: 4px 10px;
@@ -372,15 +372,15 @@
    LIVE BRAND SHOWCASE CARD (Right Column)
    ------------------------------------------------------------ */
 .showcaseCard {
-  background: rgba(13, 18, 36, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--panel-2);
+  border: 1px solid var(--border);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px var(--panel-3);
 }
 
 .showcaseBadgeHeader {
@@ -421,7 +421,7 @@
   gap: 1rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 16px var(--panel-3);
 }
 
 .brandHeroLogo {
@@ -434,7 +434,7 @@
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px var(--panel-3);
 }
 
 .brandHeroLogo img {
@@ -446,7 +446,7 @@
 .brandHeroLogo span {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #000000;
+  color: var(--panel-2);
 }
 
 .brandHeroInfo {
@@ -460,19 +460,19 @@
   font-weight: 800;
   color: #ffffff;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 4px var(--panel-3);
 }
 
 .brandHeroTagline {
   font-size: 0.775rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
   margin: 0;
 }
 
 /* Mock Social Card */
 .mockSocialCard {
   background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1rem;
   display: flex;
@@ -514,17 +514,17 @@
 .mockAuthorName {
   font-size: 0.825rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text);
 }
 
 .mockAuthorTime {
   font-size: 0.675rem;
-  color: #64748b;
+  color: var(--text);
 }
 
 .mockCaption {
   font-size: 0.8rem;
-  color: #cbd5e1;
+  color: var(--text);
   line-height: 1.45;
   margin: 0;
 }
@@ -534,7 +534,7 @@
   align-items: center;
   gap: 12px;
   padding-top: 0.4rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--border);
 }
 
 .mockActionItem {
@@ -542,7 +542,7 @@
   align-items: center;
   gap: 4px;
   font-size: 0.725rem;
-  color: #94a3b8;
+  color: var(--text);
   font-weight: 600;
 }
 
@@ -556,7 +556,7 @@
 .samplerTitle {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: var(--text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0;
@@ -602,8 +602,8 @@
 
 /* CSS Tokens & Utility Box */
 .tokensBox {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--panel-3);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.75rem;
   display: flex;
@@ -618,9 +618,9 @@
 }
 
 .copyTokensBtn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: var(--border);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: 0.725rem;
   font-weight: 600;
   padding: 4px 8px;
@@ -633,7 +633,7 @@
 }
 
 .copyTokensBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--border);
   color: #ffffff;
 }
 
@@ -671,7 +671,7 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 1rem;
-  color: #94a3b8;
+  color: var(--text);
   text-align: center;
 }
 

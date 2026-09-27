@@ -210,7 +210,7 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
           h: 24,
           content: '— @creator · CreatorOS',
           fontSize: 12,
-          color: 'rgba(255,255,255,0.6)',
+          color: 'var(--muted)',
           fontWeight: '600',
           textAlign: 'center',
         },
@@ -255,7 +255,7 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
           h: 75,
           content: '1. Hook with a bold claim\n2. Deliver 80% practical value\n3. End with a clear action',
           fontSize: 13,
-          color: 'rgba(255,255,255,0.85)',
+          color: 'var(--text-secondary)',
           fontWeight: '600',
           textAlign: 'left',
         },
@@ -325,7 +325,7 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
           h: 50,
           content: state.title || 'The exact playbook to scale your audience from scratch.',
           fontSize: 13,
-          color: 'rgba(255,255,255,0.7)',
+          color: 'var(--muted)',
           fontWeight: '500',
           textAlign: 'center',
         },
@@ -540,7 +540,7 @@ export function CreationWorkspace({ state, platformConfig, onBack, onStateChange
             AI Assist
           </button>
           <button className={styles.actionBtn} onClick={handleSave} disabled={isSaving}>
-            {isSaving ? <Loader2 size={15} className={styles.spinner} /> : saveSuccess ? <Check size={15} color="#10b981" /> : <Save size={15} />}
+            {isSaving ? <Loader2 size={15} className={styles.spinner} /> : saveSuccess ? <Check size={15} color="var(--panel-2)" /> : <Save size={15} />}
             <span>{isSaving ? 'Saving...' : saveSuccess ? 'Saved' : 'Save'}</span>
           </button>
           <button className={styles.publishBtn} onClick={handlePublish} disabled={isPublishing}>

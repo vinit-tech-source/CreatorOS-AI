@@ -57,12 +57,14 @@ class MediaAssetRepository(AbstractMediaAssetRepository):
         )
         return result.scalar_one_or_none()
 
-    async def list_by_workspace(self, workspace_id: uuid.UUID) -> list[MediaAsset]:
-        """Return all MediaAssets for a specific workspace, ordered newest first."""
+    async def list_by_workspace(self, workspace_id: uuid.UUID, limit: int = 50, offset: int = 0) -> list[MediaAsset]:
+        """Return MediaAssets for a specific workspace with pagination, ordered newest first."""
         result = await self.session.execute(
             select(MediaAsset)
             .where(MediaAsset.workspace_id == workspace_id)
             .order_by(MediaAsset.created_at.desc())
+            .limit(limit)
+            .offset(offset)
         )
         return list(result.scalars().all())
 

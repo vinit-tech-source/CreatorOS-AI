@@ -84,7 +84,7 @@ export function ContentQualityEngine({ state, platformConfig, format }: ContentQ
   }, [state, platformConfig, format]);
 
   const getScoreColor = () => {
-    if (score >= 90) return '#10b981'; // Green
+    if (score >= 90) return 'var(--panel-2)'; // Green
     if (score >= 70) return '#f59e0b'; // Yellow
     return '#ef4444'; // Red
   };

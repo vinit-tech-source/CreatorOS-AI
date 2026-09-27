@@ -62,12 +62,14 @@ class ProjectRepository(AbstractProjectRepository):
         )
         return result.scalar_one_or_none()
 
-    async def list_by_workspace(self, workspace_id: uuid.UUID) -> list[Project]:
-        """Return all Projects for a specific workspace, ordered newest first."""
+    async def list_by_workspace(self, workspace_id: uuid.UUID, limit: int = 50, offset: int = 0) -> list[Project]:
+        """Return Projects for a specific workspace with pagination, ordered newest first."""
         result = await self.session.execute(
             select(Project)
             .where(Project.workspace_id == workspace_id)
             .order_by(Project.created_at.desc())
+            .limit(limit)
+            .offset(offset)
         )
         return list(result.scalars().all())
 

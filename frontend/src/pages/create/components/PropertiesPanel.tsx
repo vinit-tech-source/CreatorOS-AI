@@ -232,7 +232,7 @@ export function PropertiesPanel({
           <button
             type="button"
             className={styles.alignBtn}
-            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'var(--border)', border: '1px solid var(--border)' }}
             onClick={() => {
               const hooks = [
                 'Most creators get this completely backwards: ',
@@ -249,7 +249,7 @@ export function PropertiesPanel({
           <button
             type="button"
             className={styles.alignBtn}
-            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'var(--border)', border: '1px solid var(--border)' }}
             onClick={() => {
               if (format.charLimit > 0 && state.caption.length > format.charLimit) {
                 const trimmed = state.caption.slice(0, format.charLimit - 25).trim();
@@ -262,7 +262,7 @@ export function PropertiesPanel({
           <button
             type="button"
             className={styles.alignBtn}
-            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem', background: 'var(--border)', border: '1px solid var(--border)' }}
             onClick={() => {
               const lines = state.caption.split('\n');
               const emojified = lines.map(l => l.trim() ? '✨ ' + l.replace(/^[•\-\*]\s*/, '') : '').join('\n');
@@ -304,9 +304,9 @@ export function PropertiesPanel({
               onClick={() => onStateChange({ hashtags: [...state.hashtags, tag] })}
               style={{
                 fontSize: '0.6875rem',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(255,255,255,0.5)',
+                background: 'var(--border)',
+                border: '1px solid var(--border)',
+                color: 'var(--muted)',
                 borderRadius: '6px',
                 padding: '0.15rem 0.4rem',
                 cursor: 'pointer'

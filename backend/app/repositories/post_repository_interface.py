@@ -18,8 +18,8 @@ class AbstractPostRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def list_by_project(self, project_id: uuid.UUID) -> list[Post]:
-        """Return all Posts for a specific project."""
+    async def list_by_project(self, project_id: uuid.UUID, limit: int = 50, offset: int = 0) -> list[Post]:
+        """Return Posts for a specific project with pagination."""
         raise NotImplementedError
 
     @abstractmethod
